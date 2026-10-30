@@ -27,6 +27,9 @@ public:
 	float 		fCameraFOV = 80.0f; 				// угол обзора камеры
 	
 	void 		updateCamera();
+	
+	bool torchActive = true;
+	bool flagTorch = false;
 };
 
 

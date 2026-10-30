@@ -39,6 +39,18 @@ Camera::Camera( const FhMicroWorldInitializationInfo& info ) : MicroWorld(info.v
 
 void Camera::updateCamera()
 {
+	
+	if(g_Key[GLFW_KEY_G] && !flagTorch)
+	{
+		torchActive = !torchActive;
+		flagTorch = true;
+	}
+	if(!g_Key[GLFW_KEY_G] && flagTorch)
+	{
+		flagTorch = false;
+	}
+	
+	
 	// 1. обязательно обновить матрицу векторов собственного пространства
 	m3VectorsForwardLeftUp = mat3_cast(rotation) * glm::mat3(1.0f);
 	

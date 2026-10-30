@@ -46,6 +46,20 @@ std::shared_ptr<MicroWorld> Level::getActor(const std::string actorName)
 }
 
 
+std::vector<std::shared_ptr<MicroWorld>> Level::getActorsWithTag(int tag)
+{
+	std::vector<std::shared_ptr<MicroWorld>> res;
+	
+	res.resize(0);
+	
+	for(auto actor : actors)
+	{
+		if( actor.second->hasTag(tag) ) res.push_back(actor.second);
+	}
+	
+	return res;
+}
+
 
 std::string Level::getLevelPath(const std::string Name)	
 {	

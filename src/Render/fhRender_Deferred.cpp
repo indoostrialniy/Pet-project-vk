@@ -6,6 +6,9 @@
 
 #include "Camera.h"
 
+#include "Material.h"
+#include "vkTexture.h"
+
 #include "Laboratory.h"
 #include "DynamicLightSource.h"
 
@@ -16,8 +19,9 @@
 void Graphics::createGpass()
 {
 	// 1 - Renderpass attachments
+	if( HANDLE_NULL(renderPass_G) )
 	{
-		if( !HANDLE_NULL(renderPass_G) ) {DEBUG_INFO return;}
+		
 		
 		std::array<VkAttachmentDescription, gPassAttachmentsCount> attachments = {};
 		for(int i=0; i<gPassAttachmentsCount; i++)
@@ -172,9 +176,8 @@ void Graphics::createGpass()
 	
 	
 	// 3 - Framebuffer
+	if( HANDLE_NULL(frameBuffer_G) )
 	{
-		if( !HANDLE_NULL(frameBuffer_G) ) { DEBUG_INFO return;}
-		
 		// gPassImageView already contains all views for G pass!
 		
 		VkFramebufferCreateInfo framebufferInfo{};
@@ -196,16 +199,75 @@ void Graphics::createGpass()
 
 	// 4 - DescriptorSetLayout
 	{
+		//~ if( !HANDLE_NULL(descriptorSetLayout_G) ) {DEBUG_INFO return;}
+		
+		//~ // схема разъема. описание точек привязки только ресурсов (буферов, изображений) к шейдерам
+		//~ /*
+			//~ VkDescriptorSetLayout describes shader binding points - which types of resource to bind to which place
+			//~ For example: to vertex shader we connect un UBO - this will be "binding 0"
+						 //~ to fragment shader we connect texture sampler - this will be "binding 1"
+		//~ */
+		
+		//~ std::array<VkDescriptorSetLayoutBinding, 6> bindings = {};
+			//~ // binding 0 -  project and view matrices - layout(binding = 0) uniform FhGeneralInfo {} commonData
+				//~ bindings[0].binding = 0;												// индекс точки привязки: layout(binding = 0) uniform FhGeneralInfo из вершинного шейдера
+				//~ bindings[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;			// тип - uniform buffer
+				//~ bindings[0].descriptorCount = 1;										// UBO-шек может быть много, но сейчас в массиве - только одна. This could be used to specify a transformation for each of the bones in a skeleton for skeletal animation, for example
+				//~ bindings[0].stageFlags = VK_SHADER_STAGE_VERTEX_BIT;					// определили этап конвейера, на котором будет обращение шейдера к UBO. Сейчас - вершинный шейдер
+				//~ bindings[0].pImmutableSamplers = nullptr; 								// Optional. Для изображений (image sampling)
+		
+			//~ // binding 1->1+MAX_MATERIALS_PER_ENTITY = material samplers[16]
+				//~ bindings[1].binding = 1;												// layout(binding = 1) uniform sampler2D material0_textures[16]; из фрагментного шейдера
+				//~ bindings[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;	// тип - изображение
+				//~ bindings[1].descriptorCount = MAX_SAMPLERS_PER_MATERIAL;				// массив на 16 ячеек
+				//~ bindings[1].stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;	// обращение к текстурам ожидается из вершинного и фрагментного шейдера
+				//~ bindings[1].pImmutableSamplers = nullptr;
+			
+				//~ bindings[2] = bindings[1];	// material_1. All the same except binding index
+				//~ bindings[2].binding = 2;
+				
+				//~ bindings[3] = bindings[1];	// material_2
+				//~ bindings[3].binding = 3;
+				
+				//~ bindings[4] = bindings[1];	// material_3
+				//~ bindings[4].binding = 4;
+			
+			//~ // binding 5 - FhMaterialInfo structs
+				//~ bindings[5].binding = 5;											// индекс точки привязки: layout(binding = 5) uniform FhMaterialInfo {}  из фрагментного шейдера
+				//~ bindings[5].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;				// тип - uniform buffer
+				//~ bindings[5].descriptorCount = 1;											// количество прикрепляемых объектов		// UBO-шек может быть много, но сейчас в массиве - только одна. This could be used to specify a transformation for each of the bones in a skeleton for skeletal animation, for example
+				//~ bindings[5].stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;		// определили этап конвейера, на котором будет обращение шейдера к UBO. Сейчас - вершинный шейдер
+				//~ bindings[5].pImmutableSamplers = nullptr; 
+			
+			// binding 6 - lights???
+				//~ //bindings[6].binding = 6;													// индекс точки привязки: layout(binding = 0) uniform UniformBufferObject из вершинного шейдера
+				//~ //bindings[6].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;				// тип - uniform buffer
+				//~ //bindings[6].descriptorCount = 1;											// количество прикрепляемых объектов		// UBO-шек может быть много, но сейчас в массиве - только одна. This could be used to specify a transformation for each of the bones in a skeleton for skeletal animation, for example
+				//~ //bindings[6].stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;						// определлили этап конвейера, на котором будет обращение шейдера к UBO. Сейчас - вершинный шейдер
+				//~ //bindings[6].pImmutableSamplers = nullptr; 									// Optional. Для изображений (image sampling)
+				
+		
+		//~ // 3 - summarize all binding
+		//~ VkDescriptorSetLayoutCreateInfo layoutInfo{};
+			//~ layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+			//~ layoutInfo.bindingCount = static_cast<uint32_t>(bindings.size());
+			//~ layoutInfo.pBindings = bindings.data();
+			
+		//~ // 4 - create VkDescriptorSetLayout
+		//~ VkResult result = vkCreateDescriptorSetLayout(logicalDevice, &layoutInfo, nullptr, &descriptorSetLayout_G);
+		//~ if( result != VK_SUCCESS) 
+		//~ {
+			//~ checkResult(result);
+			//~ throw std::runtime_error("Failed to create G descriptor set layout!");
+		//~ }
+	}
+	
+	// 4.1 - bindless DescriptorSetLayout
+	{
 		if( !HANDLE_NULL(descriptorSetLayout_G) ) {DEBUG_INFO return;}
 		
 		// схема разъема. описание точек привязки только ресурсов (буферов, изображений) к шейдерам
-		/*
-			VkDescriptorSetLayout describes shader binding points - which types of resource to bind to which place
-			For example: to vertex shader we connect un UBO - this will be "binding 0"
-						 to fragment shader we connect texture sampler - this will be "binding 1"
-		*/
-		
-		std::array<VkDescriptorSetLayoutBinding, 6> bindings = {};
+		std::array<VkDescriptorSetLayoutBinding, 4> bindings = {};
 			// binding 0 -  project and view matrices - layout(binding = 0) uniform FhGeneralInfo {} commonData
 				bindings[0].binding = 0;												// индекс точки привязки: layout(binding = 0) uniform FhGeneralInfo из вершинного шейдера
 				bindings[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;			// тип - uniform buffer
@@ -213,54 +275,110 @@ void Graphics::createGpass()
 				bindings[0].stageFlags = VK_SHADER_STAGE_VERTEX_BIT;					// определили этап конвейера, на котором будет обращение шейдера к UBO. Сейчас - вершинный шейдер
 				bindings[0].pImmutableSamplers = nullptr; 								// Optional. Для изображений (image sampling)
 		
-			// binding 1->1+MAX_MATERIALS_PER_ENTITY = material samplers[16]
-				bindings[1].binding = 1;												// layout(binding = 1) uniform sampler2D material0_textures[16]; из фрагментного шейдера
+			// все материалы, исползующиеся в движке, заносятся в один дескриптор. В 1 материале максимум MAX_SAMPLERS_PER_MATERIAL текстур
+			// binding 1
+				bindings[1].binding = 1;												// layout(binding = 1) uniform sampler2D materials_textures[320]; из фрагментного шейдера
 				bindings[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;	// тип - изображение
-				bindings[1].descriptorCount = MAX_SAMPLERS_PER_MATERIAL;				// массив на 16 ячеек
+				bindings[1].descriptorCount = MAX_MATERIALS * MAX_SAMPLERS_PER_MATERIAL;// массив на 320 ячеек
 				bindings[1].stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;	// обращение к текстурам ожидается из вершинного и фрагментного шейдера
 				bindings[1].pImmutableSamplers = nullptr;
 			
-				bindings[2] = bindings[1];	// material_1. All the same except binding index
-				bindings[2].binding = 2;
-				
-				bindings[3] = bindings[1];	// material_2
-				bindings[3].binding = 3;
-				
-				bindings[4] = bindings[1];	// material_3
-				bindings[4].binding = 4;
+			// binding 2 - FhMaterialInfo structs
+				bindings[2].binding = 2;											// индекс точки привязки: layout(binding = 2) uniform FhGpassMaterialsInfo {}  из фрагментного шейдера
+				bindings[2].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;				// тип - uniform buffer
+				bindings[2].descriptorCount = 1;							// 1 буфер, объединяющий в себе 20 (MAX_MATERIALS) структур с описанием материалов
+				bindings[2].stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;		// определили этап конвейера, на котором будет обращение шейдера к UBO. Сейчас - вершинный шейдер
+				bindings[2].pImmutableSamplers = nullptr; 
+		
+			// binding 3 - FhGpassPushConstantsInfo structs
+				bindings[3].binding = 3;											// индекс точки привязки: layout(binding = 3) uniform FhGpassPushConstantsInfo {}  из вершинного шейдера
+				bindings[3].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;				// тип - uniform buffer
+				bindings[3].descriptorCount = 1;							// 1 буфер, объединяющий в себе 64 (MAX_ENTITIES_FOR_INSTANCING) структур с пуш константами
+				bindings[3].stageFlags = VK_SHADER_STAGE_VERTEX_BIT;		// определили этап конвейера, на котором будет обращение шейдера к UBO. Сейчас - вершинный шейдер
+				bindings[3].pImmutableSamplers = nullptr; 
 			
-			// binding 5 - FhMaterialInfo structs
-				bindings[5].binding = 5;											// индекс точки привязки: layout(binding = 5) uniform FhMaterialInfo {}  из фрагментного шейдера
-				bindings[5].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;				// тип - uniform buffer
-				bindings[5].descriptorCount = 1;											// количество прикрепляемых объектов		// UBO-шек может быть много, но сейчас в массиве - только одна. This could be used to specify a transformation for each of the bones in a skeleton for skeletal animation, for example
-				bindings[5].stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;		// определили этап конвейера, на котором будет обращение шейдера к UBO. Сейчас - вершинный шейдер
-				bindings[5].pImmutableSamplers = nullptr; 
-			
-			//~ // binding 6 - lights???
-				//~ bindings[6].binding = 6;													// индекс точки привязки: layout(binding = 0) uniform UniformBufferObject из вершинного шейдера
-				//~ bindings[6].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;				// тип - uniform buffer
-				//~ bindings[6].descriptorCount = 1;											// количество прикрепляемых объектов		// UBO-шек может быть много, но сейчас в массиве - только одна. This could be used to specify a transformation for each of the bones in a skeleton for skeletal animation, for example
-				//~ bindings[6].stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;						// определлили этап конвейера, на котором будет обращение шейдера к UBO. Сейчас - вершинный шейдер
-				//~ bindings[6].pImmutableSamplers = nullptr; 									// Optional. Для изображений (image sampling)
-				
 		
 		// 3 - summarize all binding
 		VkDescriptorSetLayoutCreateInfo layoutInfo{};
 			layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
 			layoutInfo.bindingCount = static_cast<uint32_t>(bindings.size());
 			layoutInfo.pBindings = bindings.data();
+			layoutInfo.flags = VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT; // <-- ЭТО ОБЯЗАТЕЛЬНО для фичи динамической индексации для обхода ограничения в 64 семплера
 			
 		// 4 - create VkDescriptorSetLayout
 		VkResult result = vkCreateDescriptorSetLayout(logicalDevice, &layoutInfo, nullptr, &descriptorSetLayout_G);
 		if( result != VK_SUCCESS) 
 		{
 			checkResult(result);
-			throw std::runtime_error("Failed to create G descriptor set layout!");
+			throw std::runtime_error("Failed to create bindless G descriptor set layout!");
 		}
 	}
 	
 	
 	// 5 - Descriptor Pool
+	{
+		//~ // набор разъемов. создание общего перечня сетов.
+		//~ /*
+			//~ Descriptor pool — это объект, из которого Vulkan выделяет descriptor set-ы. Ты заранее указываешь, сколько дескрипторов каких типов тебе нужно, и pool использует это как резерв памяти/ресурсов для будущих set-ов.
+
+			//~ VkDescriptorPool представляет собой ресурс, используемый для управления набором дескрипторов. 
+			//~ Pool позволяет эффективно управлять созданием и удалением дескрипторных наборов (descriptor sets).
+			//~ VkDescriptorPool служит инструментом эффективного распределения и повторного использования ресурсов, позволяя избежать 
+			//~ затратных операций выделения памяти при каждом изменении состояния графического конвейера.
+
+		//~ */
+		
+		
+		//~ printVarComment("Descriptor pool size: ", MAX_ENTITIES_IN_ACTION)
+		//~ DEBUG_INFO
+		
+		//~ // 1 - Сначала нужно описать, какие типы дескрипторов содержатся в сетах дескрипторов, и их количество/
+		//~ // То есть какие патроны набивать в магазин, помещаемый в разгрузку (пул)
+		//~ // Есть пока всего 2 типа передаваемых в шейдер (конвейер) ресурсов - UBO и Image sampler, создадим массив с описанием обоих типов ресурсов
+		//~ std::array<VkDescriptorPoolSize, 6> poolSizes{};
+			
+			//~ // 1.0 - в движке будет (MAX_FRAMES_IN_FLIGHT * MAX_ENTITIES_IN_ACTION) UBO-шек FhGeneralInfo
+			//~ poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+			//~ poolSizes[0].descriptorCount =  MAX_ENTITIES_IN_ACTION;
+			
+			//~ // 1.1 - в движке будет descriptorCount сэмплеров текстур цвета
+			//~ poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+			//~ poolSizes[1].descriptorCount = MAX_ENTITIES_IN_ACTION * MAX_MATERIALS_PER_ENTITY;	// в каждом шейдере - массив на 16 ячеек текстур
+			
+			//~ poolSizes[2].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+			//~ poolSizes[2].descriptorCount = MAX_ENTITIES_IN_ACTION * MAX_MATERIALS_PER_ENTITY; // XXX в каждом шейдере - массив на 4 ячейки нормалей
+			
+			//~ poolSizes[3].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+			//~ poolSizes[3].descriptorCount = MAX_ENTITIES_IN_ACTION * MAX_MATERIALS_PER_ENTITY; // XXX в каждом шейдере - массив на 4 ячейки нормалей
+			
+			//~ poolSizes[4].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+			//~ poolSizes[4].descriptorCount = MAX_ENTITIES_IN_ACTION * MAX_MATERIALS_PER_ENTITY; // XXX в каждом шейдере - массив на 4 ячейки нормалей
+			
+			//~ // 1.5 - в движке будет descriptorCount наборов матриц материалов
+			//~ poolSizes[5].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+			//~ poolSizes[5].descriptorCount = MAX_ENTITIES_IN_ACTION;
+			
+			
+
+		//~ // 2 - зная все возможные дескрипторы, описываем общий пул для хранения дескрипторов
+		//~ VkDescriptorPoolCreateInfo poolInfo{};
+			//~ poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+			//~ poolInfo.poolSizeCount = static_cast<uint32_t>( poolSizes.size() );
+			//~ poolInfo.pPoolSizes = poolSizes.data();
+			//~ int deferredFrames = 1; // при отложенном рендеринге буферизация одинарная, всего один кадр
+			//~ poolInfo.maxSets = deferredFrames * MAX_ENTITIES_IN_ACTION; //  но зато отрисовываемых сущностей - ого-го!
+
+		//~ // 3 - и выделяем непрерывный блок памяти (pool memory) достаточного размера
+		//~ VkResult result = vkCreateDescriptorPool(logicalDevice, &poolInfo, nullptr, &descriptorPool_G);
+		//~ if( result != VK_SUCCESS) 
+		//~ {
+			//~ checkResult(result);
+			//~ throw std::runtime_error("failed to create G descriptor pool!");
+		//~ }   
+	}
+	
+	
+	// 5.1 - bindless Descriptor Pool
 	{
 		// набор разъемов. создание общего перечня сетов.
 		/*
@@ -273,39 +391,27 @@ void Graphics::createGpass()
 
 		*/
 		
-		
-		printVarComment("Descriptor pool size: ", MAX_ENTITIES_IN_ACTION)
-		DEBUG_INFO
-		
+				
 		// 1 - Сначала нужно описать, какие типы дескрипторов содержатся в сетах дескрипторов, и их количество/
 		// То есть какие патроны набивать в магазин, помещаемый в разгрузку (пул)
 		// Есть пока всего 2 типа передаваемых в шейдер (конвейер) ресурсов - UBO и Image sampler, создадим массив с описанием обоих типов ресурсов
-		std::array<VkDescriptorPoolSize, 6> poolSizes{};
+		std::array<VkDescriptorPoolSize, 4> poolSizes{};
 			
 			// 1.0 - в движке будет (MAX_FRAMES_IN_FLIGHT * MAX_ENTITIES_IN_ACTION) UBO-шек FhGeneralInfo
 			poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-			poolSizes[0].descriptorCount =  MAX_ENTITIES_IN_ACTION;
+			poolSizes[0].descriptorCount =  1;
 			
-			// 1.1 - в движке будет descriptorCount сэмплеров текстур цвета
+			// 1.1 - в движке будет 2048 сэмплеров текстур материалов
 			poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-			poolSizes[1].descriptorCount = MAX_ENTITIES_IN_ACTION * MAX_MATERIALS_PER_ENTITY;	// в каждом шейдере - массив на 16 ячеек текстур
+			poolSizes[1].descriptorCount = MAX_MATERIALS * MAX_SAMPLERS_PER_MATERIAL;	// в шейдере - массив на 128*16=2048 ячеек текстур
 			
-			poolSizes[2].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-			poolSizes[2].descriptorCount = MAX_ENTITIES_IN_ACTION * MAX_MATERIALS_PER_ENTITY; // XXX в каждом шейдере - массив на 4 ячейки нормалей
+			// 1.2 - в движке будет 1 буфер на 20 (MAX_MATERIALS) структур описаний материалов
+			poolSizes[2].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+			poolSizes[2].descriptorCount = 1;
 			
-			poolSizes[3].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-			poolSizes[3].descriptorCount = MAX_ENTITIES_IN_ACTION * MAX_MATERIALS_PER_ENTITY; // XXX в каждом шейдере - массив на 4 ячейки нормалей
-			
-			poolSizes[4].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-			poolSizes[4].descriptorCount = MAX_ENTITIES_IN_ACTION * MAX_MATERIALS_PER_ENTITY; // XXX в каждом шейдере - массив на 4 ячейки нормалей
-			
-			// 1.5 - в движке будет descriptorCount наборов матриц материалов
-			poolSizes[5].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-			poolSizes[5].descriptorCount = MAX_ENTITIES_IN_ACTION;
-			
-			//~ // 1.6 - в движке будет descriptorCount наборов матриц света
-			//~ poolSizes[6].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-			//~ poolSizes[6].descriptorCount = MAX_ENTITIES_IN_ACTION;
+			// 1.3 - в движке будет 1 буфер на 64 (MAX_ENTITIES_FOR_INSTANCING) структур пуш констант
+			poolSizes[3].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+			poolSizes[3].descriptorCount = 1;
 			
 
 		// 2 - зная все возможные дескрипторы, описываем общий пул для хранения дескрипторов
@@ -314,17 +420,190 @@ void Graphics::createGpass()
 			poolInfo.poolSizeCount = static_cast<uint32_t>( poolSizes.size() );
 			poolInfo.pPoolSizes = poolSizes.data();
 			int deferredFrames = 1; // при отложенном рендеринге буферизация одинарная, всего один кадр
-			poolInfo.maxSets = deferredFrames * MAX_ENTITIES_IN_ACTION; //  но зато отрисовываемых сущностей - ого-го!
+			poolInfo.maxSets = 1;	// набора дескрипторов deferredFrames;
+			poolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT;	// <-- ЭТО ОБЯЗАТЕЛЬНО для фичи динамической индексации для обхода ограничения в 64 семплера
 
 		// 3 - и выделяем непрерывный блок памяти (pool memory) достаточного размера
 		VkResult result = vkCreateDescriptorPool(logicalDevice, &poolInfo, nullptr, &descriptorPool_G);
 		if( result != VK_SUCCESS) 
 		{
 			checkResult(result);
-			throw std::runtime_error("failed to create П descriptor pool!");
+			throw std::runtime_error("failed to create bindless G descriptor pool!");
 		}   
 	}
 	
+	
+	createGpassGeneralInfoBuffer();
+	updateGpassGeneralInfoBuffer();
+	
+	createMaterialInfoBuffer();
+	updateMaterialInfoBuffer();
+	
+	createInstancedPushInfoBuffer();
+	//~ updateInstancedPushInfoBuffer();
+	
+	// 5.2 - bindless Descriptor Set
+	{
+		if( HANDLE_NULL(descriptorSet_G) && HANDLE_VALID(descriptorPool_G) && HANDLE_VALID(descriptorSetLayout_G) )
+		{
+			VkDescriptorSetAllocateInfo allocInfo{};
+				allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+				allocInfo.descriptorPool = descriptorPool_G;				// указываем пул			
+				allocInfo.descriptorSetCount = 1;										// и число сетов
+				allocInfo.pSetLayouts = &descriptorSetLayout_G; 			// указываем схему описания подключения ресурсов к конвейеру
+		
+			// 2 - вырезали кусок памяти из pool memory для конкретного descriptor set (взяли розетки со склада)
+			VkResult result = vkAllocateDescriptorSets(logicalDevice, &allocInfo, &descriptorSet_G );
+
+			if( result != VK_SUCCESS) 
+			{
+				checkResult(result);
+				DEBUG_INFO
+				throw std::runtime_error("Failed to allocate bindless G-pass descriptor set!");
+			}
+			
+			// 3 - связываем реальные ресурсы с дескрипторами
+			// 3.1 информация о буфере матриц PVM		
+			std::array<VkDescriptorBufferInfo, 3> bufferInfos{};
+				// binding 0
+				bufferInfos[0].buffer = GpassGeneralInfoBuffer;	// ссылка на конкретный буфер UBO
+				bufferInfos[0].offset = 0;
+				bufferInfos[0].range = sizeof(FhGeneralInfo);				// если переписывать буфер целиком, можно тут указать VK_WHOLE_SIZE
+				
+				// binding 2
+				bufferInfos[1].buffer = materialInfoBuffer;						// ссылка на конкретный буфер матриц конфигов материалов
+				bufferInfos[1].offset = 0;
+				bufferInfos[1].range = MAX_MATERIALS*sizeof(FhMaterialInfo);	// если переписывать буфер целиком, можно тут указать VK_WHOLE_SIZE	
+				
+				// binding 3
+				bufferInfos[2].buffer = instancedPushInfoBuffer;						// ссылка на конкретный буфер матриц конфигов материалов
+				bufferInfos[2].offset = 0;
+				bufferInfos[2].range = VK_WHOLE_SIZE;	//MAX_ENTITIES_FOR_INSTANCING*sizeof(FhGpassPushConstantsInfo);	// если переписывать буфер целиком, можно тут указать VK_WHOLE_SIZE	
+					
+				
+			// 3.2 - информация о текстурах
+			// к шейдеру прикрепляются максимум 320 сэмплеров: MAX_MATERIALS * MAX_SAMPLERS_PER_MATERIAL 
+			std::array<VkDescriptorImageInfo, MAX_MATERIALS * MAX_SAMPLERS_PER_MATERIAL> materials_textures {};			
+
+			
+			
+			// for(auto mat : MATS)										// перебор всех материалов
+			// {
+				// printVariable(mat.first)
+				// for(auto sampl : mat.second.lock()->vpMaterialTextures) // перебор вектора текстур из материала (std::shared_ptr<VkTexture>)
+				// {
+					// printVarComment("\tInside textures: ", sampl->_filename)
+				// }
+			// }
+			
+			
+			for(int i=0; i< MAX_MATERIALS * MAX_SAMPLERS_PER_MATERIAL; i++ ) 
+			{
+				int tex = i%MAX_SAMPLERS_PER_MATERIAL;	// 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15     0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+				int mat = i/MAX_SAMPLERS_PER_MATERIAL;	// 0 0 0 0 0 0 0 0 0 0 0  0  0  0  0  0      1 1 1 1 1 1 1 1 1 1 1  1  1  1  1  1
+				
+				materials_textures[i].imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+				materials_textures[i].imageView = gPassImageView[0];
+				materials_textures[i].sampler = gPassImageSampler[0];	
+
+				// Materials.resources (private)  хранит умные указатели на экземпляры текстур, хранящие хэндлеры 			
+			}	// заглушки назначены
+			
+			//~ printMessage("Need to configure all 320 materials samplers")
+			
+			//Materials.printData(); // список всех материалов на данный момент, с количеством пользователей
+			
+			//~ std::unordered_map<std::string, std::weak_ptr<Material>> MATS = Materials.getAllResources();
+			std::vector<std::weak_ptr<Material>> MATS = Materials.getAllResources();
+
+			// printMessage("flag 3")	
+			// актуализация сэмплеров
+			//~ printMessage("Actualize descriptors")
+
+			int materialIndex = 0; 
+			for(auto mat : MATS)										// перебор всех материалов
+			{
+				//printVariable(mat.first)
+				int samplerIndex = 0;
+				//~ for(auto sampl : mat.second.lock()->vpMaterialTextures) // перебор вектора текстур из материала (std::shared_ptr<VkTexture>)
+				for(auto sampl : mat.lock()->vpMaterialTextures) // перебор вектора текстур из материала (std::shared_ptr<VkTexture>)
+				{
+					////// printVarComment("\tInside textures: ", sampl->_filename)
+					//std::cout << "Material [" << materialIndex << ", " << mat.lock()->resourceName << "], texture [" << samplerIndex << ", " << sampl->_filename << "]." << std::endl;
+					////// std::cout << "Material [" << materialIndex << ", " << mat.first << "], texture [" << samplerIndex << ", " << sampl->_filename << "]." << std::endl;
+					
+					//printVarComment("\tPosition in massive: ", materialIndex*MAX_SAMPLERS_PER_MATERIAL + samplerIndex)
+					
+					materials_textures[materialIndex*MAX_SAMPLERS_PER_MATERIAL + samplerIndex].imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+					materials_textures[materialIndex*MAX_SAMPLERS_PER_MATERIAL + samplerIndex].imageView = sampl->_textureImageView;
+					materials_textures[materialIndex*MAX_SAMPLERS_PER_MATERIAL + samplerIndex].sampler = sampl->_textureSampler;	
+					
+					samplerIndex++;
+					if(samplerIndex == MAX_SAMPLERS_PER_MATERIAL) 
+					{
+						printMessage("Error! Too much samplers!")
+						system("pause");
+					}
+				}
+				materialIndex++;
+				if(materialIndex == MAX_MATERIALS) 
+				{
+					printMessage("Error! Too much materials!")
+					DEBUG_INFO
+					system("pause");
+					break;
+				}
+			}
+			
+			
+			// 4 - описание дескрипторов
+			std::array<VkWriteDescriptorSet, 4> descriptorWrites{};
+
+				// 4.1 PVM buffer: struct FhGeneralInfo
+				descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+				descriptorWrites[0].dstSet = descriptorSet_G;
+				descriptorWrites[0].dstBinding = 0;							// в вершинном (!) шейдере: layout(binding = 0) uniform FhGeneralInfo
+				descriptorWrites[0].dstArrayElement = 0;
+				descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+				descriptorWrites[0].descriptorCount = 1;					// 1 буфер с  общей инфой
+				descriptorWrites[0].pBufferInfo = &bufferInfos[0];
+
+				// 4.2 Image samplers 0,1,2,3
+				descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+				descriptorWrites[1].dstSet = descriptorSet_G;
+				descriptorWrites[1].dstBinding = 1;							// в фрагментном (!) шейдере: layout(binding = 1) uniform sampler2D materials_textures[320];
+				descriptorWrites[1].dstArrayElement = 0;
+				descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+				descriptorWrites[1].descriptorCount = MAX_MATERIALS * MAX_SAMPLERS_PER_MATERIAL;// второй binding вычисляется как dstBinding + (descriptorCount-1)? Количество текстур в дескрипторе
+				descriptorWrites[1].pImageInfo = materials_textures.data();//MAX_MATERIALS_PER_ENTITY;	// из общего массива materials_textures берем начало с соответствующим смещением
+
+				// material infos buffer: struct FhMaterialInfo
+				descriptorWrites[2].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+				descriptorWrites[2].dstSet = descriptorSet_G;
+				descriptorWrites[2].dstBinding = 2;							// в вершинном (!) шейдере: layout(binding = 2) uniform FhGpassMaterialsInfo
+				descriptorWrites[2].dstArrayElement = 0;
+				descriptorWrites[2].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+				descriptorWrites[2].descriptorCount = 1;		// 1 буфер на 70 структур описаний материалов
+				descriptorWrites[2].pBufferInfo = &bufferInfos[1];
+				
+				// 4.4 PVM buffer: struct FhGeneralInfo
+				descriptorWrites[3].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+				descriptorWrites[3].dstSet = descriptorSet_G;
+				descriptorWrites[3].dstBinding = 3;							// в вершинном (!) шейдере: layout(binding = 0) uniform FhGeneralInfo
+				descriptorWrites[3].dstArrayElement = 0;
+				descriptorWrites[3].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+				descriptorWrites[3].descriptorCount = 1;					// 1 буфер
+				descriptorWrites[3].pBufferInfo = &bufferInfos[2];
+
+			// printMessage("Descriptor set of entity updated")	
+				
+			
+			// 5 - обновление содержимого
+			vkUpdateDescriptorSets(logicalDevice, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
+		
+			//printMessage("\t Descriptor set of bindless G-pass updated!") 	
+		}
+	}
 	
 	// 6 - Graphics Pipeline Layout
 	{
@@ -536,7 +815,7 @@ void Graphics::createGpass()
 			colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
 			colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;
 
-		std::array<VkPipelineColorBlendAttachmentState, 3> colorBlendAttachments = {colorBlendAttachment,colorBlendAttachment,colorBlendAttachment};
+		std::array<VkPipelineColorBlendAttachmentState, gPassAttachmentsCount-1> colorBlendAttachments = {colorBlendAttachment,colorBlendAttachment,colorBlendAttachment,colorBlendAttachment,colorBlendAttachment};
 
 
 		// глобальные настройки совмещения цветов (между буферами?):
@@ -587,7 +866,121 @@ void Graphics::createGpass()
 	}
 	
 	
-	createGpassGeneralInfoBuffer();
+	//~ createGpassGeneralInfoBuffer();
+	
+	
+	// текстура-заглушка для дескрипторных наборов сущностей
+	{
+		//~ VkImage plugImage;
+		//~ VkDeviceMemory plugImageMemory;
+		//~ VkImageView plugImageView;
+		//~ VkSampler plugImageSampler;
+		
+		//~ , 
+		
+		//~ format =	VK_FORMAT_R8G8B8A8_UNORM
+		//~ tiling = VK_IMAGE_TILING_OPTIMAL
+		//~ usage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT
+		//~ aspectFlag	= VK_IMAGE_ASPECT_COLOR_BIT
+		
+		// image
+		{
+			// 1 - создание host-side хэндлера изображения
+			VkImageCreateInfo imageInfo{};
+				imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+				imageInfo.imageType = VK_IMAGE_TYPE_2D;
+				imageInfo.extent.width = 128;
+				imageInfo.extent.height = 128;
+				imageInfo.extent.depth = 1;
+				imageInfo.mipLevels = 1;
+				imageInfo.arrayLayers = 1;
+				imageInfo.format = VK_FORMAT_R8G8B8A8_UNORM;
+				imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
+				imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+				imageInfo.usage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
+				imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+				imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;		// изображением сиюмоментно владеет только 1 очередь
+
+			VkResult result = vkCreateImage(logicalDevice, &imageInfo, nullptr, &plugImage);
+			if( result != VK_SUCCESS) 
+			{
+				checkResult(result);
+				throw std::runtime_error("failed to create plugImage!");
+			}
+
+			// 2 - определение требований к памяти
+			VkMemoryRequirements memRequirements;
+			vkGetImageMemoryRequirements(logicalDevice, plugImage, &memRequirements);
+
+			// 3 - выделение видеопамяти под изображение
+			VkMemoryAllocateInfo allocInfo{};
+				allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+				allocInfo.allocationSize = memRequirements.size;
+				allocInfo.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, physicalDevice);
+
+			VkResult allocResult = vkAllocateMemory(logicalDevice, &allocInfo, nullptr, &plugImageMemory);
+			if( allocResult != VK_SUCCESS) 
+			{
+				checkResult(allocResult);
+				throw std::runtime_error("failed to allocate plugImageMemory!");
+			}
+
+			// 4 - связывание выделенной видеопамяти с host-side хэндлером
+			vkBindImageMemory(logicalDevice, plugImage, plugImageMemory, 0); // 0 - это offset
+		}
+		
+		// image view
+		{
+			// 1 - указание данных об изображении
+			VkImageViewCreateInfo viewInfo{};									// структура для настройка обертки изображения
+				viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+				viewInfo.image = plugImage;	//VkImage
+				viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+				viewInfo.format = VK_FORMAT_R8G8B8A8_UNORM;	//VK_FORMAT_R8G8B8A8_SRGB
+				viewInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;//VK_IMAGE_ASPECT_COLOR_BIT;
+				viewInfo.subresourceRange.baseMipLevel = 0;
+				viewInfo.subresourceRange.levelCount = 1;
+				viewInfo.subresourceRange.baseArrayLayer = 0;
+				viewInfo.subresourceRange.layerCount = 1;
+			
+			VkResult result = vkCreateImageView(logicalDevice, &viewInfo, nullptr, &plugImageView);
+			if( result != VK_SUCCESS) 
+			{
+				checkResult(result);
+				DEBUG_INFO
+				throw std::runtime_error("failed to create plugImageView!");
+			}
+		}
+		
+		
+		// image sampler
+		{
+			VkPhysicalDeviceProperties properties{};
+			vkGetPhysicalDeviceProperties(physicalDevice, &properties);
+
+			VkSamplerCreateInfo samplerInfo{};
+				samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+				samplerInfo.magFilter = VK_FILTER_LINEAR;
+				samplerInfo.minFilter = VK_FILTER_LINEAR;
+				samplerInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+				samplerInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+				samplerInfo.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+				samplerInfo.anisotropyEnable = VK_FALSE; // true
+				samplerInfo.maxAnisotropy = properties.limits.maxSamplerAnisotropy; // 1.0f; //
+				samplerInfo.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK;
+				samplerInfo.unnormalizedCoordinates = VK_FALSE;
+				samplerInfo.compareEnable = VK_FALSE;
+				samplerInfo.compareOp = VK_COMPARE_OP_ALWAYS;
+				samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
+
+			VkResult result = vkCreateSampler(logicalDevice, &samplerInfo, nullptr, &plugImageSampler);
+			if( result != VK_SUCCESS) 
+			{
+				DEBUG_INFO
+				throw std::runtime_error("failed to create plugImageSampler!");
+			}
+		}
+	}
 	
 }
    
@@ -595,6 +988,14 @@ void Graphics::createGpass()
 void Graphics::destroyGpass()
 {
 	// in reverse order
+	
+	vkDestroySampler(logicalDevice, 	plugImageSampler, nullptr);
+	vkDestroyImageView(logicalDevice, 	plugImageView, 	nullptr);
+	vkFreeMemory(logicalDevice, 		plugImageMemory, nullptr);
+	vkDestroyImage(logicalDevice, 		plugImage, 		nullptr);
+	
+	destroyInstancedPushInfoBuffer();
+	destroyMaterialInfoBuffer();
 	
 	destroyGpassGeneralInfoBuffer();
 	
@@ -673,6 +1074,141 @@ void Graphics::updateGpassGeneralInfoBuffer()
 	ubo.cameraPos = CHECK_PTR(g_Camera) ? g_Camera->getActorPosition() : glm::vec3(14.087f, -14.19f, 7.33f);
 	
 	memcpy( GpassGeneralInfoBufferMapped, &ubo, sizeof(ubo)); // memcpy)dest, src, count
+}
+
+
+
+
+
+void Graphics::createMaterialInfoBuffer()
+{
+	// создание в видеопамяти буфера для шейдерных переменных и "прокидывание" прямого доступа к нему
+		
+	// printMessage("create entity material info buffer")	
+	
+	// 1 - размер буфера загружаемых в шейдер (ВЫРОВНЕННЫХ!) данных
+	VkDeviceSize bufferSize = MAX_MATERIALS * sizeof(FhMaterialInfo);			// 70 структур
+	
+	//printMessage("bdbd")
+	// 3.1 - создали host-side буфер и выделили ему ВИДИМУЮ! видеопамять
+	createBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, 
+									materialInfoBuffer, 
+									materialInfoBufferMemory );
+
+	// 3.2 - сделали прямую ссылку на эту ВИДИМУЮ память и сохранили ее в вектор uniformBuffersMemory
+	vkMapMemory(logicalDevice, materialInfoBufferMemory, 0, bufferSize, 0, &materialInfoBufferMapped );
+	
+	// printMessage("createEntityMaterialInfoBuffer OK")	
+
+}
+
+void Graphics::destroyMaterialInfoBuffer()
+{
+	vkDestroyBuffer(logicalDevice, materialInfoBuffer, nullptr);
+	vkFreeMemory(logicalDevice,  materialInfoBufferMemory, nullptr);		
+}
+
+void Graphics::updateMaterialInfoBuffer()
+{
+	//FhMaterialInfo MaterialInfos[MAX_MATERIALS_PER_ENTITY];
+	
+	std::array<FhMaterialInfo, MAX_MATERIALS> MaterialInfos;
+	
+	
+	std::vector<std::weak_ptr<Material>> MATS = Materials.getAllResources();
+
+
+	int materialIndex = 0; 
+	for(auto mat : MATS)										// перебор всех материалов
+	{
+		if(materialIndex < MAX_MATERIALS)
+		{
+			MaterialInfos[materialIndex] = mat.lock()->getMaterialInfo();
+			materialIndex++;
+		}
+		else
+		{
+			printMessage("\n\t\t======================Error! Too much materials!\n======================")
+			DEBUG_INFO
+			break;
+			//system("pause");
+		}
+		
+	}
+	
+	memcpy( materialInfoBufferMapped, MaterialInfos.data(), MAX_MATERIALS * sizeof(FhMaterialInfo)); // memcpy)dest, src, count
+}
+
+
+
+
+void Graphics::createInstancedPushInfoBuffer()
+{
+	// создание в видеопамяти буфера для шейдерных переменных и "прокидывание" прямого доступа к нему
+	
+	//~ uint32_t swch_imageCount;
+	//~ vkGetSwapchainImagesKHR(logicalDevice, swapChain, &swch_imageCount, nullptr);
+	
+	//~ instancedPushInfoBuffer.resize(swch_imageCount);
+	//~ instancedPushInfoBufferMemory.resize(swch_imageCount);
+	//~ instancedPushInfoBufferMapped.resize(swch_imageCount);
+	
+	//~ for(int i=0; i<swch_imageCount; i++)
+	//~ {
+		// 1 - размер буфера загружаемых в шейдер (ВЫРОВНЕННЫХ!) данных
+		VkDeviceSize bufferSize = MAX_ENTITIES_IN_ACTION * sizeof(FhGpassPushConstantsInfo);			// MAX_ENTITIES_FOR_INSTANCING пуш констант
+		
+		// 3.1 - создали host-side буфер и выделили ему ВИДИМУЮ! видеопамять
+		createBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, 
+										instancedPushInfoBuffer, 
+										instancedPushInfoBufferMemory );
+
+		// 3.2 - сделали прямую ссылку на эту ВИДИМУЮ память и сохранили ее в вектор uniformBuffersMemory
+		vkMapMemory(logicalDevice, instancedPushInfoBufferMemory, 0, bufferSize, 0, &instancedPushInfoBufferMapped );
+	//~ }
+}
+
+void Graphics::destroyInstancedPushInfoBuffer()
+{
+	//~ uint32_t swch_imageCount;
+	//~ vkGetSwapchainImagesKHR(logicalDevice, swapChain, &swch_imageCount, nullptr);
+	
+	//~ for(int i=0; i<swch_imageCount; i++)
+	//~ {
+		vkDestroyBuffer(logicalDevice, instancedPushInfoBuffer, nullptr);
+		vkFreeMemory(logicalDevice,  instancedPushInfoBufferMemory, nullptr);		
+	//~ }
+}
+
+void Graphics::updateInstancedPushInfoBuffer()
+{
+	//FhMaterialInfo MaterialInfos[MAX_MATERIALS_PER_ENTITY];
+	
+	std::array<FhGpassPushConstantsInfo, MAX_ENTITIES_IN_ACTION>  PushConstantsInfos;
+	
+	
+	//~ std::vector<std::weak_ptr<Material>> MATS = Materials.getAllResources();
+
+
+	//~ int materialIndex = 0; 
+	//~ for(auto mat : MATS)										// перебор всех материалов
+	//~ {
+		//~ if(materialIndex < MAX_MATERIALS)
+		//~ {
+			//~ MaterialInfos[materialIndex] = mat.lock()->getMaterialInfo();
+			//~ materialIndex++;
+		//~ }
+		//~ else
+		//~ {
+			//~ printMessage("\n\t\t======================Error! Too much materials!\n======================")
+			//~ DEBUG_INFO
+			//~ break;
+			//~ //system("pause");
+		//~ }
+		
+	//~ }
+	
+	memcpy( instancedPushInfoBufferMapped, PushConstantsInfos.data(), MAX_ENTITIES_IN_ACTION * sizeof(FhGpassPushConstantsInfo)); // memcpy)dest, src, count
 }
 
 
@@ -928,7 +1464,7 @@ void Graphics::createLpass()
 				bindings[3].pImmutableSamplers = nullptr;
 				
 			// binding 4-> - shadowmapOmni samplers[16]
-				bindings[4].binding = 4;												// layout(binding = 4) uniform sampler2D shadowMapsOmni[16] из фрагментного шейдера
+				bindings[4].binding = 4;												// layout(binding = 4) uniform samplerCube shadowMapsOmni[16] из фрагментного шейдера
 				bindings[4].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;	// тип - изображение
 				bindings[4].descriptorCount = MAX_DYNAMIC_LIGHT_SOURCES;				//
 				bindings[4].stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;					// обращение к текстурам ожидается из фрагментного шейдера
@@ -1097,75 +1633,66 @@ void Graphics::createLpass()
 			materials_textures[G_PASS_EMISSION_ATTACHMENT].sampler = gPassImageSampler[G_PASS_EMISSION_ATTACHMENT];
 	
 	
-		// 3.3 информация о картах теней
-		std::array<VkDescriptorImageInfo, MAX_DYNAMIC_LIGHT_SOURCES> shadowmap_textures {};	
+		// 3.3 информация о картах теней - заполнение заглушками
+		std::array<VkDescriptorImageInfo, MAX_DYNAMIC_LIGHT_SOURCES> shadowmap_textures_spots {};	
 		for(int i=0; i<MAX_DYNAMIC_LIGHT_SOURCES; i++)
 		{		
-			shadowmap_textures[i].imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-			shadowmap_textures[i].imageView = gPassImageView[G_PASS_COLOR_ATTACHMENT];	// затычка
-			shadowmap_textures[i].sampler = gPassImageSampler[G_PASS_COLOR_ATTACHMENT];	// затычка
+			shadowmap_textures_spots[i].imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+			shadowmap_textures_spots[i].imageView = gPassImageView[G_PASS_COLOR_ATTACHMENT];	// затычка
+			shadowmap_textures_spots[i].sampler = gPassImageSampler[G_PASS_COLOR_ATTACHMENT];	// затычка
 		}
 		
-		printMessage("Try to attach dynamic lights shadowmaps")
-		if( CHECK_PTR(g_Lab) ) 
-		{
-			std::shared_ptr<DynamicLight> source = dynamic_pointer_cast<DynamicLight>(g_Lab->getActor("LabSpot"));
-			if( source != nullptr )
-			{
-				if(source->type == FH_DYNAMIC_LIGHTSOURCE_OMNIDIRECTIONAL)
-				{
-					//printMessage("Cannot attach OMNI source to L-pass!")
-					//DEBUG_INFO
-					//shadowmap_textures[1].imageLayout = VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL;
-					
-					if( HANDLE_VALID(source->cubeMapViewSampling) && HANDLE_VALID(source->cubeMapSampler) )
-					{
-						shadowmap_textures[source->index].imageView = source->cubeMapViewSampling;
-						shadowmap_textures[source->index].sampler = source->cubeMapSampler;
-						printMessage("Omni OK!")
-					}	
-				}
-				if(source->type == FH_DYNAMIC_LIGHTSOURCE_SPOT)
-				{
-					if( HANDLE_VALID(source->dynamicLightShadowImageView[0]) && HANDLE_VALID(source->dynamicLightShadowImageSampler[0]) )
-					{
-						printMessage("Spot OK!")
-						shadowmap_textures[source->index].imageView = source->dynamicLightShadowImageView[0];
-						shadowmap_textures[source->index].sampler = source->dynamicLightShadowImageSampler[0];
-					}
-				}
-				
-			}
-		
-			std::shared_ptr<DynamicLight> helispot = dynamic_pointer_cast<DynamicLight>(g_Lab->getActor("HeliSpot"));
-			if( helispot != nullptr )
-			{
-				if(helispot->type == FH_DYNAMIC_LIGHTSOURCE_OMNIDIRECTIONAL)
-				{
-					//printMessage("Cannot attach OMNI helispot to L-pass!")
-					//DEBUG_INFO
-					//shadowmap_textures[1].imageLayout = VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL;
-					
-					if( HANDLE_VALID(helispot->cubeMapViewSampling) && HANDLE_VALID(helispot->cubeMapSampler) )
-					{
-						shadowmap_textures[helispot->index].imageView = helispot->cubeMapViewSampling;
-						shadowmap_textures[helispot->index].sampler = helispot->cubeMapSampler;
-						printMessage("helispot Omni OK!")
-					}	
-				}
-				if(helispot->type == FH_DYNAMIC_LIGHTSOURCE_SPOT)
-				{
-					if( HANDLE_VALID(helispot->dynamicLightShadowImageView[0]) && HANDLE_VALID(helispot->dynamicLightShadowImageSampler[0]) )
-					{
-						printMessage("helispot Spot OK!")
-						shadowmap_textures[helispot->index].imageView = helispot->dynamicLightShadowImageView[0];
-						shadowmap_textures[helispot->index].sampler = helispot->dynamicLightShadowImageSampler[0];
-					}
-				}
-				
-			}
-		
+		std::array<VkDescriptorImageInfo, MAX_DYNAMIC_LIGHT_SOURCES> shadowmap_textures_omni {};	
+		for(int i=0; i<MAX_DYNAMIC_LIGHT_SOURCES; i++)
+		{		
+			shadowmap_textures_omni[i].imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+			shadowmap_textures_omni[i].imageView = gPassImageView[G_PASS_COLOR_ATTACHMENT];	// затычка
+			shadowmap_textures_omni[i].sampler = gPassImageSampler[G_PASS_COLOR_ATTACHMENT];	// затычка
 		}
+		
+		
+			// 3.4 актуализация карт теней
+			if( CHECK_PTR(g_Lab) ) 
+			{
+				std::vector<std::shared_ptr<MicroWorld>> lights = g_Lab->getActorsWithTag(FH_ACTOR_TAG_DYNAMIC_LIGHT);
+					
+				if( !lights.empty() )
+				{
+					//printMessage("Try to attach dynamic lights shadowmaps")
+
+					//printMessage("\n\nAll dynamic lights:")
+					for(auto l : lights)
+					{
+						//printVariable(l->MicroWorldName)
+						std::shared_ptr<DynamicLight> spot = dynamic_pointer_cast<DynamicLight>( l );
+						if( spot != nullptr )
+						{
+							if(spot->type == FH_DYNAMIC_LIGHTSOURCE_OMNIDIRECTIONAL)
+							{
+								//printMessage("Cannot attach OMNI source to L-pass!")
+								//DEBUG_INFO
+								//shadowmap_textures[1].imageLayout = VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL;
+								
+								if( HANDLE_VALID(spot->cubeMapViewSampling) && HANDLE_VALID(spot->cubeMapSampler) )
+								{
+									shadowmap_textures_omni[spot->index].imageView = spot->cubeMapViewSampling;
+									shadowmap_textures_omni[spot->index].sampler = spot->cubeMapSampler;
+									//printMessage("Omni OK!")
+								}	
+							}
+							if(spot->type == FH_DYNAMIC_LIGHTSOURCE_SPOT)
+							{
+								if( HANDLE_VALID(spot->dynamicLightShadowImageView[0]) && HANDLE_VALID(spot->dynamicLightShadowImageSampler[0]) )
+								{
+									//printMessage("Spot OK!")
+									shadowmap_textures_spots[spot->index].imageView = spot->dynamicLightShadowImageView[0];
+									shadowmap_textures_spots[spot->index].sampler = spot->dynamicLightShadowImageSampler[0];
+								}
+							}
+						}
+					}
+				}	
+			}
 		
 		
 		// 4 - описание дескрипторов
@@ -1174,7 +1701,7 @@ void Graphics::createLpass()
 			descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 			descriptorWrites[0].dstSet = descriptorSet_L;
 			descriptorWrites[0].dstBinding = 0;							// в фрагментном (!) шейдере: layout(binding = 0) uniform sampler2D maps[2];
-			descriptorWrites[0].dstArrayElement = 0;
+			descriptorWrites[0].dstArrayElement = 0;					// смещение в массиве дескрипторов: начинать с maps[0] или maps[1] или maps[2]
 			descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 			descriptorWrites[0].descriptorCount = gPassAttachmentsCount-1;	// Количество текстур в массиве maps[]
 			descriptorWrites[0].pImageInfo = materials_textures.data();
@@ -1204,16 +1731,16 @@ void Graphics::createLpass()
 			descriptorWrites[3].dstArrayElement = 0;
 			descriptorWrites[3].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 			descriptorWrites[3].descriptorCount = MAX_DYNAMIC_LIGHT_SOURCES;	// Количество текстур в массиве maps[]
-			descriptorWrites[3].pImageInfo = shadowmap_textures.data();
+			descriptorWrites[3].pImageInfo = shadowmap_textures_spots.data();
 
 			// 4.4 - shadowmapsOmni samplers2D
 			descriptorWrites[4].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 			descriptorWrites[4].dstSet = descriptorSet_L;
-			descriptorWrites[4].dstBinding = 4;							// в фрагментном (!) шейдере: layout(binding = 3) uniform sampler2D shadowMaps[16];
+			descriptorWrites[4].dstBinding = 4;							// в фрагментном (!) шейдере: layout(binding = 4) uniform samplerCube shadowMaps[16];
 			descriptorWrites[4].dstArrayElement = 0;
 			descriptorWrites[4].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 			descriptorWrites[4].descriptorCount = MAX_DYNAMIC_LIGHT_SOURCES;	// Количество текстур в массиве maps[]
-			descriptorWrites[4].pImageInfo = shadowmap_textures.data(); // duplicate samplers block! Not an error!
+			descriptorWrites[4].pImageInfo = shadowmap_textures_omni.data(); // duplicate samplers block! Not an error!
 
 
 		// 5 - обновление содержимого
@@ -1594,7 +2121,7 @@ void Graphics::updateLpassDynamicLightSourceInfoBuffer()
 		playerTorchInfo.radius = 10.0f;
 		playerTorchInfo.power = 5.0f;
 		playerTorchInfo.blendWidth = 25.0f;
-		playerTorchInfo.exists = 1;
+		playerTorchInfo.exists = CHECK_PTR(g_Camera) ? g_Camera->torchActive : false;
 			
 	//~ // write player torch info: 0
 	//~ int i=0;
@@ -1604,18 +2131,41 @@ void Graphics::updateLpassDynamicLightSourceInfoBuffer()
 	
 	if( CHECK_PTR(g_Lab) )
 	{
-		// XXX заменить на поиск по тегу, чтобы автоматизировать заполнение списка активных источников
-		std::shared_ptr<DynamicLight> spot = dynamic_pointer_cast<DynamicLight>(g_Lab->getActor("LabSpot"));
-		if( spot != nullptr )
+		std::vector<std::shared_ptr<MicroWorld>> lights = g_Lab->getActorsWithTag(FH_ACTOR_TAG_DYNAMIC_LIGHT);
+				
+		if( !lights.empty() )
 		{
-			lightSourcesData[spot->index] = spot->getLightSourceInfo();
+			int index = 1;	// 0-й индекс назначен фонарику игрока
+			//printMessage("\n\nAll dynamic lights:")
+			for(auto l : lights)
+			{
+				//printVariable(l->MicroWorldName)
+				std::shared_ptr<DynamicLight> spot = dynamic_pointer_cast<DynamicLight>( l );
+				if( spot != nullptr )
+				{
+					lightSourcesData[spot->index] = spot->getLightSourceInfo();
+				}
+			}
 		}
 		
-		std::shared_ptr<DynamicLight> helispot = dynamic_pointer_cast<DynamicLight>(g_Lab->getActor("HeliSpot"));
-		if( helispot != nullptr )
-		{
-			lightSourcesData[helispot->index] = helispot->getLightSourceInfo();
-		}
+		//~ // XXX заменить на поиск по тегу, чтобы автоматизировать заполнение списка активных источников
+		//~ std::shared_ptr<DynamicLight> spot = dynamic_pointer_cast<DynamicLight>(g_Lab->getActor("LabSpot"));
+		//~ if( spot != nullptr )
+		//~ {
+			//~ lightSourcesData[spot->index] = spot->getLightSourceInfo();
+		//~ }
+		
+		//~ std::shared_ptr<DynamicLight> helispot = dynamic_pointer_cast<DynamicLight>(g_Lab->getActor("HeliSpot"));
+		//~ if( helispot != nullptr )
+		//~ {
+			//~ lightSourcesData[helispot->index] = helispot->getLightSourceInfo();
+		//~ }
+		
+		//~ std::shared_ptr<DynamicLight> liftspot = dynamic_pointer_cast<DynamicLight>(g_Lab->getActor("ElevatorSpot"));
+		//~ if( liftspot != nullptr )
+		//~ {
+			//~ lightSourcesData[liftspot->index] = liftspot->getLightSourceInfo();
+		//~ }
 	}
 	
 	//~ printMessage("\n\n\n\n\n\n\n\n\n\n\nUpdate buffer----------------------------------")

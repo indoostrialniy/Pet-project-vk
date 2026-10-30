@@ -35,141 +35,45 @@ Entity::Entity( FhEntityInitializationInfo& entityParams, glm::vec3& actorLoc, g
 	//~ printVec3(actorLoc)
 	//~ printQuat(actorRot)
 	
-	//~ TEXTURE = VkTextures.getAsset( getTexturePath(entityParams.textureName) );
-	
-	// для одного материала
-	// if( entityParams.initMeshMaterialsVector.size() != 0 ) entityMaterialPtr = Materials.getAsset( entityParams.initMeshMaterialsVector[0] );
-	
+	int mi = 0;
 	// для вектора материалов
 	for(auto mat : entityParams.initMeshMaterialsVector)	// перебор имен материалов объекта
 	{
-		//~ printMessage("Create material")
+		//printVarComment("Create material ", mat)
 		auto material = g_GraphicsCore.Materials.getAsset( mat );			// очередной материал
 
-		//~ printMessage("add to vector")
+		std::optional<int> index = g_GraphicsCore.Materials.getAssetIndex( mat );	// получим индекс материала
+		if( index.has_value() )
+		{
+			materialRetargets[mi] = static_cast<uint8_t>( index.value() + 1 );					// заретаргетили инкрементирвоанный индекс
+			////~ printVarComment("Its global index is ", materialRetargets[mi])
+			//std::cout << "Local index [" << mi << ", global index [" << index.value() << "]" << std::endl;
+		}
 
 		entityMaterialsPtr.push_back(material);
-		// printVariable(mat)
-		// printVariable(material->resourceName)
-		// system("pause");
-		
-		//~ if( CHECK_PTR(material) )// && material->materialTextures.size() != 0) 
-		//~ {
-			//~ for(auto map : material->materialTextures) // набор готовых указателей на VkTextures
-			//~ {
-				//~ // printVariable(map->_filename)
-				//~ // system("pause");
-				//~ createEntityDescriptorSets( map->_textureImageView, map->_textureSampler, entityParams.initSysname );	// когда буфер и текстуры созданы...
-				//~ break; // выход после 1 картинки
-			//~ }
-			
-			//~ // createEntityDescriptorSets( material->materialTextures[0]->_textureImageView, material->materialTextures[0]->_textureSampler, entityParams.initSysname );	// когда буфер и текстуры созданы...
-		
-			//~ entityMaterialsPtr.push_back( material );
-			//~ break;
-		//~ }
+		mi++;
 	}
 	//~ printMessage("Entity materials configured")
 	
 	
 	entityMeshPtr = g_GraphicsCore.Meshes.getAsset( entityParams.initMeshName );//std::make_shared<Mesh>(entityParams.initMeshName);
+		
+		
+	//~ createEntityMaterialInfoBuffer();
+	//~ createEntityGpassDescriptorSet( entityMaterialsPtr, entityParams.initSysname );	// когда буфер и текстуры созданы...	
+	//~ updateEntityMaterialInfoBuffer(0);
 	
-	//~ createEntityUniformBuffers();	// создание подключаемого буфера UBO с матрицами
-	
-	createEntityMaterialInfoBuffer();
-	
-	//~ if( CHECK_PTR(entityMaterialPtr) && entityMaterialPtr->materialTextures.size() != 0 && CHECK_PTR(entityMaterialPtr->materialTextures[0]) ) 
-	//~ if( CHECK_PTR(entityMaterialsPtr) && entityMaterialsPtr->materialTextures.size() != 0 && CHECK_PTR(entityMaterialPtr->materialTextures[0]) ) 
-	{
-		//~ createEntityDescriptorSets( entityMaterialPtr->materialTextures[0]->_textureImageView, entityMaterialPtr->materialTextures[0]->_textureSampler, entityParams.initSysname );	// когда буфер и текстуры созданы...
-		//~ createEntityDescriptorSets( entityMaterialPtr, entityParams.initSysname );	// когда буфер и текстуры созданы...
-	}
-	
-	//~ printMessage("ready to create entity descriptor")	
-
-	createEntityGpassDescriptorSet( entityMaterialsPtr, entityParams.initSysname );	// когда буфер и текстуры созданы...
-	
-	
-	updateEntityMaterialInfoBuffer(0);
 }
 
 
 Entity::~Entity() 
 {
 	
-	destroyEntityMaterialInfoBuffer();
+	//~ destroyEntityMaterialInfoBuffer();
 	
 	//~ printMessage("\nDestructor of entity!\n") 
 
-	//~ TEXTURE.reset();
 }
-
-
-//~ void Entity::createEntityUniformBuffers()
-//~ {
-	//~ // создание в видеопамяти буфера для шейдерных переменных и "прокидывание" прямого доступа к нему
-		
-	//~ // 1 - размер буфера загружаемых в шейдер (ВЫРОВНЕННЫХ!) данных
-	//~ VkDeviceSize bufferSize = sizeof(UniformBufferObject);			// размер буфера = 3*(4*4)*4 = 192 байта
-			
-	//~ // 2 - усечение/актуализация размера векторов данных объекта: для каждого кадра свой буфер, кусок памяти и прочая обвязка
-	//~ uniformBuffers.resize(MAX_FRAMES_IN_FLIGHT);
-	//~ uniformBuffersMemory.resize(MAX_FRAMES_IN_FLIGHT);
-	//~ uniformBuffersMapped.resize(MAX_FRAMES_IN_FLIGHT);
-			
-	//~ // 3 - для каждого кадра из цепочки показа - аналогично как делали для буфера вершинных данных, только без vkUnmapMemory!
-	//~ for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) 
-	//~ {		
-		//~ //printMessage("bdbd")
-		//~ // 3.1 - создали host-side буфер и выделили ему ВИДИМУЮ! видеопамять
-		//~ g_GraphicsCore.createBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, 
-										//~ uniformBuffers[i], 
-										//~ uniformBuffersMemory[i] );
-	
-		//~ // 3.2 - сделали прямую ссылку на эту ВИДИМУЮ память и сохранили ее в вектор uniformBuffersMemory
-		//~ vkMapMemory(g_GraphicsCore.logicalDevice, uniformBuffersMemory[i], 0, bufferSize, 0, &uniformBuffersMapped[i] );
-
-		//~ // XXX буфер остается помеченым до конца жизни программы. Эта техника называется “persistent mapping” и работает на всех имплементациях Vulkan
-
-	//~ }
-	
-
-//~ }
-
-
-//~ void Entity::destroyEntityUniformBuffers()
-//~ {	
-	//~ for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
-	//~ {
-		//~ vkDestroyBuffer(g_GraphicsCore.logicalDevice, uniformBuffers[i], nullptr);
-		//~ vkFreeMemory(g_GraphicsCore.logicalDevice,  uniformBuffersMemory[i], nullptr);			
-	//~ }
-//~ }
-
-//~ void Entity::updateEntityUniformBuffer(uint32_t currentImage)
-//~ {
-	//~ static auto startTime = std::chrono::high_resolution_clock::now();
-
-	//~ auto currentTime = std::chrono::high_resolution_clock::now();
-	//~ float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
-	
-	//~ UniformBufferObject ubo{};	
-	
-	//~ ubo.materialInfo = glm::mat4(1.0f);	//CHECK_PTR(entityMaterialPtr) ? entityMaterialPtr->getMatInfo() : glm::mat4(1.0f);
-	
-		
-	//~ glm::vec3 POV = CHECK_PTR(g_Camera) ? g_Camera->getActorPosition() : glm::vec3(-1.0f, 0.0f, 0.1f);
-	//~ glm::vec3 DOV = POV + (CHECK_PTR(g_Camera) ? g_Camera->getActorForwardVector() : glm::vec3(1.0f, 0.0f, 0.0f));//*Camera::rotation;	//glm::vec3(0.0f, 0.0f, 0.0f);
-	//~ glm::vec3 UP = glm::vec3(0.0f, 0.0f, 1.0f);
-		
-	//~ ubo.view = glm::lookAt(POV, DOV, UP);
-		
-	//~ if(CHECK_PTR(g_Camera)) ubo.proj = glm::perspective(glm::radians(g_Camera->fCameraFOV), (float) g_GraphicsCore.swapChainExtent.width / (float) g_GraphicsCore.swapChainExtent.height, g_Camera->fCameraViewNear, g_Camera->fCameraViewDepth);
-	//~ ubo.proj[1][1] *= -1; // GLM was originally designed for OpenGL, where the Y coordinate of the clip coordinates is inverted. 
-	
-
-	//~ memcpy( uniformBuffersMapped[currentImage], &ubo, sizeof(ubo)); // memcpy)dest, src, count
-//~ }
 
 
 
@@ -177,7 +81,7 @@ void Entity::createEntityMaterialInfoBuffer()
 {
 	// создание в видеопамяти буфера для шейдерных переменных и "прокидывание" прямого доступа к нему
 		
-	//~ printMessage("create entity material info buffer")	
+	// printMessage("create entity material info buffer")	
 	
 	// 1 - размер буфера загружаемых в шейдер (ВЫРОВНЕННЫХ!) данных
 	VkDeviceSize bufferSize = MAX_MATERIALS_PER_ENTITY * sizeof(FhMaterialInfo);			// размер буфера = 4*(4*4)*4 = 256 байта
@@ -191,7 +95,7 @@ void Entity::createEntityMaterialInfoBuffer()
 	// 3.2 - сделали прямую ссылку на эту ВИДИМУЮ память и сохранили ее в вектор uniformBuffersMemory
 	vkMapMemory(g_GraphicsCore.logicalDevice, materialInfoBufferMemory, 0, bufferSize, 0, &materialInfoBufferMapped );
 	
-	//~ printMessage("createEntityMaterialInfoBuffer OK")	
+	// printMessage("createEntityMaterialInfoBuffer OK")	
 
 }
 
@@ -219,8 +123,6 @@ void Entity::updateEntityMaterialInfoBuffer(uint32_t currentImage)
 		}
 	}
 	
-	//~ memcpy( materialInfoBufferMapped, &MaterialInfos, sizeof(MaterialInfos)); // memcpy)dest, src, count
-
 	memcpy( materialInfoBufferMapped, MaterialInfos.data(), MAX_MATERIALS_PER_ENTITY*sizeof(FhMaterialInfo)); // memcpy)dest, src, count
 }
 
@@ -232,7 +134,7 @@ void Entity::updateEntityMaterialInfoBuffer(uint32_t currentImage)
 void Entity::createEntityGpassDescriptorSet( std::vector<std::shared_ptr<Material>> materials, std::string entityName )
 {
 	
-	//~ printMessage("Vanguiu, zdes")
+	// printMessage("Vanguiu, zdes")
 	
 	VkDescriptorSetAllocateInfo allocInfo{};
 		allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
@@ -251,7 +153,7 @@ void Entity::createEntityGpassDescriptorSet( std::vector<std::shared_ptr<Materia
 	}
 		
 		
-	//~ printMessage("flag 1")	
+	// printMessage("flag 1")	
 		
 	// 3 - связываем реальные ресурсы с дескрипторами
 	// 3.1 информация о буфере матриц PVM		
@@ -266,18 +168,18 @@ void Entity::createEntityGpassDescriptorSet( std::vector<std::shared_ptr<Materia
 		bufferInfos[1].offset = 0;
 		bufferInfos[1].range = MAX_MATERIALS_PER_ENTITY*sizeof(FhMaterialInfo);			// если переписывать буфер целиком, можно тут указать VK_WHOLE_SIZE
 	
-		//~ // binding 6
-		//~ bufferInfos[2].buffer = g_GraphicsCore.lightsUniformBuffers;	// ссылка на конкретный буфер lights
-		//~ bufferInfos[2].offset = 0;
-		//~ bufferInfos[2].range = sizeof(FhIlluminationInfo);				// если переписывать буфер целиком, можно тут указать VK_WHOLE_SIZE
+		// // binding 6
+		// bufferInfos[2].buffer = g_GraphicsCore.lightsUniformBuffers;	// ссылка на конкретный буфер lights
+		// bufferInfos[2].offset = 0;
+		// bufferInfos[2].range = sizeof(FhIlluminationInfo);				// если переписывать буфер целиком, можно тут указать VK_WHOLE_SIZE
 	
-	//~ printMessage("flag 2")		
+	// printMessage("flag 2")		
 
 	// 3.2 - информация о текстурах
-	//~ VkDescriptorImageInfo imageInfo{};
-		//~ imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-		//~ imageInfo.imageView = imageView;//textureImageView;
-		//~ imageInfo.sampler = sampler;//textureSampler;
+	// VkDescriptorImageInfo imageInfo{};
+		// imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+		// imageInfo.imageView = imageView;//textureImageView;
+		// imageInfo.sampler = sampler;//textureSampler;
 		
 	// к шейдеру прикрепляются максимум 64 картинки: MAX_MATERIALS_PER_ENTITY массива текстур (т.е. материалы), каждый по MAX_SAMPLERS_PER_MATERIAL сэмплера
 	std::array<VkDescriptorImageInfo, MAX_MATERIALS_PER_ENTITY*MAX_SAMPLERS_PER_MATERIAL> materials_textures {};			
@@ -288,12 +190,12 @@ void Entity::createEntityGpassDescriptorSet( std::vector<std::shared_ptr<Materia
 		int mat = i/MAX_SAMPLERS_PER_MATERIAL;	// 0 0 0 0 0 0 0 0 0 0 0  0  0  0  0  0  1 1 1 1 1 1 1 1 1 1 1  1  1  1  1  1
 		 
 		 
-		//~ if(tex == 0) { printVarComment("\n\t\t", mat)	}
-		//~ else { printVarComment("\t\t\t", mat) }
+		// if(tex == 0) { printVarComment("\n\t\t", mat)	}
+		// else { printVarComment("\t\t\t", mat) }
 		
-		//~ std::shared_ptr<Material> material = g_GraphicsCore.Materials.getAsset(); // первый валидный материал
+		// std::shared_ptr<Material> material = g_GraphicsCore.Materials.getAsset(); // первый валидный материал
 		 
-		//~ if(!materials.empty() && material != nullptr && !material->vpMaterialTextures.empty() )	
+		// if(!materials.empty() && material != nullptr && !material->vpMaterialTextures.empty() )	
 		if(!materials.empty() && !materials[0]->vpMaterialTextures.empty() ) // если есть хоть один материал и в нем есть хоть одна текстура
 		{
 			// везде будет 0-я картинка 0-го материала
@@ -308,16 +210,26 @@ void Entity::createEntityGpassDescriptorSet( std::vector<std::shared_ptr<Materia
 			materials_textures[i].sampler = materials[0]->vpMaterialTextures[0]->_textureSampler;// materials[0]->vpMaterialTextures[0]->_textureSampler;
 		}
 		else
-		{
-			#ifdef ENTITY_DEBUG
-				printVarComment("Error: no valid image texture for entity: ", entityName)
-				DEBUG_INFO
-			#endif
+		{			
+			// заглушка из fhRender.h
+			if( HANDLE_VALID( g_GraphicsCore.gPassImageView[G_PASS_COLOR_ATTACHMENT] ) 
+				&& HANDLE_VALID( g_GraphicsCore.gPassImageSampler[G_PASS_COLOR_ATTACHMENT] ) )
+			{
+				materials_textures[i].imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+				materials_textures[i].imageView = g_GraphicsCore.plugImageView;			//gPassImageView[G_PASS_COLOR_ATTACHMENT];
+				materials_textures[i].sampler = g_GraphicsCore.plugImageSampler;		//gPassImageSampler[G_PASS_COLOR_ATTACHMENT];
+				
+				#ifdef ENTITY_DEBUG
+					printVarComment("Error: no valid image texture for entity: ", entityName)
+					printMessage("\tUsing a plug")
+					DEBUG_INFO
+				#endif
+			}
 		}
 		
-		//~ if(  	 materials.size() >= (mat+1) // i != 0
-						//~ && materials[mat]->vpMaterialTextures.size() >= (tex+1) 
-						//~ && CHECK_PTR(materials[mat]->vpMaterialTextures[tex]) )
+		// if(  	 materials.size() >= (mat+1) // i != 0
+						// && materials[mat]->vpMaterialTextures.size() >= (tex+1) 
+						// && CHECK_PTR(materials[mat]->vpMaterialTextures[tex]) )
 		if(  	 materials.size() >= (mat+1) // точно есть mat-й матерал
 						&& materials[mat]->vpMaterialTextures.size() >= (tex+1) // точно есть tex-ая текстура
 						&& CHECK_PTR(materials[mat]->vpMaterialTextures[tex]) )
@@ -332,7 +244,7 @@ void Entity::createEntityGpassDescriptorSet( std::vector<std::shared_ptr<Materia
 		
 	}
 	
-	//~ printMessage("flag 3")	
+	// printMessage("flag 3")	
 	
 	// 4 - описание дескрипторов
 	std::array<VkWriteDescriptorSet, 6> descriptorWrites{};
@@ -358,7 +270,7 @@ void Entity::createEntityGpassDescriptorSet( std::vector<std::shared_ptr<Materia
 			descriptorWrites[b].pImageInfo = materials_textures.data() + (b-1)*MAX_SAMPLERS_PER_MATERIAL;//MAX_MATERIALS_PER_ENTITY;	// из общего массива materials_textures берем начало с соответствующим смещением
 		}
 
-		//~ printMessage("flag 4")	
+		// printMessage("flag 4")	
 
 		// material infos buffer: struct FhMaterialInfo
 		descriptorWrites[5].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
@@ -369,17 +281,17 @@ void Entity::createEntityGpassDescriptorSet( std::vector<std::shared_ptr<Materia
 		descriptorWrites[5].descriptorCount = 1;
 		descriptorWrites[5].pBufferInfo = &bufferInfos[1];
 
-		//~ // LIGHTS buffer: struct FhIlluminationInfo
-		//~ descriptorWrites[6].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		//~ descriptorWrites[6].dstSet = GpassDescriptorSet;
-		//~ descriptorWrites[6].dstBinding = 6;							// в вершинном (!) шейдере: layout(binding = 6) uniform FhIlluminationInfo 
-		//~ descriptorWrites[6].dstArrayElement = 0;
-		//~ descriptorWrites[6].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-		//~ descriptorWrites[6].descriptorCount = 1;
-		//~ descriptorWrites[6].pBufferInfo = &bufferInfos[2];
+		// // LIGHTS buffer: struct FhIlluminationInfo
+		// descriptorWrites[6].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		// descriptorWrites[6].dstSet = GpassDescriptorSet;
+		// descriptorWrites[6].dstBinding = 6;							// в вершинном (!) шейдере: layout(binding = 6) uniform FhIlluminationInfo 
+		// descriptorWrites[6].dstArrayElement = 0;
+		// descriptorWrites[6].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		// descriptorWrites[6].descriptorCount = 1;
+		// descriptorWrites[6].pBufferInfo = &bufferInfos[2];
 		
 
-	//~ printMessage("Descriptor set of entity updated")	
+	// printMessage("Descriptor set of entity updated")	
 
 
 	// 5 - обновление содержимого

@@ -94,11 +94,14 @@ struct FhGeneralInfo	// common data for G-pass. (former UniformBufferObject)
 
 struct FhGpassPushConstantsInfo // per-entity personal data for G-pass
 {
-	glm::mat4 model;				// entity model matrix
-	uint32_t type;
-	uint32_t reserve1;
-	float reserve2;
-	float reserve3;
+	// minimum 128 bytes: 
+				glm::mat4 model;				// 64 bytes.	Матрица 00 01 02 03 - 60 61 62 63
+	alignas(16) uint32_t type;					// 68 bytes.	Число 64 65 66 67
+				uint32_t uboOffset;				// 72 bytes.	Число 68 69 70 71
+				float reserve2;					// 76 bytes.	Число 72 73 74 75
+				float reserve3;					// 80 bytes.	Число 76 77 78 79
+	alignas(16) uint8_t materialIndexes[48];	//				Число 80 81 82 83 - 127
+	// We`ll pack here 48 short integers and in GLSL (read by 4 bytes straight) decomposite it using bitwise operatons
 };
 
 

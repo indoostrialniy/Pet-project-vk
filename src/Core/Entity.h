@@ -54,36 +54,25 @@ public:
 	
 	// entity resources
 	std::shared_ptr<Mesh>					entityMeshPtr;
-	//~ std::shared_ptr<Material>				entityMaterialPtr;
 	std::vector<std::shared_ptr<Material>>	entityMaterialsPtr;
+	
+	// incremented by 1
+	uint8_t materialRetargets[48] {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
 		
-    //~ std::shared_ptr<VkTexture>	TEXTURE; 
-    
-    //~ void createEntityUniformBuffers(); // создание в видеопамяти буфера для шейдерных переменных и "прокидывание" прямого доступа к нему
-    //~ void destroyEntityUniformBuffers();
-    //~ void updateEntityUniformBuffer(uint32_t currentImage);
-
+    // G-pass section start
 	void createEntityMaterialInfoBuffer();
 	void destroyEntityMaterialInfoBuffer();
 	void updateEntityMaterialInfoBuffer(uint32_t currentImage);
 
-	// G-pass section start
 	VkDescriptorSet GpassDescriptorSet;	// объект, определяющий, какие именно ресурсы надо привязать к шейдеру. ubo (PVM) + texture. Биндится для отрисовки. Не надо удалять вручную. Удаляются автоматически вместе с пулом
 
     void createEntityGpassDescriptorSet( std::vector<std::shared_ptr<Material>> material, std::string entityName ); // текстура и сэмплер для нее встраиваются в descriptor set. удаление не нужно, ибо происходит автоматически
-	// G-pass section end
 
-    
-	//~ // для каждого объекта нужны нижеприведенные хэндлеры по числу кадров в swapchain - MAX_FRAMES_IN_FLIGHT
-	//~ std::vector<VkBuffer> 		 uniformBuffers;							// host-side хэндлер буфера для переменных (матриц)		
-	//~ std::vector<VkDeviceMemory>  uniformBuffersMemory;					// кусок видеопамяти для буфера переменных
-	//~ std::vector<void*> 			 uniformBuffersMapped;					// адрес видеопамяти для прямого доступа из функции updateEntityUniformBuffer() и т.п.
-	
-	// material infos buffer
+	//~ // material infos buffer
 	VkBuffer 		 			materialInfoBuffer;							// host-side хэндлер буфера для переменных (матриц)		
 	VkDeviceMemory  			materialInfoBufferMemory;					// кусок видеопамяти для буфера переменных
 	void*					 	materialInfoBufferMapped;					// адрес видеопамяти для прямого доступа из функции updateEntityUniformBuffer() и т.п.
-	
+	// G-pass section end
 	
 	
 	

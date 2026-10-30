@@ -24,7 +24,8 @@ const std::vector<const char*> validationLayers = {
 
 // список необходимых расширений устройства
 const std::vector<const char*> deviceExtensions = {
-    VK_KHR_SWAPCHAIN_EXTENSION_NAME
+    VK_KHR_SWAPCHAIN_EXTENSION_NAME,
+    "VK_EXT_descriptor_indexing"
 };
 
 
@@ -83,6 +84,7 @@ public:
     VkDescriptorPool 			descriptorPool_G 		{ VK_NULL_HANDLE };			// объект, выделяющий и владеющий местом для descriptor sets? пул дескрипторов для шейдерных переменных - один. Надо удалять вручную
     VkPipelineLayout 			pipelineLayout_G 		{ VK_NULL_HANDLE };			// обобщенное описание (доступа конвейера к) ЛЮБЫХ передаваемых в шейдеры переменных - ресурсов (descriptorSetLayout) и чисел (push-констант), которые могут быть обновлены во время отрисовки. pipeline layout используется при "жизни" программы, поэтому надо вручную удалить в конце
     VkPipeline 					pipeline_G  			{ VK_NULL_HANDLE };			// может ссылаться на descriptorSetLayout. Это "рецепт" генерации кадра: какие этапы + каким рендерпасом + какие могут быть точки подключения
+    VkDescriptorSet				descriptorSet_G			{ VK_NULL_HANDLE };
     
     static constexpr int gPassAttachmentsCount = 6;									// G_PASS_ATTACHMENTS количество выходных прикреплений к G-пассу
     
@@ -103,6 +105,31 @@ public:
 		void destroyGpassGeneralInfoBuffer();
 		void updateGpassGeneralInfoBuffer();
     //FhGeneralInfo buffer creation end
+    
+    //~ // material infos buffer
+	VkBuffer 		 			materialInfoBuffer;							// host-side хэндлер буфера для переменных (матриц)		
+	VkDeviceMemory  			materialInfoBufferMemory;					// кусок видеопамяти для буфера переменных
+	void*					 	materialInfoBufferMapped;
+	
+    void createMaterialInfoBuffer();
+	void destroyMaterialInfoBuffer();
+	void updateMaterialInfoBuffer();
+    
+    // gpass instancing start
+    //~ std::vector<VkBuffer> 		 			instancedPushInfoBuffer;							// host-side хэндлер буфера для переменных (матриц)		
+	//~ std::vector<VkDeviceMemory>  			instancedPushInfoBufferMemory;					// кусок видеопамяти для буфера переменных
+	//~ std::vector<void*>					 	instancedPushInfoBufferMapped;
+	VkBuffer 		 			instancedPushInfoBuffer;							// host-side хэндлер буфера для переменных (матриц)		
+	VkDeviceMemory  			instancedPushInfoBufferMemory;					// кусок видеопамяти для буфера переменных
+	void*					 	instancedPushInfoBufferMapped;
+	
+	bool updated = false;
+	
+    void createInstancedPushInfoBuffer();
+	void destroyInstancedPushInfoBuffer();
+	void updateInstancedPushInfoBuffer();
+    // gpass instancing end
+    
     // deferred G-pass end
     
     
@@ -164,6 +191,11 @@ public:
     // Final-pass end
     
     
+    
+    VkImage plugImage;
+    VkDeviceMemory plugImageMemory;
+    VkImageView plugImageView;
+    VkSampler plugImageSampler;
     
     
     

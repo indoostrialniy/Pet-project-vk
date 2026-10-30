@@ -3,12 +3,15 @@
 #include "macros.h"
 //~ #include "auxiliary.h" //Stopwatch definition
 
+#include <algorithm>
+#include <ranges>
+
 #include "Entity.h"
 #include "fhRender.h"
 #include "globals.h"
 #include "Mesh.h"
 
-#define MICROWORLD_DEBUG
+//~ #define MICROWORLD_DEBUG
 
 MicroWorld::MicroWorld(Graphics& core) : g_GraphicsCore(core)
 {
@@ -113,18 +116,22 @@ glm::vec3 MicroWorld::getActorUpVector()
 
 
 // TAGS
-bool MicroWorld::addTag( const std::string& tag )
+void MicroWorld::addTag( int tag )	//const std::string& tag )
 {
 	tags.push_back(tag);
-	return true;
+	//return true;
 }
 
-bool MicroWorld::removeTag( const std::string& tag )
+void MicroWorld::removeTag( int tag )	//const std::string& tag )
 {
-	return true;
+	//return true;
 }
 
-
+bool MicroWorld::hasTag( int tag )	//const std::string& tag )
+{
+	bool hasVal = (std::find(tags.begin(), tags.end(), tag) != tags.end());  // true	bool hasVal = std::ranges::contains(tags, 3) ? true : false;  // true
+	return hasVal;
+}
 
 
 // TRANSFORMS

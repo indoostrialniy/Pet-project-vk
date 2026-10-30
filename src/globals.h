@@ -52,11 +52,12 @@ extern uint32_t 				HEIGHT;// = 768;
 constexpr int 					MAX_FRAMES_IN_FLIGHT = 3;				// MAX_FRAMES_IN_FLIGHT — это сколько кадров CPU/GPU будет обрабатывать 
 																		// одновременно, а количество изображений в swapchain — это сколько 
 																		// color images вообще есть у цепочки показа
+constexpr int					MAX_MATERIALS = 128;					// сколько разных материалов вообще может быть в игре
 
-constexpr int					MAX_MATERIALS_PER_ENTITY = 4;			// максимум материалов, назначаемых одному объекту
+constexpr int					MAX_MATERIALS_PER_ENTITY = 48;			// максимум материалов, назначаемых одному объекту
 constexpr int					MAX_SAMPLERS_PER_MATERIAL = 16;			// максимум текстурных сэмплеров в 1 материале
 
-
+constexpr int					MAX_ENTITIES_FOR_INSTANCING = 64;		// максимум сущностей для рендеринга за один вызов отрисовки
 constexpr int					MAX_ENTITIES_IN_ACTION = 500;			// максимум объектов на сцене
 
 constexpr int					MAX_DYNAMIC_LIGHT_SOURCES = 16;			// максимум динамических источников света

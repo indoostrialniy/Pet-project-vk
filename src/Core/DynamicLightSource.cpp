@@ -32,8 +32,18 @@ DynamicLight::DynamicLight( const FhMicroWorldInitializationInfo& info ) : Micro
 	blendWidth 	= info.blendWidth;
 	index 		= info.index;
 	
-	shadowExtent.width 	= SHADOWMAP_WIDTH;
-	shadowExtent.height = SHADOWMAP_HEIGHT;
+	//~ shadowExtent.width 	= 1024;
+	//~ shadowExtent.height = 1024;
+	shadowExtent.width 	= 512;
+	shadowExtent.height = 512;
+	//~ shadowExtent.width 	= SHADOWMAP_WIDTH;
+	//~ shadowExtent.height = SHADOWMAP_HEIGHT;
+	
+	
+	addTag(FH_ACTOR_TAG_DYNAMIC_LIGHT);
+	
+	// 1. обязательно обновить матрицу векторов собственного пространства
+	m3VectorsForwardLeftUp = mat3_cast(rotation) * glm::mat3(1.0f);
 			
 	switch( DynamicLight::type )
 	{
@@ -169,7 +179,26 @@ void DynamicLight::createShadowpassSpot()
 			g_GraphicsCore.createImage(shadowExtent.width, shadowExtent.height, depthFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 
 						dynamicLightShadowImage[i], dynamicLightShadowImageMemory[i] );
 			
-			dynamicLightShadowImageView[i] = g_GraphicsCore.createImageView( dynamicLightShadowImage[i], depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT);
+			//~ dynamicLightShadowImageView[i] = g_GraphicsCore.createImageView( dynamicLightShadowImage[i], depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT);
+				// 1 - указание данных об изображении
+				VkImageViewCreateInfo viewInfo{};									// структура для настройка обертки изображения
+					viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+					viewInfo.image = dynamicLightShadowImage[i];	//VkImage
+					viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+					viewInfo.format = depthFormat;	//VK_FORMAT_R8G8B8A8_SRGB
+					viewInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;//VK_IMAGE_ASPECT_COLOR_BIT;
+					viewInfo.subresourceRange.baseMipLevel = 0;
+					viewInfo.subresourceRange.levelCount = 1;
+					viewInfo.subresourceRange.baseArrayLayer = 0;
+					viewInfo.subresourceRange.layerCount = 1;
+
+				VkResult result = vkCreateImageView(g_GraphicsCore.logicalDevice, &viewInfo, nullptr, &dynamicLightShadowImageView[i]);
+				if( result != VK_SUCCESS) 
+				{
+					g_GraphicsCore.checkResult(result);
+					DEBUG_INFO
+					throw std::runtime_error("failed to create image view!");
+				}
 			
 			g_GraphicsCore.createTextureSampler( dynamicLightShadowImageSampler[i] );
 		}
@@ -855,33 +884,31 @@ void DynamicLight::recordShadowpassCommand( VkCommandBuffer& commandBuffer )
 			// DRAW ENTITIES
 			if( CHECK_PTR(g_Lab) )
 			{
+				//~ printMessage("Flag C1")
+				if( type == FH_DYNAMIC_LIGHTSOURCE_OMNIDIRECTIONAL)
+				{
+					vkCmdBindDescriptorSets( commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout_Shadow, 0, 1, &dynamicLightOmniSet, 0, nullptr);	// привязали дексриптор, где хранятся ссылки на наши матрицы PVM и текстуры
+				}
+				if( type == FH_DYNAMIC_LIGHTSOURCE_SPOT)
+				{
+					vkCmdBindDescriptorSets( commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout_Shadow, 0, 1, &dynamicLightSpotSet, 0, nullptr);	// привязали дексриптор, где хранятся ссылки на наши матрицы PVM и текстуры
+				}
+				constants.PV = getLightSourcePV();			
+				//~ printMessage("Flag C2")
+				
 				for(auto act : g_Lab->actors)
 				{
 					for(auto ent : act.second->components)
 					{
-						if( CHECK_PTR(ent.second->entityMeshPtr) )
+						if( CHECK_PTR(ent.second->entityMeshPtr) 
+							&& glm::length(ent.second->position - position) < 1.0*radius
+						)
 						{
-							vkCmdBindVertexBuffers( commandBuffer, 0, 1, &ent.second->entityMeshPtr->getMeshVertexBuffer(), offsets);	
+							vkCmdBindVertexBuffers( commandBuffer, 0, 1, &ent.second->entityMeshPtr->getMeshVertexBuffer(), offsets);	// bind mesh
 				
-							//~ printMessage("Flag C1")
-				
-							if( type == FH_DYNAMIC_LIGHTSOURCE_OMNIDIRECTIONAL)
-							{
-								vkCmdBindDescriptorSets( commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout_Shadow, 0, 1, &dynamicLightOmniSet, 0, nullptr);	// привязали дексриптор, где хранятся ссылки на наши матрицы PVM и текстуры
-							}
-							if( type == FH_DYNAMIC_LIGHTSOURCE_SPOT)
-							{
-								vkCmdBindDescriptorSets( commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout_Shadow, 0, 1, &dynamicLightSpotSet, 0, nullptr);	// привязали дексриптор, где хранятся ссылки на наши матрицы PVM и текстуры
-							}
-							
-							
-							ent.second->configureModelMatrix( modelMatrix );
+							ent.second->configureModelMatrix( modelMatrix );	// make model matrix
 								
-							constants.model = ent.second->entityMatrix;	//modelMatrix;
-							
-							constants.PV = getLightSourcePV();
-							
-							//~ printMessage("Flag C2")
+							constants.model = ent.second->entityMatrix;			// load model matrix;
 							
 							vkCmdPushConstants(commandBuffer, pipelineLayout_Shadow, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(FhShadowpassPushConstantsInfo), &constants);	//upload the matrix to the GPU via push constants
 							
@@ -932,7 +959,7 @@ void DynamicLight::createShadowpassOmni()
 			imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
 			imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
 			imageInfo.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT 
-							| VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT ;
+							| VK_IMAGE_USAGE_SAMPLED_BIT;					// | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT ;
 			imageInfo.flags = VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT; // ← важно для кубмапа
 			
 		VkResult result = vkCreateImage( g_GraphicsCore.logicalDevice, &imageInfo, nullptr, &cubeMap);
@@ -1045,7 +1072,7 @@ void DynamicLight::createShadowpassOmni()
 		VkAttachmentDescription depthAttachment;
 			depthAttachment.format = VK_FORMAT_D32_SFLOAT;//g_GraphicsCore.findDepthFormat();
 			depthAttachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-			depthAttachment.flags = VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT; // 0
+			depthAttachment.flags = 0;	//VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT; // 0
 			depthAttachment.samples = VK_SAMPLE_COUNT_1_BIT;						// 1 => без мультисемплинга
 			depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;					// заливать буфер одним цветом перед каждым кадром (назначать всем значениям некую константу)
 			depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;					// результат отрисовки будет сохранен в память и может быть считан потом
@@ -1441,7 +1468,7 @@ void DynamicLight::createShadowpassOmni()
 			viewportState.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;	// 22
 			viewportState.viewportCount = dynamicLightMapsCount; // 6
 			viewportState.scissorCount = dynamicLightMapsCount;	 //6
-			viewportState.flags = VK_DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT; // для Geometry-шейдера
+			viewportState.flags = 0;		//VK_DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT; // для Geometry-шейдера
 		// ... а реальные вьюпорт и ножницы затем можно будет указывать во время отрисовки (через command buffer)
 	
 					
@@ -1582,7 +1609,7 @@ void DynamicLight::destroyShadowpassOmni()
 
 void DynamicLight::createEdgeMatricesBuffer()
 {
-	if( HANDLE_NULL(edgeMatricesBuffer) && HANDLE_NULL(edgeMatricesBufferMemory) && !CHECK_PTR(edgeMatricesBufferMapped) )
+	if( HANDLE_NULL(edgeMatricesBuffer) && HANDLE_NULL(edgeMatricesBufferMemory) && edgeMatricesBufferMapped == nullptr )
 	{	
 		// создание в видеопамяти буфера для шейдерных переменных и "прокидывание" прямого доступа к нему
 		// 1 - размер буфера загружаемых в шейдер (ВЫРОВНЕННЫХ!) данных
@@ -1595,6 +1622,11 @@ void DynamicLight::createEdgeMatricesBuffer()
 
 		// 3.2 - сделали прямую ссылку на эту ВИДИМУЮ память и сохранили ее в вектор uniformBuffersMemory
 		vkMapMemory(g_GraphicsCore.logicalDevice, edgeMatricesBufferMemory, 0, bufferSize, 0, &edgeMatricesBufferMapped );
+	}
+	else
+	{
+		DEBUG_INFO
+		printMessage("Something is wrong with createEdgeMatricesBuffer()!")
 	}
 }
 	

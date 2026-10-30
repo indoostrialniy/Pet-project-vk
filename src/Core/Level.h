@@ -31,6 +31,8 @@ public:
 
 	std::shared_ptr<MicroWorld> getActor(const std::string actorName);
 	
+	std::vector<std::shared_ptr<MicroWorld>> getActorsWithTag(int tag);
+	
 	Graphics& g_GraphicsCore;		
 	
 	template <typename T>

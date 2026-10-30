@@ -332,9 +332,11 @@ void Graphics::createLogicalDevice()
 	
 	
 	// 4 - фичи видеокарты
-	VkPhysicalDeviceFeatures deviceFeatures{};						// пока пусто?
+	VkPhysicalDeviceFeatures deviceFeatures{};						
 		deviceFeatures.geometryShader = VK_TRUE;
-
+		deviceFeatures.multiViewport = VK_TRUE;
+		deviceFeatures.shaderSampledImageArrayDynamicIndexing  = VK_TRUE;
+		
 	// 5 - прописываем информацию о создаваемом логическом устройстве
 	VkDeviceCreateInfo createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
@@ -344,12 +346,34 @@ void Graphics::createLogicalDevice()
 		createInfo.pQueueCreateInfos = queueCreateInfos.data();									// занесли инфу об очередях
 
 		// 5.2 - фичи
-		createInfo.pEnabledFeatures = &deviceFeatures;											
+		// createInfo.pEnabledFeatures = &deviceFeatures;											
 
 		// 5.3 - требуемые расширения
 		createInfo.enabledExtensionCount = static_cast<uint32_t>(deviceExtensions.size());		// количество
 		createInfo.ppEnabledExtensionNames = deviceExtensions.data();							// инфа
-		
+	
+		// Сначала описываем, какие фичи нам нужны
+		VkPhysicalDeviceDescriptorIndexingFeaturesEXT indexingFeatures{};
+			indexingFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT;
+			indexingFeatures.pNext = nullptr;
+
+			// ВАЖНО: включаем динамическую индексацию массивов сэмплеров
+			indexingFeatures.shaderSampledImageArrayNonUniformIndexing  = VK_TRUE;	//shaderSampledImageArrayDynamicIndexing = VK_TRUE;
+
+			// (Опционально) если планируешь менять MIP-уровень динамически
+			//indexingFeatures.shaderResourceMinLod = VK_TRUE; 
+
+		// Теперь оборачиваем это в VkPhysicalDeviceFeatures2, чтобы передать в vkCreateDevice
+		VkPhysicalDeviceFeatures2 features2{};
+			features2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
+			features2.pNext = &indexingFeatures;
+			features2.features = deviceFeatures;
+
+		// И передаём в createInfo
+		createInfo.pEnabledFeatures = nullptr; // Если используешь features2, старое поле не используй
+		createInfo.pNext = &features2;          // <-- это ключ: фичи идут через pNext
+
+
 		//~ // 5.4 - слои валидации
 		//~ if (enableValidationLayers) 
 		//~ {

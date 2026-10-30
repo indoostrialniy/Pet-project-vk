@@ -14,11 +14,16 @@
 #include <glm/glm.hpp>
 #include "Weapon.h"
 
+#include <tuple>
+#include <memory>
+
 //~ Game::Game()
 //~ {
 	
 //~ }
 
+
+#define INSTANCED_RENDERING
 
 void Graphics::run() 
 {
@@ -60,7 +65,7 @@ void Graphics::initVulkan()
 	
 	// vulkan inited!
 	
-	createGpass();
+	//~ createGpass();
 
 	createLpassDynamicLightSourceInfoBuffer();
 	
@@ -121,7 +126,9 @@ void Graphics::spawns()	// calls from main.cpp
 void Graphics::createDeferredPipeline()
 {
 	
-	
+	createGpass();
+
+	//~ createLpassDynamicLightSourceInfoBuffer();
 
 	
 	createFullscreenQuad();
@@ -160,20 +167,20 @@ void Graphics::mainLoop()
 			flagE = false;
 			printMessage("E Pressed!")
 			
-			if(CHECK_PTR(g_Lab))
-			{
-				//~ auto ScenaActor = g_Lab->getActor("Scena");
-				if(CHECK_PTR(g_Lab->getActor("SR3")))
-				{
-					std::shared_ptr<Weapon> DC = std::dynamic_pointer_cast<Weapon>(g_Lab->getActor("SR3"));
-					if( CHECK_PTR(DC) )
-					{
-						//DC->wpnShoot();		//moving();
-					}
-				}
-			}
+			//~ if(CHECK_PTR(g_Lab))
+			//~ {
+				//~ // auto ScenaActor = g_Lab->getActor("Scena");
+				//~ if(CHECK_PTR(g_Lab->getActor("SR3")))
+				//~ {
+					//~ std::shared_ptr<Weapon> DC = std::dynamic_pointer_cast<Weapon>(g_Lab->getActor("SR3"));
+					//~ if( CHECK_PTR(DC) )
+					//~ {
+						//~ //DC->wpnShoot();		//moving();
+					//~ }
+				//~ }
+			//~ }
 						
-			UPD = true;			
+			//~ UPD = true;			
 		}
 		if( !g_Key[GLFW_KEY_E] && !flagE)
 		{
@@ -186,20 +193,20 @@ void Graphics::mainLoop()
 			flagG = false;
 			printMessage("G Pressed!")
 			
-			if(CHECK_PTR(g_Lab))
-			{
-				//~ auto ScenaActor = g_Lab->getActor("Scena");
-				if(CHECK_PTR(g_Lab->getActor("SR3")))
-				{
-					std::shared_ptr<Weapon> DC = std::dynamic_pointer_cast<Weapon>(g_Lab->getActor("SR3"));
-					if( CHECK_PTR(DC) )
-					{
-						//DC->wpnChangePriklad();	
-					}
-				}
-			}
+			//~ if(CHECK_PTR(g_Lab))
+			//~ {
+				//~ // auto ScenaActor = g_Lab->getActor("Scena");
+				//~ if(CHECK_PTR(g_Lab->getActor("SR3")))
+				//~ {
+					//~ std::shared_ptr<Weapon> DC = std::dynamic_pointer_cast<Weapon>(g_Lab->getActor("SR3"));
+					//~ if( CHECK_PTR(DC) )
+					//~ {
+						//~ //DC->wpnChangePriklad();	
+					//~ }
+				//~ }
+			//~ }
 			
-			UPD = true;			
+			//~ UPD = true;			
 		}
 		if( !g_Key[GLFW_KEY_G] && !flagG)
 		{
@@ -212,20 +219,20 @@ void Graphics::mainLoop()
 			flagR = false;
 			printMessage("R Pressed!")
 			
-			if(CHECK_PTR(g_Lab))
-			{
-				//~ auto ScenaActor = g_Lab->getActor("Scena");
-				if(CHECK_PTR(g_Lab->getActor("SR3")))
-				{
-					std::shared_ptr<Weapon> DC = std::dynamic_pointer_cast<Weapon>(g_Lab->getActor("SR3"));
-					if( CHECK_PTR(DC) )
-					{
-						//DC->wpnReload();	
-					}
-				}
-			}
+			//~ if(CHECK_PTR(g_Lab))
+			//~ {
+				//~ // auto ScenaActor = g_Lab->getActor("Scena");
+				//~ if(CHECK_PTR(g_Lab->getActor("SR3")))
+				//~ {
+					//~ std::shared_ptr<Weapon> DC = std::dynamic_pointer_cast<Weapon>(g_Lab->getActor("SR3"));
+					//~ if( CHECK_PTR(DC) )
+					//~ {
+						//~ //DC->wpnReload();	
+					//~ }
+				//~ }
+			//~ }
 			
-			UPD = true;			
+			//~ UPD = true;			
 		}
 		if( !g_Key[GLFW_KEY_R] && !flagR)
 		{
@@ -570,99 +577,253 @@ void Graphics::drawFrame()
 				
 				// DRAW ENTITIES
 				if( CHECK_PTR(g_Lab) )//g_SceneMicromir)
-				{
+				{	
+					if( HANDLE_VALID(descriptorSet_G) )
+					{
+						vkCmdBindDescriptorSets(_frames[currentFrame].commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout_G, 0, 1, &descriptorSet_G, 0, nullptr);	// привязали дексриптор, где хранятся ссылки на наши матрицы PVM и текстуры
+					}
+					else
+					{
+						system("pause");
+					}
+					
+					std::unordered_map<std::string, std::tuple<std::shared_ptr<Mesh>, int, std::array<FhGpassPushConstantsInfo, MAX_ENTITIES_IN_ACTION>>> uniqs;
+					
+
+					int entityLevelIndex = 0;
+					
 					for(auto act : g_Lab->actors)
 					{
 						//int i=0;
+						
+						//std::array<FhGpassPushConstantsInfo, MAX_ENTITIES_FOR_INSTANCING>  PushConstantsInfos;
+						
 						for(auto ent : act.second->components)	//int i=0; i<2; i++) g_SceneMicromir
 						{
+							
+							//~ if( dot( glm::normalize(ent.second->position - g_Camera->getActorPosition()), g_Camera->getActorForwardVector() ) < 0.4)
+							//~ {
+								//~ continue;	// сразу отбросим объект, не попадающий в камеру
+							//~ }
 							
 							//~ printVarComment("recordCommandBuffer ", ent.first)
 							if( CHECK_PTR(ent.second->entityMeshPtr) )
 							{
-								vkCmdBindVertexBuffers(_frames[currentFrame].commandBuffer, 0, 1, &ent.second->entityMeshPtr->getMeshVertexBuffer(), offsets);	
-								//~ printMessage("recordCommandBuffer Flag 0")
-					
-								vkCmdBindDescriptorSets(_frames[currentFrame].commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout_G, 0, 1, &ent.second->GpassDescriptorSet, 0, nullptr);	// привязали дексриптор, где хранятся ссылки на наши матрицы PVM и текстуры
+								//~ printVariable(ent.second->entityMeshPtr->getResourceName())
 								
-								//~ printMessage("recordCommandBuffer Flag 1")
-								
-								//~ if(i==0) g_SceneMicromir->configureModelMatrix(modelMatrix, glm::vec3(2,0,0), glm::quat(1,0,0,0) );
-								//~ if(i==1) g_SceneMicromir->configureModelMatrix(modelMatrix, glm::vec3(0,0,0), glm::quat(1,0,0,0) );
-								
-								ent.second->configureModelMatrix( modelMatrix );
-									
+								ent.second->configureModelMatrix( modelMatrix );	
 								constants.model = ent.second->entityMatrix;	//modelMatrix;
+								for(int i=0; i<48; i++)
+								{
+									constants.materialIndexes[i] = ent.second->materialRetargets[i];
+								}
+								constants.type = entityLevelIndex;//ent.second->entityType;
+								constants.uboOffset = 0;
+								constants.reserve2 = 0.0f;
+								constants.reserve3 = 0.0f;
 								
-								//constants.data[0] = 
-								
-								//~ if( CHECK_PTR(ent.second->entityMaterialPtr) )
-								//{
-									//constants.data[1] = 1.0f;	//ent.second->entityMaterialPtr->getMatInfo()[2][0];// UV scale
-								//}
-								
-								//~ if( ent.second->entityType == 1 ) // TRANSPARENT
-								//~ {
-									constants.type = ent.second->entityType;
-									constants.reserve1 = 0;
-									constants.reserve2 = 0.0f;
-									constants.reserve3 = 0.0f;
-								//~ }
-								//~ printMessage("recordCommandBuffer Flag 2")
-								//~ printMat4("entity ", constants.model ) 
+								#ifdef INSTANCED_RENDERING
 									
-								vkCmdPushConstants(_frames[currentFrame].commandBuffer, pipelineLayout_G, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(FhGpassPushConstantsInfo), &constants);	//upload the matrix to the GPU via push constants
-								vkCmdDraw(_frames[currentFrame].commandBuffer, static_cast<uint32_t>(ent.second->entityMeshPtr->getVerticesCount()), 1, 0, 0);	//vkCmdDraw(commandBuffer, vertexCount, instanceCount, firstVertexOffset, firstInstanceOffset);
+									if( uniqs.count(ent.second->entityMeshPtr->getResourceName()) == 0)	// если таких мешей еще не было
+									{
+										std::array<FhGpassPushConstantsInfo, MAX_ENTITIES_IN_ACTION> constants2;
+										constants2[0] = constants;
+										
+										uniqs[ent.second->entityMeshPtr->getResourceName()] = std::tuple<std::shared_ptr<Mesh>, int, std::array<FhGpassPushConstantsInfo, MAX_ENTITIES_IN_ACTION>>(ent.second->entityMeshPtr, 1, constants2); // кладем указатель и счетчик
+									}
+									else
+									{
+										if( get<1>( uniqs[ent.second->entityMeshPtr->getResourceName()] ) < MAX_ENTITIES_IN_ACTION-1 )
+										{
+											int newIndex = get<1>( uniqs[ent.second->entityMeshPtr->getResourceName()] ) + 1;	// increment counter
+											get<1>( uniqs[ent.second->entityMeshPtr->getResourceName()] ) = newIndex; 	// save new index
+											get<2>( uniqs[ent.second->entityMeshPtr->getResourceName()] )[newIndex] = constants; // new pushconstants
+										}
+										else
+										{
+											printMessage("Current entity could`t be drawed because it`s index is bigger than limit MAX_ENTITIES_IN_ACTION")
+										}
+									}
+								#endif 
 								
-								//~ printVarComment("recordCommandBuffer end ", ent.first)
-								//i++;
+								//~ vkCmdBindVertexBuffers(_frames[currentFrame].commandBuffer, 0, 1, &ent.second->entityMeshPtr->getMeshVertexBuffer(), offsets);	
+													//~ printMessage("recordCommandBuffer Flag 0")
+										
+													//~ vkCmdBindDescriptorSets(_frames[currentFrame].commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout_G, 0, 1, &ent.second->GpassDescriptorSet, 0, nullptr);	// привязали дексриптор, где хранятся ссылки на наши матрицы PVM и текстуры
+													
+													//~ printMessage("recordCommandBuffer Flag 1")
+													
+													//~ if(i==0) g_SceneMicromir->configureModelMatrix(modelMatrix, glm::vec3(2,0,0), glm::quat(1,0,0,0) );
+													//~ if(i==1) g_SceneMicromir->configureModelMatrix(modelMatrix, glm::vec3(0,0,0), glm::quat(1,0,0,0) );
+												
+												
+													//constants.data[0] = 
+													
+													//~ if( CHECK_PTR(ent.second->entityMaterialPtr) )
+													//{
+														//constants.data[1] = 1.0f;	//ent.second->entityMaterialPtr->getMatInfo()[2][0];// UV scale
+													//}
+													
+													//~ if( ent.second->entityType == 1 ) // TRANSPARENT
+													//~ {
+														
+													//~ }
+													//~ printMessage("recordCommandBuffer Flag 2")
+													//~ printMat4("entity ", constants.model ) 
+									
+								//~ vkCmdPushConstants(_frames[currentFrame].commandBuffer, pipelineLayout_G, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(FhGpassPushConstantsInfo), &constants);	//upload the matrix to the GPU via push constants
+								//~ vkCmdDraw(_frames[currentFrame].commandBuffer, static_cast<uint32_t>(ent.second->entityMeshPtr->getVerticesCount()), 1, 0, 0);	//vkCmdDraw(commandBuffer, vertexCount, instanceCount, firstVertexOffset, firstInstanceOffset);
+								
+													//~ printVarComment("recordCommandBuffer end ", ent.first)
+													//i++;
+													
+								entityLevelIndex++;
 							}   
 							
 						}
 						
 					}
+					
+					
+					#ifdef INSTANCED_RENDERING
+						int uniqueEntities = uniqs.size();
+						//~ printVarComment("\t\tUnique entities count: ", uniqueEntities )
+
+						int offset = 0;
+						int unq = 0;
+						//int previosEntityInstances = 0;
+						for(auto un : uniqs)
+						{
+						//~ printVarComment("Unique mesh name: ", un.first )
+						
+						int uniqueEntitieInstancesCount = get<1>(uniqs[un.first]);
+						//~ printVarComment("\t\tInstances: ", uniqueEntitieInstancesCount )
+						
+						if( CHECK_PTR( get<0>(un.second) ) ) // проверка умного указателя на меш
+						{
+							vkCmdBindVertexBuffers(_frames[currentFrame].commandBuffer, 0, 1, &get<0>(un.second)->getMeshVertexBuffer(), offsets);	
+
+							constants.uboOffset = offset;
+							
+							glm::vec3 POV = CHECK_PTR(g_Camera) ? g_Camera->getActorPosition() : glm::vec3(-1.0f, 0.0f, 0.1f);
+							glm::vec3 DOV = POV + (CHECK_PTR(g_Camera) ? g_Camera->getActorForwardVector() : glm::vec3(1.0f, 0.0f, 0.0f));//*Camera::rotation;	//glm::vec3(0.0f, 0.0f, 0.0f);
+							glm::vec3 UP = glm::vec3(0.0f, 0.0f, 1.0f);
+							
+							glm::mat4 view = glm::lookAt(POV, DOV, UP);
+							
+							glm::mat4 proj;
+							if(CHECK_PTR(g_Camera)) proj = glm::perspective(glm::radians(g_Camera->fCameraFOV), (float) swapChainExtent.width / (float) swapChainExtent.height, g_Camera->fCameraViewNear, g_Camera->fCameraViewDepth);
+							proj[1][1] *= -1; // GLM was originally designed for OpenGL, where the Y coordinate of the clip coordinates is inverted. 
+							
+							constants.model = proj * view;
+							
+							vkCmdPushConstants(_frames[currentFrame].commandBuffer, pipelineLayout_G, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(FhGpassPushConstantsInfo), &constants);	//upload the matrix to the GPU via push constants
+							
+							//int offset = serial*uniqueEntitieInstancesCount;
+							// XXX из за асинхрона вулкана каждому vkCmdDraw() нужен свой буфер instancedPushInfoBuffer?
+							// или лучше создать один буфер на [MAX_ENTITIES_IN_ACTION] структур FhGpassPushConstantsInfo и настроить индексацию? 
+							
+							//if( unq == (uniqueEntities-1) )
+							{
+								if( !updated )
+								{
+									//~ printVariable(unq)
+									memcpy( instancedPushInfoBufferMapped + offset*sizeof(FhGpassPushConstantsInfo), get<2>(un.second).data(), uniqueEntitieInstancesCount * sizeof(FhGpassPushConstantsInfo)); // memcpy)dest, src, count
+									if( unq == (uniqueEntities-1) ) updated = true;
+									//system("pause");
+								}
+							}
+							
+							vkCmdDraw(_frames[currentFrame].commandBuffer, static_cast<uint32_t>(get<0>(un.second)->getVerticesCount()), uniqueEntitieInstancesCount, 0, 0);	//vkCmdDraw(commandBuffer, vertexCount, instanceCount, firstVertexOffset, firstInstanceOffset);
+							unq++;
+						}
+						offset += uniqueEntitieInstancesCount;
+					}
+					#endif
 				}
 				
 				
 
 			// 3.4 - Finalize the render pass and command buffer
 			vkCmdEndRenderPass(_frames[currentFrame].commandBuffer);
+			//~ printMessage("G_pass OK")
 		}
 
-		//~ printMessage("G_pass OK")
+		
 
 		// Shadow-pass
 		{
 			// get all dynamic light source actors and call their func
-			
-			std::shared_ptr<DynamicLight> spot = dynamic_pointer_cast<DynamicLight>(g_Lab->getActor("LabSpot"));
-			if( spot != nullptr )
+			if( CHECK_PTR(g_Lab) )
 			{
-				spot->recordShadowpassCommand( _frames[currentFrame].commandBuffer );
-			}
-			
-			std::shared_ptr<DynamicLight> helispot = dynamic_pointer_cast<DynamicLight>(g_Lab->getActor("HeliSpot"));
-			if( helispot != nullptr )
-			{
-				helispot->recordShadowpassCommand( _frames[currentFrame].commandBuffer );
-			}
-			
-		}
+				std::vector<std::shared_ptr<MicroWorld>> lights = g_Lab->getActorsWithTag(FH_ACTOR_TAG_DYNAMIC_LIGHT);
+				
+				if( !lights.empty() )
+				{
+					//printMessage("\n\nAll dynamic lights:")
+					for(auto l : lights)
+					{
+						//printVariable(l->MicroWorldName)
+						std::shared_ptr<DynamicLight> spot = dynamic_pointer_cast<DynamicLight>( l );
+						if( spot != nullptr )
+						{
+							// запуск отрисовки карт теней
+							// надо добавить проверку на изменение состояния сцены: передвинулся/повернулся ли источник или некоторые объекты в
+							// его зоне видимости и т.д. С некоторым порогом.
+							// Т.к. если сцена не поменялась, то зачем перерисовывать карту, если результат будет тот же. Старая карта теней с предыдущего 
+							// кадра сгодится!
+							if(1) // scene has changed?
+							{
+								spot->recordShadowpassCommand( _frames[currentFrame].commandBuffer );
+							}
+						}
+					}
+				}
+			}			
 		//~ printMessage("Shadow_pass OK")
+		}
+		
 
 
-		//#ifdef L_PASS
+		// image layer transition
+		{
+			VkImageMemoryBarrier barrier{};
+				barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+				barrier.srcAccessMask      = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+				barrier.dstAccessMask      = VK_ACCESS_SHADER_READ_BIT;
+				barrier.oldLayout          = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+				barrier.newLayout          = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+				barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+				barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+				barrier.image              = gPassImage[G_PASS_COLOR_ATTACHMENT];		//image;                 // твой VkImage 0x16...
+				barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+				barrier.subresourceRange.baseMipLevel = 0;
+				barrier.subresourceRange.levelCount = 1;
+				barrier.subresourceRange.baseArrayLayer = 0;
+				barrier.subresourceRange.layerCount = 1;
+
+			//~ vkCmdPipelineBarrier(
+				//~ _frames[currentFrame].commandBuffer,
+				//~ VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+				//~ VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
+				//~ 0, 0, nullptr, 0, nullptr, 1, &barrier
+			//~ );
+
+		}
+
+
 		// L-pass
+		//#ifdef L_PASS
 		{
 			// 2 - рендерпас
 			VkRenderPassBeginInfo renderPassInfo{};
 				renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
 				renderPassInfo.renderPass = renderPass_L;							// the render pass itself and the attachments to bind			
-				renderPassInfo.framebuffer = frameBuffer_L;	// привязали к рендерпасу один из ранее созданных framebuffer кадров из цепочки, в который хотим рендерить
+				renderPassInfo.framebuffer = frameBuffer_L;	// привязали к рендерпасу один из ранее созданных framebuffer, в который хотим рендерить
 				renderPassInfo.renderArea.offset = {0, 0};
 				renderPassInfo.renderArea.extent = swapChainExtent;
 				
-			std::array<VkClearValue, gPassAttachmentsCount-1> clearValues{};
+				std::array<VkClearValue, gPassAttachmentsCount-1> clearValues{};
 				for(int i=0; i<gPassAttachmentsCount-1; i++)
 				{
 					clearValues[i].color = {{0.96, 0.46, 0.96, 1.0}};	// цвет фона - , непрозрачность 1 (100%)
@@ -718,10 +879,11 @@ void Graphics::drawFrame()
 		  
 			// 3.4 - Finalize the render pass and command buffer
 			vkCmdEndRenderPass(_frames[currentFrame].commandBuffer);
+			//~ printMessage("L_pass OK")
 		}
 		//#endif
 	
-		//~ printMessage("L_pass OK")
+		
 
 		// F-pass
 		{
@@ -760,11 +922,7 @@ void Graphics::drawFrame()
 					scissor.extent = swapChainExtent;
 				vkCmdSetScissor(_frames[currentFrame].commandBuffer, 0, 1, &scissor);			// ... и передаем в шейдер
 
-				// Внутри render pass'а может идти серия операций:
-				// for (auto object : objects) {}
 
-				// отрисовка 1 объекта
-				//~ updateUniformBuffer(currentFrame, 0); // обязательно до начала обработки кадра!
 				// 3.3 привязываем VBO
 				// Параметр массива VkBuffer в команде vkCmdBindVertexBuffers() нужен для поддержки сложных моделей вершинных данных, когда каждая такая часть хранится в отдельном буфере: VkBuffer vertexBuffers[] = { vertexBuffer, colorBuffer, uvBuffer };
 				//VkBuffer vertexBuffers[] = { gameObjects[0]->vertexBuffer /*colorBuffer, uvBuffer*/ };
@@ -786,9 +944,10 @@ void Graphics::drawFrame()
 		  
 			// 3.4 - Finalize the render pass and command buffer
 			vkCmdEndRenderPass(_frames[currentFrame].commandBuffer);
+			//~ printMessage("F_pass OK")
 		}
 
-		//~ printMessage("F_pass OK")
+		
 
 		// 4 - END COMMAND BUFFER:
 		if (vkEndCommandBuffer(_frames[currentFrame].commandBuffer) != VK_SUCCESS) {

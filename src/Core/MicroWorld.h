@@ -69,10 +69,13 @@ public:
 	
 // TAGS
 public:
-	bool 				addTag					(const std::string& tag);
-	bool 				removeTag				(const std::string& tag);
+	//~ bool 				addTag					(const std::string& tag);
+	//~ bool 				removeTag				(const std::string& tag);
+	void 				addTag					(int tag);
+	void 				removeTag				(int tag);
+	bool 				hasTag					(int tag);
 protected:
-	std::vector <std::string> tags; 					// вектор тегов. Добавление/удаление тегов извне может использоваться для скриптования
+	std::vector <int> tags; 					// вектор тегов. Добавление/удаление тегов извне может использоваться для скриптования
 	
 
 // TRANSFORMS
