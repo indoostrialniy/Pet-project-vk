@@ -1,12 +1,4 @@
 #version 450
-// к binding = 0 будем ссылаться в descriptor layout
-layout(binding = 0) uniform FhGeneralInfo {
-	mat4 view;
-	mat4 proj;
-	vec3 cameraPos;
-	float Time;
-} commonData;
-
 layout(location = 0) in vec3 inPosition;
 layout(location = 1) in vec3 inNormal;
 layout(location = 2) in vec2 inUV;
@@ -20,12 +12,13 @@ layout(location = 3) out vec2 fragTexCoord;
 layout(location = 4) out mat3 txrxMatrix;
 layout(location = 7) out float sysTime;
 layout(location = 8) out vec3 tangent;
+layout(location = 9) out uint Type;
+layout(location = 10) out struct VSOut
+{
+	uint v[48];	// прямая переиндексация 48 материалов, назначенных объекту
+} vs_out;
 
-
-layout(binding = 1) uniform sampler2D material0_textures[16];
-layout(binding = 2) uniform sampler2D material1_textures[16];
-layout(binding = 3) uniform sampler2D material2_textures[16];
-layout(binding = 4) uniform sampler2D material3_textures[16];
+#define INSTANCED_RENDERING
 
 struct FhMaterialInfo
 {
@@ -58,93 +51,80 @@ struct FhMaterialInfo
 	vec4 emissionDefault;
 };
 
-layout(binding = 5) uniform FhGpassMaterialsInfo {
-	FhMaterialInfo materialInfo[4];
+layout(binding = 0) uniform FhGeneralInfo 						// к binding = 0 будем ссылаться в descriptor layout
+{
+	mat4 view;
+	mat4 proj;
+	vec3 cameraPos;
+	float Time;
+} commonData;
+
+layout(binding = 1) uniform sampler2D materials_textures[2048]; 	// 70 materials * 16 samplers = 1120
+layout(binding = 2) uniform FhGpassMaterialsInfo 
+{
+	FhMaterialInfo materialInfo[128];							// 70 materials description
 } materialInfos;
 
+struct PushConstantsStruct
+{
+	// minimum 128 bytes: 
+	mat4 model;					// 64 bytes - entity model matrix
+	uint type;					// 68 bytes
+	uint uboOffset;				// 72 bytes
+	float reserve2;				// 76 bytes
+	float reserve3;				// 76 77 78 79 bytes
+	uvec4 materialIndexes[3];
+	//uint materialIndexes0;
+	//uint materialIndexes1;
+	//uint materialIndexes2;
+	//uint materialIndexes3;
+	//uint materialIndexes4;
+	//uint materialIndexes5;
+	//uint materialIndexes6;
+	//uint materialIndexes7;
+	//uint materialIndexes8;
+	//uint materialIndexes9;
+	//uint materialIndexes10;
+	//uint materialIndexes11;
+	//uint materialIndexes[3];	// We`ll pack here 48 short integers and in GLSL (read by 4 bytes straight) decomposite it using bitwise operatons	
+};
+
+layout(binding = 3) uniform FhGpassPushConstantsInfo 
+{
+	PushConstantsStruct constants[700];							// 64 push constants structs
+} pushConstantsBuffer;
 
 
 //push constants block
 layout( push_constant ) uniform constants
 {
-	mat4 model;
-	uint type;
-	uint reserve1;
-	float reserve2;
-	float reserve3;
+	// minimum 128 bytes: 
+	mat4 model;					// 64 bytes - entity model matrix
+	uint type;					// 68 bytes
+	uint uboOffset;				// 72 bytes
+	float reserve2;				// 76 bytes
+	float reserve3;				// 80 bytes
+	uint materialIndexes[12];	// We`ll pack here 48 short integers and in GLSL (read by 4 bytes straight) decomposite it using bitwise operatons
 } PushConstants;
-
-
-
-
-float getDisplacement()
-{
-	int dispMapAddress = int(materialInfos.materialInfo[ inMaterialIndex ].displacementAddress)-1;
-	float dispMapScale =	1;//  materialInfos.materialInfo[ inMaterialIndex ].displacementScale;
-
-	switch(inMaterialIndex)
-	{
-		case 0: return dispMapAddress >= 0 ? texture(material0_textures[ dispMapAddress ], inUV * dispMapScale).x : 0;
-		case 1: return dispMapAddress >= 0 ? texture(material1_textures[ dispMapAddress ], inUV * dispMapScale).x : 0;
-		case 2: return dispMapAddress >= 0 ? texture(material2_textures[ dispMapAddress ], inUV * dispMapScale).x : 0;
-		case 3: return dispMapAddress >= 0 ? texture(material3_textures[ dispMapAddress ], inUV * dispMapScale).x : 0;
-	};
-}
-
-
-vec3 getNormalVert()
-{
-	int normMapAddress = int(materialInfos.materialInfo[ inMaterialIndex ].normalAddress)-1;
-	float normMapScale = 1;//materialInfos.materialInfo[ inMaterialIndex ].normalScale;
-
-	vec3 normal = inNormal; // from triangle
-
-	if( normMapAddress >= 0 ) // if there is a map
-	{
-		switch( inMaterialIndex )
-		{
-			case 0: normal = texture( material0_textures[ normMapAddress ], inUV * normMapScale).xyz; break;
-			case 1: normal = texture( material1_textures[ normMapAddress ], inUV * normMapScale).xyz; break;
-			case 2: normal = texture( material2_textures[ normMapAddress ], inUV * normMapScale).xyz; break;
-			case 3: normal = texture( material3_textures[ normMapAddress ], inUV * normMapScale).xyz; break;
-		};
-		//normal = (normal-vec3(0.5)) * 2;
-		normal = (normalize(normal)-vec3(0.5)) * 2;
-        
-		vec3 N = mat3(PushConstants.model) * normalize(inNormal);        // повернутая матрицей модели нормаль ТРЕУГОЛЬНИКА
-        vec3 T  = mat3(PushConstants.model) * normalize(inTangent);             // повернутый матрицей модели вектор tangent
-        vec3 B  = mat3(PushConstants.model) * normalize(cross(N,T) );           // повернутый матрицей модели вычисленный вектор bitangent
-		// T  = txrxMatrix * normalize(vec3(2,0,0));             // повернутый матрицей модели вектор tangent
-        // B  = txrxMatrix * normalize(vec3(0,2,0));           // повернутый матрицей модели вычисленный вектор bitangent
-        // N = txrxMatrix * normalize(vec3(0,0,1));
-
-		mat3 TBN = mat3(T,B,N);                                               // матрица TBN
-        normal = normalize(TBN * normal);                                       // мировые координаты!!!
-		
-	}
-	
-	else
-	{
-		normal = mat3(PushConstants.model) * fragNormal;
-	}
-	//return vec3(1);
-	return normal;
-}
-
 
 
 void main() 
 {
+	int offset = int(PushConstants.uboOffset);
+	//int offset = 0;
+	
+	PushConstantsStruct pushes = pushConstantsBuffer.constants[gl_InstanceIndex+offset];
+	//PushConstantsStruct pushes = pushConstantsBuffer.constants[0];
+
 	vec4 WPos = vec4(inPosition, 1.0);
 	//float disp = getDisplacement();
-
-
 	//vec3 normal = getNormalVert();
 		//normal = inNormal;
 		//normal = (normal-vec3(0.5)) * 2;
 	//WPos += vec4(normal*disp*0.2, 0);
 	
-	WPos = PushConstants.model * WPos;
+	WPos = pushes.model * WPos;
+	
 	//vec4 disp 
 	//int dispAddress = materialInfos.materialInfo[inMaterialIndex].displacementAddress-1;
 	//dispAddress >= 0? texture(, inUV);
@@ -156,9 +136,11 @@ void main()
 	
 	worldPosition = WPos.xyz;
 	
-	gl_Position = commonData.proj * commonData.view * WPos;
+	//gl_Position = commonData.proj * commonData.view * WPos;
     
-	txrxMatrix = mat3(PushConstants.model);
+	gl_Position = PushConstants.model * WPos; // PushConstants.model - proj*view
+	
+	txrxMatrix = transpose(inverse(mat3(pushes.model)));	//mat3(PushConstants.model);
 	
 	fragMaterialIndex = inMaterialIndex;	//int(inUVmat.z);//
 	
@@ -167,8 +149,37 @@ void main()
 	
 	sysTime = commonData.Time;
 	
-	int Type = int(PushConstants.type);
+	Type = uint(pushes.type);
 
 	tangent = inTangent;
+
+	
+	
+	#ifdef INSTANCED_RENDERING
+		// unpack material indexes for instances
+		// 	uvec4 materialIndexes[3]; - 4*4*3 = 48 bytes
+		for(int v=0; v<3; v++)
+		{
+			for(int ve=0; ve<4; ve++)
+			{
+				//uint a = uint(vec4(1)[1]);
+				uint BYTE = pushes.materialIndexes[v][ve]; // unpack 4 values from here
+				vs_out.v[16*v + 4*ve + 0] = (BYTE >> 0)  & 0xFFu;
+				vs_out.v[16*v + 4*ve + 1] = (BYTE >> 8)  & 0xFFu;
+				vs_out.v[16*v + 4*ve + 2] = (BYTE >> 16) & 0xFFu;
+				vs_out.v[16*v + 4*ve + 3] = (BYTE >> 24) & 0xFFu;
+			}
+			
+		}
+	#else
+		// unpack material indexes
+		for(int i=0; i<12; i++)
+		{
+			vs_out.v[4*i+0] = (PushConstants.materialIndexes[i] >> 0)  & 0xFFu;
+			vs_out.v[4*i+1] = (PushConstants.materialIndexes[i] >> 8)  & 0xFFu;
+			vs_out.v[4*i+2] = (PushConstants.materialIndexes[i] >> 16) & 0xFFu;
+			vs_out.v[4*i+3] = (PushConstants.materialIndexes[i] >> 24) & 0xFFu;
+		}
+	#endif
 
 }

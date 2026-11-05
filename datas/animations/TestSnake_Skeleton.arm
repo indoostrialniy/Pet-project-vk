@@ -1,0 +1,24 @@
+;2025-03-18 15:43:21.921042
+name TestSnake_Skeleton
+bones 3
+//default bind-pose LSK matrices of all bones as quats x y z w
+m Bone 0.707107 0.000000 0.000000 0.707107
+m Bone.001 0.707107 0.000000 0.000000 0.707107
+m Bone.002 0.707107 0.000000 0.000000 0.707107
+
+
+//default bind-pose heads of all bones x y z
+h Bone 0.0 0.0 0.0
+h Bone.001 0.0 0.0 1.0
+h Bone.002 0.0 0.0 2.5
+
+Bone_ierarchy (branch`s bones serial numbers, parents lists for every bone)
+0 1 strings and rows
+ie 0
+ie 1 0
+ie 2 1 0
+END IERARCHY PARAMS
+
+
+//Attached animations
+a TestSnake_SkeletonAction

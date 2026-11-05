@@ -4,7 +4,7 @@
 
 
 /*
-	2026-10-07  indoostrialniy  <pawel.iv.2016@yandex.ru>
+	2026-10-28  indoostrialniy  <pawel.iv.2016@yandex.ru>
 	
 	Описание библиотеки ResourceManager v2.0.
 
@@ -50,10 +50,16 @@
 #include <unordered_map>
 #include <memory>
 #include <mutex>
+#include <string>
+#include <vector>
+#include <optional>
 
 //~ #define RESOURCE_MANAGER_REPORTS
 
 class Graphics;
+
+
+
 
 template <class R>
 class resManAsset	// шаблонный класс, содержащий методы для обработки ресурсов
@@ -61,6 +67,12 @@ class resManAsset	// шаблонный класс, содержащий мет�
 	// менеджер просто хранит словарь weak_ptr для общего контроля, а менеджмент ресурсов ведется в предоставленном из объекта shared_ptr
 public:
 
+	struct Paar
+	{
+		std::string name;
+		std::weak_ptr<R> ptr;
+	};
+	
 	std::mutex mtx;
 
 	Graphics* g_GraphicsCore;
@@ -83,12 +95,12 @@ public:
 		#ifdef RESOURCE_MANAGER_REPORTS
 			std::cout << "\n Delete resource manager for: " << assetType << std::endl;	
 		#endif
-		resources.clear();	// очистка словаря слабых указателей автоматически приведет к их выходу из области видимости и, следоватлеьно, удалению
+		//resources.clear();	// очистка словаря слабых указателей автоматически приведет к их выходу из области видимости и, следоватлеьно, удалению
 	}
 	
 	
 	
-	std::shared_ptr<R> getAsset( const std::string& assetName)
+	std::shared_ptr<R> getAsset0( const std::string& assetName )
 	{
 		std::shared_ptr<R> res;								// создадим новый shared_ptr для хранения ресурса
 		
@@ -123,25 +135,85 @@ public:
 		return res;																// и вернем указатель на запрашиваемый ресурс
 	}
 	
+	std::optional<int> getAssetIndex( const std::string& assetName )
+	{
+		std::optional<int> index;
+		
+		int i = 0;
+		for(auto r : resources)
+		{
+			if(r.name == assetName)							// если найден дубликат
+			{
+				index = i;
+			}
+			i++;
+		}
+		return index;
+	}
+	
+	
+	std::shared_ptr<R> getAsset( const std::string& assetName )
+	{
+		std::shared_ptr<R> res;								// создадим новый shared_ptr для хранения ресурса
+		
+		std::lock_guard<std::mutex> lock(mtx);				// блокировка на случай многопоточности
+		
+		bool resourceFound = false;
+		for(auto r : resources)
+		{
+			if(r.name == assetName)							// если найден дубликат
+			{
+				#ifdef RESOURCE_MANAGER_REPORTS
+					std::cout << "\n\n\tResource [" << assetName << "] already has an instance, return shared_ptr reference." << std::endl;
+				#endif
+				
+				res = r.ptr.lock();			// отметим, что старого ресурса стало больше
+				resourceFound = true;					
+				break;										// выходим из цикла с правдой
+			}
+		}
+		
+		if( !resourceFound )								// если ресурс ранее не был зарегистрирован
+		{
+			#ifdef RESOURCE_MANAGER_REPORTS
+				std::cout << "\tCreate new instance of object [" << assetName << "]" << std::endl;
+			#endif
+				
+			res = std::make_shared<R>(assetName, *g_GraphicsCore);			// создадим новый экземпляр, записав его адрес в shared_ptr
+			Paar rookie;
+				rookie.name = assetName;
+				rookie.ptr = res;
+			
+			resources.push_back(rookie);	//[assetName] = std::weak_ptr<R>(res); 	// занесем в словарь слабую ссылку о новом ресурсе на основании созданного shared_ptr
+			
+			#ifdef RESOURCE_MANAGER_REPORTS
+				std::cout << "\tWeak prt created [" << assetName << "]" << std::endl;
+			#endif
+		}
+		
+		
+		return res;																// и вернем указатель на запрашиваемый ресурс
+	}
 	
 	std::shared_ptr<R> getAsset()
 	{
 		
-		if (resources.empty()) 
-		{
-			//return std::nullopt; // Нет элементов
-		}
+		//~ if (resources.empty()) 
+		//~ {
+			//~ //return std::nullopt; // Нет элементов
+		//~ }
 
-		// Берём любой элемент — begin() даёт итератор на какой‑то существующий
-		auto it = resources.begin();
-		std::shared_ptr<R> sp = it->second.lock();
+		//~ // Берём любой элемент — begin() даёт итератор на какой‑то существующий
+		//~ auto it = resources.begin();
+		//~ std::shared_ptr<R> sp = it->second.lock();
 
-		if (!sp) 
-		{
-			// Слабый указатель истёк (объект Material уже удалён)
-			//return std::nullopt;
-		}
-		return sp;
+		//~ if (!sp) 
+		//~ {
+			//~ // Слабый указатель истёк (объект Material уже удалён)
+			//~ //return std::nullopt;
+		//~ }
+		//~ return sp;
+		
 		//~ std::shared_ptr<R> res;								// создадим новый shared_ptr для хранения ресурса
 		
 		//~ //std::lock_guard<std::mutex> lock(mtx);				// блокировка на случай многопоточности
@@ -163,37 +235,54 @@ public:
 	// XXX Метод для удаления из словаря weak_ptr, если его счетчик равен 0 (т.е. если expired() == true). Но когда его вызывать-то? Мутить таймер или вызываеть его в конце функции getAsset()?
 	void clear()
 	{
-		std::lock_guard<std::mutex> lock(mtx);				// блокировка на случай многопоточности
+		//~ std::lock_guard<std::mutex> lock(mtx);				// блокировка на случай многопоточности
 
-		for (auto it = resources.begin(); it != resources.end(); ) 
-		{
-			if (it->second.expired()) 
-			{
-				#ifdef RESOURCE_MANAGER_REPORTS
-					std::cout << "Object [" << it->first << "] was deleted!" << std::endl;
-				#endif
-				it = resources.erase(it);  // Удаляем элемент и получаем следующий итератор
-			} 
-			else 
-			{
-				++it;
-			}
-		}
+		//~ for (auto it = resources.begin(); it != resources.end(); ) 
+		//~ {
+			//~ if (it->second.expired()) 
+			//~ {
+				//~ #ifdef RESOURCE_MANAGER_REPORTS
+					//~ std::cout << "Object [" << it->first << "] was deleted!" << std::endl;
+				//~ #endif
+				//~ it = resources.erase(it);  // Удаляем элемент и получаем следующий итератор
+			//~ } 
+			//~ else 
+			//~ {
+				//~ ++it;
+			//~ }
+		//~ }
 		
 	}
 	
 	void printData()
 	{
 		std::cout << "\n Check counts!" << std::endl;
-		for(auto res : resources)
-			std::cout << res.first << " " << res.second.use_count() << std::endl;
+		//~ for(auto res : resources)
+			//~ std::cout << res.first << " " << res.second.use_count() << std::endl;
+	}
+	
+	//~ std::unordered_map<std::string, std::weak_ptr<R>> getAllResources()
+	//~ {
+		//~ return resources;
+	//~ }
+	std::vector<std::weak_ptr<R>> getAllResources()
+	{
+		std::vector<std::weak_ptr<R>> res;
+		for(auto r : resources)
+		{
+			res.push_back(r.ptr);
+		}
+		return res;
 	}
 
+
+	
 	
 private:
 	std::string assetType = "undefined asset type";
 	
-	std::unordered_map <std::string, std::weak_ptr<R> > 	resources;
+	//~ std::unordered_map <std::string, std::weak_ptr<R> > 	resources;
+	std::vector<Paar> resources;
 	
 	//доступ к карте с указателями на объекты осуществляется только через публичные функции addObject/deleteObject, во избежание утечек
 };

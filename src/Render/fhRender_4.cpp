@@ -356,7 +356,7 @@ void Graphics::createTextureImage(std::string filename, VkImage& image, VkDevice
 	stbi_uc* pixels = stbi_load(filename.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
 	
 	VkDeviceSize imageSize = texWidth * texHeight * 4;
-	if (!pixels) {throw std::runtime_error("failed to load texture image!");	}
+	if (!pixels) {throw std::runtime_error("Failed to load texture image: [" + filename+"]");	}
 	
 	// 1.2 - создаем промежуточный буфер
 	VkBuffer stagingBuffer;

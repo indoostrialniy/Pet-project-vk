@@ -13,9 +13,13 @@ layout( push_constant ) uniform FhShadowpassPushConstantsInfo
 	mat4 PV;
 } PushConstants;
 
+layout(location = 0) out vec4 WorldPos;
+
 
 void main() 
 {
 	// with geometry shader
 	gl_Position = PushConstants.model * vec4(inPosition, 1.0);
+	
+	WorldPos = PushConstants.model * vec4(inPosition, 1.0);
 }

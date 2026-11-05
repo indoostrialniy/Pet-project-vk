@@ -35,6 +35,6 @@ vec4 getBloom()
 
 void main() {
     outColor = vec4(1,1,0,1);	//
-	outColor = texture(maps[0], fragTexCoord) + getBloom();
+	outColor = texture(maps[0], fragTexCoord);// + getBloom();
 	//outColor += outColor * texture(maps[1], fragTexCoord);
 }

@@ -57,8 +57,8 @@ constexpr int					MAX_MATERIALS = 128;					// сколько разных мат
 constexpr int					MAX_MATERIALS_PER_ENTITY = 48;			// максимум материалов, назначаемых одному объекту
 constexpr int					MAX_SAMPLERS_PER_MATERIAL = 16;			// максимум текстурных сэмплеров в 1 материале
 
-constexpr int					MAX_ENTITIES_FOR_INSTANCING = 64;		// максимум сущностей для рендеринга за один вызов отрисовки
-constexpr int					MAX_ENTITIES_IN_ACTION = 500;			// максимум объектов на сцене
+constexpr int					MAX_ENTITIES_FOR_INSTANCING = 256;		// максимум сущностей для рендеринга за один вызов отрисовки
+constexpr int					MAX_ENTITIES_IN_ACTION = 700;			// максимум объектов на сцене
 
 constexpr int					MAX_DYNAMIC_LIGHT_SOURCES = 16;			// максимум динамических источников света
 

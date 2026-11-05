@@ -46,7 +46,7 @@ Laboratory::Laboratory(std::string name, Graphics& core) : Level(core)
 			shahtaSpot.name = "LabSpot";
 			//~ shahtaSpot.initPos = glm::vec3(-1.55, -4.41, 1.18);//7, 1, 3);
 			//~ shahtaSpot.initRot = glm::quat(1,0,0,0);
-			shahtaSpot.initPos = glm::vec3(19.839, -28.262, 5.5095);//7, 1, 3);
+			shahtaSpot.initPos = glm::vec3(19.839, -28.262, 4.5095);//7, 1, 3);
 			shahtaSpot.initRot = glm::quat(1,0,0,0);
 			shahtaSpot.color = glm::vec3(1.0, 0.594, 0.034);
 			//~ shahtaSpot.type = FH_DYNAMIC_LIGHTSOURCE_SPOT;

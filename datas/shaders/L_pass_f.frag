@@ -230,7 +230,7 @@ vec3 getLightSourceInfluence(int index)
 
 	vec3 ambient = vec3(0.0) * albedo;
 
-	float lightVolumeRadius = 7;//illuminationInfos.illuminationInfo[index].radius;	//радиус влияния источника света
+	float lightVolumeRadius = 70;//illuminationInfos.illuminationInfo[index].radius;	//радиус влияния источника света
 	if( distance > lightVolumeRadius )
 	{
 		//return (ambient/(ambient+1.0))*(ambient/(ambient+1.0));//
@@ -323,11 +323,11 @@ void main()
 	//vec3 finalColor0 = getLightSourceInfluence(0);
 	//vec3 finalColor1 = getLightSourceInfluence(1);
 	
-	vec3 finalColor = outColor.rgb*0.02;
+	vec3 finalColor = outColor.rgb*0.2;
 	//int l=1;
-	
 	for(int l=0; l<16; l++)
 	{
+		//break;
 		//if(l==0) continue;	// skip player torch
 		
 		if( illuminationInfos.illuminationInfo[l].exists != 1) continue;	// discard non existing lightsources
@@ -346,6 +346,7 @@ void main()
 	}
 
 	outColor = vec4(sqrt(finalColor), 1.0);
+	
 
 
 	//float r = sqrt( pow(finalColor0.r, 2) + pow(finalColor1.r, 2) );

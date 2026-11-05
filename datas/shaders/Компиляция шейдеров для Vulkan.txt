@@ -1,0 +1,13 @@
+Сначала сменить директорию на папку с файлами исходников шейдеров:
+(если запускать bat-скрипт, то менять директорию не нужно, это выполняется автоматически при запуске скрипта)
+
+cd /D E:\Development\Projects\fhEngineVK\datas\shaders
+
+Затем запустить программу glslang.exe и скормить ей файлы с указанием, что и куда:
+
+C:\VulkanSDK\1.4.309.0\Bin\glslang.exe -V vert.vert -o vert.spv
+C:\VulkanSDK\1.4.309.0\Bin\glslang.exe -V frag.frag -o frag.spv
+
+где:
+-V vert.vert это флаг и указание исходника
+-o vert.spv это выходной скомпилированный двоичный файл

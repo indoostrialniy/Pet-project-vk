@@ -3,11 +3,12 @@
 
 // uint32_t
 enum FH_ENTITY_TYPE {
-						FH_ENTITY_TYPE_RENDER_OPAQUE = 0x00000000,		// 0-й бит
-						FH_ENTITY_TYPE_RENDER_TRANSPARENT = 0x00000001,	// 0-1 бит
-						FH_ENTITY_TYPE_RENDER_BLOOM = 0x00000002,		// 1-й
-						FH_ENTITY_TYPE_LIGHT_VOLUME = 0x00000004,		// 2-1
-						FH_ENTITY_TYPE_SKELETAL_MESH = 0x00000008		// 3-й
+						FH_ENTITY_TYPE_RENDER_OPAQUE = 0x00000000,		// default opaque bit
+						FH_ENTITY_TYPE_RENDER_TRANSPARENT = 0x00000001,	// 0 bit, 2^0 = dec(1)  = hex(1)
+						FH_ENTITY_TYPE_RENDER_BLOOM = 0x00000002,		// 1 bit, 2^1 = dec(2)  = hex(2)
+						FH_ENTITY_TYPE_LIGHT_VOLUME = 0x00000004,		// 2 bit, 2^2 = dec(4)  = hex(4)
+						FH_ENTITY_TYPE_SKELETAL_MESH = 0x00000008,		// 3 bit, 2^3 = dec(8)  = hex(8)
+						FH_ENTITY_TYPE_TRIPLANAR_MAPPED = 0x00000010	// 4 bit, 2^4 = dec(16) = hex(10)
 					};
 
 // геометрический проход записывает в буферы информацию о цвете, нормали, позиции и т.д. для каждого пикселя

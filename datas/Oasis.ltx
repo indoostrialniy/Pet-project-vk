@@ -1,94 +1,6812 @@
-;demo collection, version of 2026-10-19 16:50:40.446292
+;Collection [Oasis], version of 2026-11-5 16:59
 
 CAMERA PARAMETERS
-;Camera position - x y z 
-p 6.97201681137085 8.972128868103027 2.9645938873291016
+;Camera position - x y z
+p 3.222891 -50.672115 5.826350
 
 ;Camera rotation quaternion in format W X Y Z
-v 0.6296279430389404 0.5274667739868164 -0.3663068413734436 -0.43722620606422424
+v 0.678877 0.709358 -0.136965 -0.131062
 END CAMERA PARAMETERS
 
 [0] MESH
-sysname Tonnel
-position 0.0 0.0 0.0
+sysname Landscape
+position -126.0 126.0 0.0
 direction 1.0 0.0 0.0 0.0
 scale 1.0 1.0 1.0
-model Tonnel
-material M_Floor_tile_polished
-material M_Nylon_Weave_01
-END
-
-[0] MESH
-sysname Front.001
-position 9.4284 10.1823 2.7773
-direction 0.4978 0.4383 -0.4886 -0.5669
-scale 1.0 1.0 1.0
-model Front
-material M_Floor_tile_polished
-END
-
-[0] MESH
-sysname Back.001
-position 4.4605 8.1529 2.6637
-direction 0.4617 0.5476 0.4911 0.4958
-scale 1.0 1.0 1.0
-model Back
-material M_Floor_tile_polished
-END
-
-[0] MESH
-sysname Left.001
-position 6.4725 10.5786 2.6815
-direction 0.7211 0.6892 -0.0117 0.0698
-scale 1.0 1.0 1.0
-model Left
-material M_Floor_tile_polished
-END
-
-[0] MESH
-sysname Right.001
-position 8.6082 5.9774 2.6815
-direction -0.0219 -0.0782 0.6649 0.7425
-scale 1.0 1.0 1.0
-model Right
-material M_Floor_tile_polished
-END
-
-[0] MESH
-sysname Down.001
-position 7.2888 10.3235 -0.142
-direction 0.747 0.054 -0.0018 -0.6626
-scale 1.0 1.0 1.0
-model Down
-material M_Floor_tile_polished
-END
-
-[0] MESH
-sysname Up.001
-position 6.6965 8.443 5.7778
-direction -0.0406 0.7297 0.6822 -0.0216
-scale 1.0 1.0 1.0
-model Up
-material M_Floor_tile_polished
-END
-
-[0] MESH
-sysname Pond.001
-position 8.2126 -19.8879 1.1642
-direction 1.0 0.0 0.0 0.0
-scale 1.0 1.0 1.0
-model SM_Pond
-material M_Pond_02
+model Landscape
+material grass_path_2
 type 2 emission
 END
 
 [0] MESH
-sysname Skybox.001
+sysname Skybox
 position 0.0 0.0 0.0
 direction 1.0 0.0 0.0 0.0
 scale 100.0 100.0 100.0
 model SM_Skybox
 material M_Skybox_01
+END
+
+[0] MESH
+sysname SM_Oasis_Building
+position 0.0 0.0 0.0
+direction 1.0 0.0 0.0 0.0
+scale 1.0 1.0 1.0
+model SM_Oasis_Building
+material Fbx_Default_Material.001
+type 2 emission
+material MI_Rubber
+type 1 transparent
+type 2 emission
+material MI_Plastic_a
+type 1 transparent
+type 2 emission
+material M_GlassDirty
+type 1 transparent
+type 2 emission
+material MI_Metall
+type 1 transparent
+type 2 emission
+material MI_DarkMetal_a
+type 1 transparent
+type 2 emission
+material MI_DarkMetal.001
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Ammo_Crate_2
+position 26.08 -28.5001 3.3105
+direction 0.6792 0.0039 -0.0048 0.7339
+scale 0.01 0.01 0.01
+model SM_Ammo_Crate
+material MI_Ammo_Crate_01a
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Ammo_Crate_4
+position 25.6276 -30.0961 2.8469
+direction 0.9679 -0.0032 -0.2037 -0.1471
+scale 0.01 0.01 0.01
+model SM_Ammo_Crate
+material MI_Ammo_Crate_01a
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Ammo_Crate_7
+position 26.08 -28.452 2.762
+direction 0.6792 -0.0042 0.0039 0.734
+scale 0.01 0.01 0.01
+model SM_Ammo_Crate
+material MI_Ammo_Crate_01a
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Ammo_Crate_10
+position 13.9595 -28.1506 8.0848
+direction 0.1066 0.006 -0.0016 0.9943
+scale 0.0078 0.0078 0.0078
+model SM_Ammo_Crate
+material MI_Ammo_Crate_01a
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Ammo_Crate_13
+position 26.0356 -31.8713 4.4475
+direction 0.728 0.0 0.0 -0.6856
+scale 0.01 0.01 0.01
+model SM_Ammo_Crate
+material MI_Ammo_Crate_01a
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Antenna_1
+position 16.5947 -20.393 12.4264
+direction 0.9887 0.0 0.0 0.1498
+scale 0.0125 0.0125 0.0125
+model SM_Antenna
+material MI_Antenna_Fan
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Bench_b_0
+position 24.7273 -20.7316 2.739
+direction 0.6769 0.0 0.0 -0.7361
+scale 0.011 0.011 0.011
+model SM_Bench_b
+material MI_Table_Chair_Set_a
+type 2 emission
+material MI_WhiteMetalA
+type 1 transparent
+type 2 emission
+material MI_BlackMetalB
+type 1 transparent
+type 2 emission
+material MM_BaseColorDecal
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Bench_b_1
+position 25.9737 -21.8115 2.739
+direction 0.0741 0.0 0.0 -0.9973
+scale 0.011 0.011 0.011
+model SM_Bench_b
+material MI_Table_Chair_Set_a
+type 2 emission
+material MI_WhiteMetalA
+type 1 transparent
+type 2 emission
+material MI_BlackMetalB
+type 1 transparent
+type 2 emission
+material MM_BaseColorDecal
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Box_a_0
+position 26.0025 -30.0979 3.7341
+direction 0.999 0.0 0.0 0.044
+scale 0.01 0.01 0.01
+model SM_Box_a
+material MI_Painted_Metal_Orange
+type 1 transparent
+type 2 emission
+material M_Steel_2
+type 2 emission
+material M_Trims
+type 1 transparent
+type 2 emission
+material M_Floaters_3
+type 1 transparent
+type 2 emission
+material M_Signs_4
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Box_a_1
+position 26.0296 -31.0284 4.4506
+direction 0.6366 0.0 0.0 -0.7712
+scale 0.0077 0.0077 0.0077
+model SM_Box_a
+material MI_Painted_Metal_Orange
+type 1 transparent
+type 2 emission
+material M_Steel_2
+type 2 emission
+material M_Trims
+type 1 transparent
+type 2 emission
+material M_Floaters_3
+type 1 transparent
+type 2 emission
+material M_Signs_4
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Box_a_2
+position 25.9603 -31.8941 5.1368
+direction 0.8539 0.0 0.0 -0.5205
+scale 0.0077 0.0077 0.0077
+model SM_Box_a
+material MI_Painted_Metal_Orange
+type 1 transparent
+type 2 emission
+material M_Steel_2
+type 2 emission
+material M_Trims
+type 1 transparent
+type 2 emission
+material M_Floaters_3
+type 1 transparent
+type 2 emission
+material M_Signs_4
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Box_b_0
+position 20.7594 -22.3651 2.7735
+direction 0.9978 -0.0122 0.0008 -0.0658
+scale 0.01 0.01 0.01
+model SM_Box_b
+material MI_MetalPanelWhiteFill
+type 1 transparent
+type 2 emission
+material M_Steel
+type 2 emission
+material M_Floaters
+type 1 transparent
+type 2 emission
+material M_Signs
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Box_b_1
+position 14.214 -28.0815 7.3421
+direction 0.7547 -0.0092 -0.008 0.6559
+scale 0.01 0.01 0.01
+model SM_Box_b
+material MI_MetalPanelWhiteFill
+type 1 transparent
+type 2 emission
+material M_Steel
+type 2 emission
+material M_Floaters
+type 1 transparent
+type 2 emission
+material M_Signs
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Box_b_3
+position 28.3605 -21.0788 7.3935
+direction 0.689 -0.0084 0.0088 -0.7247
+scale 0.01 0.01 0.01
+model SM_Box_b
+material MI_MetalPanelWhiteFill
+type 1 transparent
+type 2 emission
+material M_Steel
+type 2 emission
+material M_Floaters
+type 1 transparent
+type 2 emission
+material M_Signs
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CannedFood_a_0
+position 22.345 -20.643 3.721
+direction 0.673 0.0 0.0 0.7396
+scale 0.01 0.01 0.01
+model SM_CannedFood_a
+material MI_CannedFood
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CannedFood_a_1
+position 22.2477 -20.4895 4.1033
+direction 0.8726 0.0 0.0 0.4884
+scale 0.01 0.01 0.01
+model SM_CannedFood_a
+material MI_CannedFood
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CannedFood_a_2
+position 21.8045 -20.5017 4.1033
+direction 1.0 0.0 0.0 0.0
+scale 0.01 0.01 0.01
+model SM_CannedFood_a
+material MI_CannedFood
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CannedFood_a_3
+position 21.8033 -20.491 4.1374
+direction 0.9873 0.0 0.0 -0.1586
+scale 0.01 0.01 0.01
+model SM_CannedFood_a
+material MI_CannedFood
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CannedFood_a_4
+position 22.1273 -20.6311 4.1033
+direction 0.5961 0.0 0.0 -0.8029
+scale 0.01 0.01 0.01
+model SM_CannedFood_a
+material MI_CannedFood
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CannedFood_a_5
+position 21.5848 -20.4736 4.1033
+direction 0.8636 0.0 0.0 0.5041
+scale 0.01 0.01 0.01
+model SM_CannedFood_a
+material MI_CannedFood
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CannedFood_a_6
+position 21.5006 -20.6296 4.1033
+direction 0.7342 0.0 0.0 -0.6789
+scale 0.01 0.01 0.01
+model SM_CannedFood_a
+material MI_CannedFood
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CannedFood_a_7
+position 22.0626 -20.51 4.1374
+direction 1.0 0.0 0.0 0.0
+scale 0.01 0.01 0.01
+model SM_CannedFood_a
+material MI_CannedFood
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CannedFood_a_8
+position 22.0057 -20.4926 4.1033
+direction 0.8696 0.0 0.0 -0.4938
+scale 0.01 0.01 0.01
+model SM_CannedFood_a
+material MI_CannedFood
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CannedFood_b_0
+position 21.6225 -20.5371 3.721
+direction 0.6063 0.0 0.0 0.7952
+scale 0.01 0.01 0.01
+model SM_CannedFood_b
+material MI_CannedFood
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CannedFood_b_1
+position 22.0715 -20.6117 3.721
+direction 0.9693 0.0 0.0 -0.2459
+scale 0.01 0.01 0.01
+model SM_CannedFood_b
+material MI_CannedFood
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CannedFood_b_2
+position 21.7979 -20.5476 3.721
+direction 1.0 0.0 0.0 0.0
+scale 0.01 0.01 0.01
+model SM_CannedFood_b
+material MI_CannedFood
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CannedFood_b_4
+position 22.1309 -20.4365 3.7849
+direction 0.6476 0.2752 0.654 -0.2779
+scale 0.01 0.01 0.01
+model SM_CannedFood_b
+material MI_CannedFood
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CannedFood_b_5
+position 22.6217 -20.451 4.1033
+direction 1.0 0.0 0.0 0.0
+scale 0.01 0.01 0.01
+model SM_CannedFood_b
+material MI_CannedFood
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CannedFood_b_6
+position 21.9475 -20.4838 3.721
+direction 0.5186 0.0 0.0 -0.855
+scale 0.01 0.01 0.01
+model SM_CannedFood_b
+material MI_CannedFood
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CannedFood_c_0
+position 22.4866 -20.5006 3.721
+direction 0.9483 0.0 0.0 -0.3175
+scale 0.01 0.01 0.01
+model SM_CannedFood_c
+material MI_CannedFood
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CannedFood_c_2
+position 22.6512 -20.6084 3.721
+direction 1.0 0.0 0.0 0.0
+scale 0.01 0.01 0.01
+model SM_CannedFood_c
+material MI_CannedFood
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CannedFood_c_3
+position 22.9544 -20.4836 3.721
+direction 1.0 0.0 0.0 0.0
+scale 0.01 0.01 0.01
+model SM_CannedFood_c
+material MI_CannedFood
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CannedFood_c_4
+position 22.8185 -20.6391 3.721
+direction 0.6893 0.0 0.0 -0.7245
+scale 0.01 0.01 0.01
+model SM_CannedFood_c
+material MI_CannedFood
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CannedFood_c_5
+position 22.7278 -20.4807 3.721
+direction 0.9975 0.0 0.0 -0.07
+scale 0.01 0.01 0.01
+model SM_CannedFood_c
+material MI_CannedFood
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CannedFood_d_0
+position 21.3159 -20.4896 4.1033
+direction 0.0955 0.0 0.0 -0.9954
+scale 0.01 0.01 0.01
+model SM_CannedFood_d
+material MI_CannedFood
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CannedFood_d_1
+position 21.1814 -20.6064 4.1033
+direction 0.8741 0.0 0.0 -0.4858
+scale 0.01 0.01 0.01
+model SM_CannedFood_d
+material MI_CannedFood
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CannedFood_d_3
+position 22.4618 -20.5268 4.1033
+direction 0.714 0.0 0.0 -0.7001
+scale 0.01 0.01 0.01
+model SM_CannedFood_d
+material MI_CannedFood
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CartonGarbage_1
+position 24.789 -21.9137 3.5724
+direction 1.0 0.0 0.0 0.0
+scale 0.0047 0.0047 0.0047
+model SM_CartonGarbage
+material MI_CartonBox
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CerealBox_0
+position 21.1319 -20.5229 4.4554
+direction 1.0 0.0 0.0 0.0
+scale 0.01 0.01 0.01
+model SM_CerealBox
+material MI_CerealBox
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CerealBox_1
+position 21.4387 -20.5153 4.487
+direction 0.7071 0.0 0.7071 -0.0
+scale 0.01 0.01 0.01
+model SM_CerealBox
+material MI_CerealBox
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CerealBox_2
+position 21.3049 -20.5275 4.4554
+direction 0.2546 0.0 0.0 -0.9671
+scale 0.01 0.01 0.01
+model SM_CerealBox
+material MI_CerealBox
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Chair_a_3
+position 14.8814 -25.1768 7.3579
+direction 0.3539 0.0 0.0 0.9353
+scale 0.0125 0.0125 0.0115
+model SM_Chair_a
+material MI_Table_Chair_Set_b
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Chair_a_4
+position 25.9645 -24.0521 3.0786
+direction 0.6628 0.2787 -0.6302 0.2931
+scale 0.0125 0.0125 0.0115
+model SM_Chair_a
+material MI_Table_Chair_Set_b
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Chair_a_5
+position 21.1778 -26.5284 2.7448
+direction 0.8005 0.0 0.0 0.5993
+scale 0.0125 0.0125 0.0115
+model SM_Chair_a
+material MI_Table_Chair_Set_b
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Chair_a_8
+position 23.1278 -21.4588 2.7127
+direction 0.3971 0.0057 -0.0035 -0.9178
+scale 0.0125 0.0125 0.0115
+model SM_Chair_a
+material MI_Table_Chair_Set_b
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Chair_b_1
+position 26.0972 -28.917 2.739
+direction 0.989 0.116 -0.0204 0.0891
+scale 0.0125 0.0125 0.0115
+model SM_Chair_b
+material MI_Table_Chair_Set_b
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Chair_b_4
+position 25.9607 -29.0651 2.739
+direction 0.0157 -0.0021 0.1348 -0.9907
+scale 0.0125 0.0125 0.0115
+model SM_Chair_b
+material MI_Table_Chair_Set_b
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Chair_b_5
+position 26.0539 -29.1817 2.739
+direction 0.0462 -0.0063 0.1347 -0.9898
+scale 0.0125 0.0125 0.0115
+model SM_Chair_b
+material MI_Table_Chair_Set_b
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Chest_0
+position 25.9826 -31.8859 3.9757
+direction 1.0 0.0 0.0 -0.0026
+scale 0.01 0.01 0.01
+model SM_Chest
+material MI_Chest
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Chest_1
+position 25.9917 -30.1195 4.4711
+direction 1.0 0.0 0.0 -0.0026
+scale 0.01 0.01 0.01
+model SM_Chest
+material MI_Chest
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Chest_2
+position 25.9384 -31.8643 3.7341
+direction 0.9997 0.0 0.0 -0.0228
+scale 0.01 0.01 0.01
+model SM_Chest
+material MI_Chest
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CoffeeCup_0
+position 24.4123 -21.5839 3.5716
+direction 0.6569 0.0 0.0 0.754
+scale 0.01 0.01 0.01
+model SM_CoffeeCup
+material MI_DarkMetal
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CoffeeCup_1
+position 25.1169 -21.5289 3.5716
+direction 0.9823 0.0 0.0 -0.1871
+scale 0.01 0.01 0.01
+model SM_CoffeeCup
+material MI_DarkMetal
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CoffeeCup_2
+position 25.7208 -31.2639 3.7341
+direction 0.2186 0.0 0.0 0.9758
+scale 0.01 0.01 0.01
+model SM_CoffeeCup
+material MI_DarkMetal
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CoffeeCup_4
+position 23.3781 -20.6284 4.1033
+direction 1.0 0.0 0.0 0.0
+scale 0.01 0.01 0.01
+model SM_CoffeeCup
+material MI_DarkMetal
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Counter_0
+position 26.4041 -27.0829 2.739
+direction 0.7071 0.0 0.0 -0.7071
+scale 0.01 0.01 0.01
+model SM_Counter
+material MI_Counter
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Cup_0
+position 25.2543 -22.5663 3.6322
+direction 0.3871 0.416 -0.5808 -0.5829
+scale 0.01 0.01 0.01
+model SM_Cup
+material MI_Plastic
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Cup_2
+position 24.2408 -21.888 3.5716
+direction 1.0 0.0 0.0 0.0
+scale 0.01 0.01 0.01
+model SM_Cup
+material MI_Plastic
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Flashlight_1
+position 26.0624 -26.765 3.739
+direction 0.3326 0.0 0.0 -0.9431
+scale 0.01 0.01 0.01
+model SM_Flashlight
+material MI_FlashLight
+type 1 transparent
+type 2 emission
+material MI_FlashLight_Glass
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_FloorMat_0
+position 25.3868 -23.5654 2.7219
+direction 0.7111 0.0 0.0 -0.7031
+scale 0.0162 0.0162 0.0162
+model SM_FloorMat
+material MI_Floor
+type 2 emission
+END
+
+[0] MESH
+sysname SM_FloorMat_1
+position 25.4048 -32.4514 2.7146
+direction 0.7297 0.0 0.0 -0.6837
+scale 0.0145 0.0145 0.0145
+model SM_FloorMat
+material MI_Floor
+type 2 emission
+END
+
+[0] MESH
+sysname SM_GasCylinder_0
+position 21.3943 -20.7619 2.8395
+direction 1.0 0.0 0.0 0.0
+scale 0.01 0.01 0.01
+model SM_GasCylinder
+material MI_Storage
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_GasCylinder_1
+position 26.1628 -24.9975 2.7653
+direction 1.0 0.0 0.0 0.0
+scale 0.01 0.01 0.01
+model SM_GasCylinder
+material MI_Storage
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Gun_Display_0
+position 26.4546 -26.0604 4.4661
+direction 0.7071 0.0 0.0 -0.7071
+scale 0.01 0.01 0.01
+model SM_Gun_Display
+material MI_Gun_Display
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Hanging_Light_0
+position 23.3084 -27.8157 6.9363
+direction 0.7398 0.0 0.0 -0.6728
+scale 0.01 0.01 0.0088
+model SM_Hanging_Light
+material MI_Hanging_Light
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Hanging_Light_1
+position 23.236 -22.1149 6.9463
+direction 0.6943 -0.0094 -0.0098 -0.7195
+scale 0.01 0.01 0.01
+model SM_Hanging_Light
+material MI_Hanging_Light
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Hose_1
+position 26.0772 -30.902 3.7341
+direction 1.0 0.0 0.0 0.0
+scale 0.0091 0.0091 0.0091
+model SM_Hose
+material MI_Hose
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Hose_3
+position 26.0772 -30.1678 4.6943
+direction 0.5736 0.0 0.0 0.8192
+scale 0.0091 0.0091 0.0091
+model SM_Hose
+material MI_Hose
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Hose_6
+position 21.9248 -22.3486 2.8371
+direction 0.3879 -0.0351 0.0148 -0.9209
+scale 0.0154 0.0154 0.0154
+model SM_Hose
+material MI_Hose
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_IceBox_0
+position 20.8286 -22.0289 3.5264
+direction 0.9664 0.0 0.0 0.257
+scale 0.0069 0.0069 0.0069
+model SM_IceBox
+material MI_IceBox
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_LightSmall_0
+position 26.2263 -29.5613 5.3905
+direction 0.6465 0.6147 -0.3658 0.2651
+scale 0.01 0.01 0.01
+model SM_LightSmall
+material M_Trims
+type 1 transparent
+type 2 emission
+material M_Ceiling_Rubber
+type 1 transparent
+type 2 emission
+material M_Steel_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_LightSmall_4
+position 19.8439 -21.1413 0.1312
+direction 1.0 0.0 0.0 0.0
+scale 0.01 0.01 0.01
+model SM_LightSmall
+material M_Trims
+type 1 transparent
+type 2 emission
+material M_Ceiling_Rubber
+type 1 transparent
+type 2 emission
+material M_Steel_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_LightSmall_8
+position 20.9121 -32.1051 2.739
+direction 1.0 0.0 0.0 0.0
+scale 0.01 0.01 0.01
+model SM_LightSmall
+material M_Trims
+type 1 transparent
+type 2 emission
+material M_Ceiling_Rubber
+type 1 transparent
+type 2 emission
+material M_Steel_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_LightSmall_11
+position 20.6776 -23.6682 2.7653
+direction 1.0 0.0 0.0 0.0
+scale 0.01 0.01 0.01
+model SM_LightSmall
+material M_Trims
+type 1 transparent
+type 2 emission
+material M_Ceiling_Rubber
+type 1 transparent
+type 2 emission
+material M_Steel_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_LightSmall_18
+position 25.1822 -32.2167 2.9173
+direction 0.685 -0.6808 -0.1819 0.1849
+scale 0.01 0.01 0.01
+model SM_LightSmall
+material M_Trims
+type 1 transparent
+type 2 emission
+material M_Ceiling_Rubber
+type 1 transparent
+type 2 emission
+material M_Steel_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_LightStand_7
+position 28.7761 -34.6689 2.4878
+direction 0.3257 0.0 0.0 0.9455
+scale 0.01 0.01 0.01
+model SM_LightStand
+material MI_LightStand
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Paper_Targets_b_1
+position 26.0746 -32.5051 3.2411
+direction 0.0507 -0.0011 0.0209 -0.9985
+scale 0.01 0.01 0.01
+model SM_Paper_Targets_b
+material MI_Paper_Targets
+type 2 emission
+END
+
+[0] MESH
+sysname SM_PaperPile_c_1
+position 22.0022 -20.5404 4.4554
+direction 1.0 0.0 0.0 0.0
+scale 0.01 0.01 0.01
+model SM_PaperPile_c
+material MI_PaperPile
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Pashalko_3
+position 26.4157 -27.143 3.903
+direction 0.5 0.5 -0.5 -0.5
+scale 0.0012 0.0012 0.0012
+model SM_Pashalko_a
+material M_Pashalko_a
+type 2 emission
+END
+
+[0] MESH
+sysname SM_PencilCup_0
+position 22.3461 -20.5035 4.4554
+direction 1.0 0.0 0.0 0.0
+scale 0.01 0.01 0.01
+model SM_PencilCup
+material MI_PencilCup
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_PortableStove_0
+position 26.0575 -25.5994 3.739
+direction 0.0664 0.0 0.0 0.9978
+scale 0.01 0.01 0.01
+model SM_PortableStove
+material MI_PortableStove
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Rack_a_0
+position 25.9856 -31.0079 2.739
+direction 0.9999 0.0 0.0 -0.0106
+scale 0.0083 0.0075 0.0088
+model SM_Rack_a
+material MI_Rack
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Rack_b_0
+position 25.9856 -31.0079 4.3467
+direction 0.9999 0.0 0.0 -0.0106
+scale 0.0083 0.0075 0.01
+model SM_Rack_b
+material MI_Rack
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Rack_b_1
+position 25.9856 -31.0079 5.7536
+direction 0.9999 0.0 0.0 -0.0106
+scale 0.0083 0.0075 0.01
+model SM_Rack_b
+material MI_Rack
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Rack_b_2
+position 25.9856 -31.0079 3.6203
+direction 0.9999 0.0 0.0 -0.0106
+scale 0.0083 0.0075 0.01
+model SM_Rack_b
+material MI_Rack
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Rack_b_3
+position 25.9856 -31.0079 5.0129
+direction 0.9999 0.0 0.0 -0.0106
+scale 0.0083 0.0075 0.01
+model SM_Rack_b
+material MI_Rack
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Rack_b_4
+position 25.9959 -31.0106 2.9813
+direction 0.9702 -0.05 -0.2364 -0.0183
+scale 0.0082 0.0075 0.01
+model SM_Rack_b
+material MI_Rack
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Radio_0
+position 23.1772 -20.5286 4.4554
+direction 0.1766 0.0 0.0 -0.9843
+scale 0.01 0.01 0.01
+model SM_Radio
+material MI_Radio
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Radio_3
+position 24.5265 -22.5085 3.5716
+direction 0.9224 0.0 0.0 -0.3862
+scale 0.015 0.015 0.015
+model SM_Radio
+material MI_Radio
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RolledBlanket_1
+position 26.1905 -31.4138 5.8673
+direction 0.731 0.0 0.0 0.6824
+scale 0.0168 0.0168 0.0168
+model SM_RolledBlanket
+material MI_RolledBlanket
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RolledBlanket_2
+position 26.164 -31.7987 5.9406
+direction 0.5636 0.2833 -0.2141 0.7458
+scale 0.0168 0.0168 0.0168
+model SM_RolledBlanket
+material MI_RolledBlanket
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Shelf_a_0
+position 22.2703 -20.5215 3.1909
+direction 0.7071 0.0 0.0 0.7071
+scale 0.01 0.01 0.01
+model SM_Shelf_a
+material MI_Plastic_b
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Shelf_b_0
+position 22.2703 -20.5215 4.0922
+direction 0.7071 0.0 0.0 -0.7071
+scale 0.01 0.01 0.01
+model SM_Shelf_b
+material MI_Plastic_b
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_SleepingBag_0
+position 25.9722 -30.3728 5.9073
+direction 0.7438 -0.3079 0.2269 -0.5481
+scale 0.01 0.01 0.01
+model SM_SleepingBag
+material MI_SleepingBag
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_SleepingBag_1
+position 25.9722 -30.9049 5.8673
+direction 1.0 0.0 0.0 0.0
+scale 0.01 0.01 0.01
+model SM_SleepingBag
+material MI_SleepingBag
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_SolarPanelStand_1
+position 24.4442 -20.1147 12.2868
+direction 0.01 0.0 0.0 -0.9999
+scale 0.01 0.01 0.01
+model SM_SolarPanelStand
+material MI_SolarPanel
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_StreetPole_10
+position 14.1367 -27.4818 -1.0727
+direction 0.2391 -0.0 0.0 0.971
+scale 0.02 0.02 0.0133
+model SM_StreetPole
+material MI_StreetPoleYellow
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_StreetPole_12
+position 28.9115 -34.5498 1.157
+direction 0.0 0.0134 0.0 0.9999
+scale 0.02 0.02 0.0126
+model SM_StreetPole
+material MI_StreetPoleYellow
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_StreetPole_19
+position 14.8243 -26.1701 -1.043
+direction 0.2391 -0.0 0.0 0.971
+scale 0.02 0.02 0.0126
+model SM_StreetPole
+material MI_StreetPoleYellow
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Table_2
+position 24.8179 -22.506 2.6922
+direction 0.6418 0.0 0.0 0.7668
+scale 0.0135 0.015 0.011
+model SM_Table
+material MI_Table_Chair_Set_a
+type 2 emission
+END
+
+[0] MESH
+sysname SM_TarpBlack_1
+position 21.6479 -21.8052 2.8187
+direction 0.6946 0.0036 0.0023 0.7194
+scale 0.01 0.01 0.01
+model SM_TarpBlack
+material MI_Tarp
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Thermos_3
+position 22.8581 -20.4671 4.4554
+direction 1.0 0.0 0.0 0.0
+scale 0.01 0.01 0.01
+model SM_Thermos
+material MI_KitchenProps
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_ToiletPaper_0
+position 23.0433 -20.4452 4.1033
+direction 1.0 0.0 0.0 0.0
+scale 0.01 0.01 0.01
+model SM_ToiletPaper
+material MI_ToiletPaper
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_ToiletPaper_1
+position 22.9231 -20.5762 4.1033
+direction 0.8316 0.0 0.0 -0.5553
+scale 0.01 0.01 0.01
+model SM_ToiletPaper
+material MI_ToiletPaper
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_ToiletPaper_2
+position 23.0853 -20.5933 4.1033
+direction 1.0 0.0 0.0 0.0
+scale 0.01 0.01 0.01
+model SM_ToiletPaper
+material MI_ToiletPaper
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Vent_0
+position 18.8093 -19.1177 11.6
+direction 0.7071 0.0 0.0 0.7071
+scale 0.0135 0.0135 0.0135
+model SM_Vent
+material MI_Metal
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Vent_1
+position 18.8093 -34.1255 11.6
+direction 0.7071 0.0 0.0 -0.7071
+scale 0.0135 0.0135 0.0135
+model SM_Vent
+material MI_Metal
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Vent_2
+position 26.4916 -19.1177 11.6
+direction 0.7071 0.0 0.0 0.7071
+scale 0.0135 0.0135 0.0135
+model SM_Vent
+material MI_Metal
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Vent_3
+position 26.3702 -34.1916 11.6
+direction 0.6631 0.0039 0.0988 -0.742
+scale 0.0135 0.0135 0.0135
+model SM_Vent
+material MI_Metal
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_WallLight_0
+position 20.514 -20.6843 4.9262
+direction 0.7071 -0.0 -0.7071 -0.0
+scale 0.01 0.01 0.01
+model SM_WallLight
+material MI_Wall_Light
+type 2 emission
+END
+
+[0] MESH
+sysname SM_WallLight_1
+position 26.1671 -20.6843 5.0977
+direction 0.7071 0.0 0.7071 0.0
+scale 0.01 0.01 0.01
+model SM_WallLight
+material MI_Wall_Light
+type 2 emission
+END
+
+[0] MESH
+sysname SM_WallLight_2
+position 25.8327 -30.7301 5.127
+direction 0.468 -0.471 0.5305 -0.527
+scale 0.01 0.01 0.01
+model SM_WallLight
+material MI_Wall_Light
+type 2 emission
+END
+
+[0] MESH
+sysname SM_WallLight_3
+position 27.3863 -22.465 11.0153
+direction 0.7071 -0.0 0.0 0.7071
+scale 0.01 0.01 0.01
+model SM_WallLight
+material MI_Wall_Light
+type 2 emission
+END
+
+[0] MESH
+sysname SM_WallLight_4
+position 15.3811 -26.6312 10.9267
+direction 0.7071 -0.0 -0.0 -0.7071
+scale 0.01 0.01 0.01
+model SM_WallLight
+material MI_Wall_Light
+type 2 emission
+END
+
+[0] MESH
+sysname SM_WaterCamper_1
+position 22.9263 -20.6749 2.7185
+direction 1.0 0.0 0.0 0.0
+scale 0.01 0.01 0.01
+model SM_WaterCamper
+material MI_WaterCamper
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_StairsYSeparated_A_0
+position 28.777 -28.7133 0.033
+direction 0.9959 0.0 0.0908 0.0
+scale 0.01 0.01 0.01
+model SM_StairsYSeparated_A
+material MI_Stairs_Fence
+type 2 emission
+END
+
+[0] MESH
+sysname SM_StairsYSeparated_A_3
+position 27.6865 -29.9126 -0.1224
+direction 0.9959 0.0 0.0 0.0902
+scale 0.01 0.01 0.01
+model SM_StairsYSeparated_A
+material MI_Stairs_Fence
+type 2 emission
+END
+
+[0] MESH
+sysname SM_PropCrate_0
+position 32.0389 -20.1696 0.2883
+direction 0.9873 0.0 0.0 0.1587
+scale 0.01 0.01 0.01
+model SM_PropCrate
+material MI_MetalPanelDGrayTrimD
+type 1 transparent
+type 2 emission
+material MI_MetalPanelDGrayFill
+type 1 transparent
+type 2 emission
+material MI_MetalPanelGrayTrimD
+type 1 transparent
+type 2 emission
+material MI_MetalPanelYellowFill
+type 1 transparent
+type 2 emission
+material MI_MetalWornFillA
+type 1 transparent
+type 2 emission
+material MI_MetalPanelGrayFill
+type 1 transparent
+type 2 emission
+material MI_MetalPanelWhiteFill
+type 1 transparent
+type 2 emission
+material Fbx_Default_Material
+type 2 emission
+material MI_MetalPanelWhiteTrimD
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_StairsYSeparated_A_6
+position 26.3899 -25.3804 0.2358
+direction 0.0222 0.9992 0.0008 0.0346
+scale 0.01 0.01 0.01
+model SM_StairsYSeparated_A
+material MI_Stairs_Fence
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Barrel_c_0
+position 29.7913 -12.9583 0.2887
+direction 0.988 0.0316 0.0522 -0.1421
+scale 0.02 0.02 0.02
+model SM_Barrel_c
+material MI_MetalPanelWhiteFill_1
+type 1 transparent
+type 2 emission
+material M_Trims
+type 1 transparent
+type 2 emission
+material M_Floaters
+type 1 transparent
+type 2 emission
+material M_Steel
+type 2 emission
+material M_Signs
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_WaterTank_0
+position 27.1612 -12.2265 0.2551
+direction 0.9394 0.0 0.0 0.3428
+scale 0.01 0.01 0.01
+model SM_WaterTank
+material MI_WaterTank
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Barrel_b_0
+position 20.5176 -11.7913 0.5678
+direction 0.9996 -0.0004 -0.0212 -0.0174
+scale 0.01 0.01 0.01
+model SM_Barrel_b
+material MI_Barrel_a
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_WaterTank_1
+position 31.0088 -17.7628 0.0134
+direction 1.0 0.0 0.0 0.0
+scale 0.01 0.01 0.01
+model SM_WaterTank
+material MI_WaterTank
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_StairsYSeparated_A_11
+position 28.2541 -25.7273 -0.1067
+direction 0.9912 0.002 0.015 0.1315
+scale 0.01 0.01 0.01
+model SM_StairsYSeparated_A
+material MI_Stairs_Fence
+type 2 emission
+END
+
+[0] MESH
+sysname SM_StairsYSeparated_A_12
+position 26.3884 -29.0151 -0.1214
+direction 0.9526 0.0 0.0 0.3043
+scale 0.01 0.01 0.01
+model SM_StairsYSeparated_A
+material MI_Stairs_Fence
+type 2 emission
+END
+
+[0] MESH
+sysname SM_StairsYSeparated_A_14
+position 28.6749 -30.5993 -0.119
+direction 0.9949 0.0 0.0 -0.1009
+scale 0.01 0.01 0.01
+model SM_StairsYSeparated_A
+material MI_Stairs_Fence
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Barrel_c_3
+position 28.8814 -13.0717 0.3369
+direction 0.7347 0.0159 0.0342 -0.6774
+scale 0.01 0.01 0.01
+model SM_Barrel_c
+material MI_MetalPanelWhiteFill_1
+type 1 transparent
+type 2 emission
+material M_Trims
+type 1 transparent
+type 2 emission
+material M_Floaters
+type 1 transparent
+type 2 emission
+material M_Steel
+type 2 emission
+material M_Signs
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Box_c_0
+position 22.229 -12.3289 0.7537
+direction 0.9554 -0.0063 -0.018 0.2948
+scale 0.01 0.01 0.01
+model SM_Box_c
+material MI_Boxes
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Barrel_d_2
+position 28.1824 -12.7004 0.2369
+direction 0.9998 0.0 0.0 -0.0174
+scale 0.01 0.01 0.01
+model SM_Barrel_d
+material MI_Barrel_PlasticA
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_StairsYSeparated_A_26
+position 25.8716 -27.3333 -0.1221
+direction 0.5873 0.0 0.0 0.8094
+scale 0.01 0.01 0.01
+model SM_StairsYSeparated_A
+material MI_Stairs_Fence
+type 2 emission
+END
+
+[0] MESH
+sysname SM_StairsYSeparated_A_38
+position 27.6576 -26.7429 0.2021
+direction 0.0222 0.9998 0.0 0.0
+scale 0.01 0.01 0.01
+model SM_StairsYSeparated_A
+material MI_Stairs_Fence
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Barrel_d_3
+position 31.1718 -18.8033 0.0103
+direction 1.0 0.0 0.0 0.0
+scale 0.01 0.01 0.01
+model SM_Barrel_d
+material MI_Barrel_PlasticA
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_StairsYSeparated_A_42
+position 28.3694 -27.7034 -0.1117
+direction 0.8965 0.0 0.0 -0.4431
+scale 0.01 0.01 0.01
+model SM_StairsYSeparated_A
+material MI_Stairs_Fence
+type 2 emission
+END
+
+[0] MESH
+sysname SM_YellowFence_16
+position 29.3764 -26.0189 -0.0122
+direction 0.5838 -0.4079 0.3995 -0.5772
+scale 0.01 0.01 0.01
+model SM_YellowFence
+material MI_Stairs_Fence
+type 2 emission
+END
+
+[0] MESH
+sysname SM_StairsYSeparated_C_0
+position 27.2344 -27.4714 0.1205
+direction 0.6126 0.3531 -0.6126 0.3531
+scale 0.01 0.01 0.01
+model SM_StairsYSeparated_C
+material MI_Stairs_Fence
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Barrel_a_0
+position 21.2124 -11.8434 0.7252
+direction 0.9997 -0.0003 -0.0194 -0.0174
+scale 0.01 0.01 0.01
+model SM_Barrel_a
+material MI_Barrel_b
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Barrel_c_12
+position 29.1929 -13.7938 0.2576
+direction 0.8962 0.0369 0.0354 -0.4408
+scale 0.01 0.01 0.01
+model SM_Barrel_c
+material MI_MetalPanelWhiteFill_1
+type 1 transparent
+type 2 emission
+material M_Trims
+type 1 transparent
+type 2 emission
+material M_Floaters
+type 1 transparent
+type 2 emission
+material M_Steel
+type 2 emission
+material M_Signs
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_LightStand_5
+position 28.7837 -11.9388 0.4787
+direction 0.657 -0.2819 -0.1934 -0.6719
+scale 0.01 0.01 0.01
+model SM_LightStand
+material MI_LightStand
+type 2 emission
+END
+
+[0] MESH
+sysname SM_YellowFence_22
+position 28.8648 -29.7358 -0.0
+direction 0.4672 -0.4641 0.5318 -0.5324
+scale 0.01 0.01 0.01
+model SM_YellowFence
+material MI_Stairs_Fence
+type 2 emission
+END
+
+[0] MESH
+sysname SM_StairsYSeparated_A_55
+position 27.6075 -24.632 -0.1138
+direction 0.9936 0.0 0.0 -0.1131
+scale 0.01 0.01 0.01
+model SM_StairsYSeparated_A
+material MI_Stairs_Fence
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Barrel_c_14
+position 30.2507 -15.4665 0.2135
+direction 0.7493 -0.0238 0.0606 -0.6591
+scale 0.01 0.01 0.01
+model SM_Barrel_c
+material MI_MetalPanelWhiteFill_1
+type 1 transparent
+type 2 emission
+material M_Trims
+type 1 transparent
+type 2 emission
+material M_Floaters
+type 1 transparent
+type 2 emission
+material M_Steel
+type 2 emission
+material M_Signs
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_StairsYSeparated_B_13
+position 27.2516 -24.8256 -0.0091
+direction 0.0959 -0.1898 -0.9503 0.2273
+scale 0.01 0.01 0.01
+model SM_StairsYSeparated_B
+material MI_Stairs_Fence
+type 2 emission
+END
+
+[0] MESH
+sysname SM_StairsYSeparated_B_15
+position 29.7154 -23.4696 0.1385
+direction 0.9417 0.2562 0.0023 -0.2179
+scale 0.01 0.01 0.01
+model SM_StairsYSeparated_B
+material MI_Stairs_Fence
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Barrel_c_17
+position 30.1243 -14.4047 0.1631
+direction 0.5606 -0.013 0.0378 -0.8272
+scale 0.02 0.02 0.02
+model SM_Barrel_c
+material MI_MetalPanelWhiteFill_1
+type 1 transparent
+type 2 emission
+material M_Trims
+type 1 transparent
+type 2 emission
+material M_Floaters
+type 1 transparent
+type 2 emission
+material M_Steel
+type 2 emission
+material M_Signs
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Barrel_a_1
+position 20.1635 -12.3088 0.8031
+direction 0.468 -0.3352 0.5394 -0.6145
+scale 0.01 0.01 0.01
+model SM_Barrel_a
+material MI_Barrel_b
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Ceiling_L_0
+position 26.5663 -28.5484 2.0086
+direction 0.7071 0.0 0.0 0.7071
+scale 0.0195 0.0254 0.001
+model SM_Ceiling_L
+material MI_Ceiling_White
+type 1 transparent
+type 2 emission
+material M_Ceiling_Rubber
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Ceiling_L_1
+position 26.5663 -24.6484 2.0086
+direction 0.7071 0.0 0.0 0.7071
+scale 0.0195 0.0254 0.001
+model SM_Ceiling_L
+material MI_Ceiling_White
+type 1 transparent
+type 2 emission
+material M_Ceiling_Rubber
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Ceiling_L_2
+position 26.5663 -32.4484 2.0086
+direction 0.7071 0.0 0.0 0.7071
+scale 0.0195 0.0254 0.001
+model SM_Ceiling_L
+material MI_Ceiling_White
+type 1 transparent
+type 2 emission
+material M_Ceiling_Rubber
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Ceiling_S_0
+position 20.9702 -20.759 2.1425
+direction 1.0 0.0 0.0 0.0
+scale 0.012 0.008 0.001
+model SM_Ceiling_S
+material MI_Ceiling_White
+type 1 transparent
+type 2 emission
+material M_Ceiling_Rubber
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Ceiling_S_1
+position 23.3702 -20.759 2.1425
+direction 1.0 0.0 0.0 0.0
+scale 0.012 0.008 0.001
+model SM_Ceiling_S
+material MI_Ceiling_White
+type 1 transparent
+type 2 emission
+material M_Ceiling_Rubber
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_ConcreteColunm_2
+position 26.3437 -20.2377 -0.2484
+direction 0.7071 0.0 0.0 -0.7071
+scale 0.0187 0.0187 0.0187
+model SM_ConcreteColunm
+material MI_ConcreteColumn
+type 2 emission
+material M_AridGravelGround
+type 2 emission
+END
+
+[0] MESH
+sysname SM_ConcreteColunm_4
+position 26.3437 -33.0063 -0.2484
+direction 0.7071 0.0 0.0 0.7071
+scale 0.0187 0.0187 0.0187
+model SM_ConcreteColunm
+material MI_ConcreteColumn
+type 2 emission
+material M_AridGravelGround
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Door_0
+position 27.0423 -21.4315 10.1229
+direction 1.0 0.0 0.0 0.0
+scale 0.012 0.012 0.013
+model SM_Door
+material MI_DarkMetal
+type 1 transparent
+type 2 emission
+material Fbx_Default_Material
+type 2 emission
+material MI_OldMetall
+type 2 emission
+material Fbx_Default_Material
+type 2 emission
+material Fbx_Default_Material
+type 2 emission
+material Fbx_Default_Material
+type 2 emission
+material Fbx_Default_Material
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Door_1
+position 15.8295 -25.6488 10.0792
+direction 1.0 0.0 0.0 0.0
+scale 0.0115 0.0115 0.0125
+model SM_Door
+material MI_DarkMetal
+type 1 transparent
+type 2 emission
+material Fbx_Default_Material
+type 2 emission
+material MI_OldMetall
+type 2 emission
+material Fbx_Default_Material
+type 2 emission
+material Fbx_Default_Material
+type 2 emission
+material Fbx_Default_Material
+type 2 emission
+material Fbx_Default_Material
+type 2 emission
+END
+
+[0] MESH
+sysname SM_FloorLatticeY_0
+position 23.3794 -28.8111 2.7583
+direction 0.7071 0.0 0.0 0.7071
+scale 0.0112 0.0112 0.0114
+model SM_FloorLatticeY
+material MI_Floor_Grate
+type 2 emission
+END
+
+[0] MESH
+sysname SM_FloorLatticeY_1
+position 23.3794 -28.8253 2.7583
+direction 0.7071 0.0 0.0 -0.7071
+scale 0.0112 0.0112 0.0114
+model SM_FloorLatticeY
+material MI_Floor_Grate
+type 2 emission
+END
+
+[0] MESH
+sysname SM_FloorLatticeY_2
+position 23.3794 -24.4395 2.7583
+direction 0.7071 0.0 0.0 -0.7071
+scale 0.0112 0.0112 0.0114
+model SM_FloorLatticeY
+material MI_Floor_Grate
+type 2 emission
+END
+
+[0] MESH
+sysname SM_FloorLatticeY_3
+position 23.3794 -33.2279 2.7583
+direction 0.7071 0.0 0.0 0.7071
+scale 0.0113 0.0112 0.0115
+model SM_FloorLatticeY
+material MI_Floor_Grate
+type 2 emission
+END
+
+[0] MESH
+sysname SM_FloorLatticeY_4
+position 23.3794 -24.4253 2.7583
+direction 0.7071 0.0 0.0 0.7071
+scale 0.0105 0.0112 0.0114
+model SM_FloorLatticeY
+material MI_Floor_Grate
+type 2 emission
+END
+
+[0] MESH
+sysname SM_FloorLatticeY_5
+position 23.3794 -20.3395 2.7583
+direction 0.7071 -0.0 0.0 -0.7071
+scale 0.0105 0.0112 0.0115
+model SM_FloorLatticeY
+material MI_Floor_Grate
+type 2 emission
+END
+
+[0] MESH
+sysname SM_MetallFenceCorner_0
+position 15.397 -28.5932 7.358
+direction 1.0 0.0 0.0 0.0
+scale 0.01 0.0088 0.01
+model SM_MetallFenceCorner
+material MI_Railing
+type 2 emission
+END
+
+[0] MESH
+sysname SM_MetallFenceCorner_1
+position 15.397 -24.6662 7.358
+direction -0.0 0.0 1.0 0.0
+scale -0.01 -0.0088 -0.01
+model SM_MetallFenceCorner
+material MI_Railing
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Pips_0
+position 20.5987 -26.6687 1.3006
+direction 0.0 -0.7071 -0.7071 0.0
+scale 0.0162 0.0162 0.0162
+model SM_Pips
+material MI_Equipments
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Pips_1
+position 26.0708 -26.6687 1.3006
+direction 0.0 -0.7071 0.7071 -0.0
+scale 0.0162 0.0162 0.0162
+model SM_Pips
+material MI_Equipments
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Pips_2
+position 20.3913 -26.6029 7.2097
+direction 0.5 -0.5 -0.5 0.5
+scale 0.0145 0.0145 0.0145
+model SM_Pips
+material MI_Equipments
+type 2 emission
+END
+
+[0] MESH
+sysname SM_PlatformFloorLong_0
+position 22.1989 -35.4869 2.4578
+direction 1.0 0.0 0.0 0.0
+scale 0.01 0.01 0.01
+model SM_PlatformFloorLong
+material MI_Floor
+type 2 emission
+END
+
+[0] MESH
+sysname SM_PlatformFloorLong_1
+position 29.3422 -24.4869 7.3864
+direction 0.7071 0.0 0.0 0.7071
+scale 0.01 0.01 0.01
+model SM_PlatformFloorLong
+material MI_Floor
+type 2 emission
+END
+
+[0] MESH
+sysname SM_PlatformFloorLong_2
+position 19.5989 -35.4869 1.3578
+direction 0.7071 0.0 0.0 0.7071
+scale 0.005 0.005 0.01
+model SM_PlatformFloorLong
+material MI_Floor
+type 2 emission
+END
+
+[0] MESH
+sysname SM_PlatformFloorLong_3
+position 27.1989 -35.4869 2.4578
+direction 0.7071 0.0 0.0 0.7071
+scale 0.005 0.005 0.01
+model SM_PlatformFloorLong
+material MI_Floor
+type 2 emission
+END
+
+[0] MESH
+sysname SM_PlatformFloorSquare_4
+position 27.1987 -35.5 2.4578
+direction 1.0 0.0 0.0 0.0
+scale 0.01 0.01 0.01
+model SM_PlatformFloorSquare
+material MI_Floor
+type 2 emission
+END
+
+[0] MESH
+sysname SM_StairsY_6
+position 16.089 -34.4944 0.2173
+direction 0.7071 0.0 0.0 0.7071
+scale 0.01 0.01 0.012
+model SM_StairsY
+material MI_Stairs_Fence
+type 2 emission
+END
+
+[0] MESH
+sysname SM_StairsY_9
+position 19.689 -34.4527 1.4173
+direction 0.7071 0.0 0.0 0.7071
+scale 0.01 0.01 0.011
+model SM_StairsY
+material MI_Stairs_Fence
+type 2 emission
+END
+
+[0] MESH
+sysname SM_StairsYSeparated_A_9
+position 28.7901 -26.2638 5.861
+direction 0.3213 0.0159 0.1003 -0.9415
+scale 0.01 0.01 0.01
+model SM_StairsYSeparated_A
+material MI_Stairs_Fence
+type 2 emission
+END
+
+[0] MESH
+sysname SM_StairsYSeparated_A_27
+position 29.0253 -26.2815 5.111
+direction 0.3548 0.1271 0.1158 -0.919
+scale 0.01 0.01 0.01
+model SM_StairsYSeparated_A
+material MI_Stairs_Fence
+type 2 emission
+END
+
+[0] MESH
+sysname SM_StairsYSeparated_A_28
+position 28.8831 -26.2911 5.4971
+direction 0.3316 0.084 0.0985 -0.9345
+scale 0.01 0.01 0.01
+model SM_StairsYSeparated_A
+material MI_Stairs_Fence
+type 2 emission
+END
+
+[0] MESH
+sysname SM_StairsYSeparated_A_33
+position 29.3419 -26.3138 4.197
+direction 0.348 0.1811 0.1399 -0.9091
+scale 0.01 0.01 0.01
+model SM_StairsYSeparated_A
+material MI_Stairs_Fence
+type 2 emission
+END
+
+[0] MESH
+sysname SM_StairsYSeparated_A_53
+position 27.6806 -30.1104 1.0206
+direction 0.209 0.0133 -0.6812 -0.7015
+scale 0.01 0.01 0.01
+model SM_StairsYSeparated_A
+material MI_Stairs_Fence
+type 2 emission
+END
+
+[0] MESH
+sysname SM_StairsYSeparated_A_63
+position 29.1449 -26.2711 4.6785
+direction 0.3653 0.1674 0.1299 -0.9065
+scale 0.01 0.01 0.01
+model SM_StairsYSeparated_A
+material MI_Stairs_Fence
+type 2 emission
+END
+
+[0] MESH
+sysname SM_StairsYSeparated_A_67
+position 27.2051 -29.7562 0.6902
+direction 0.3873 0.0936 -0.6576 -0.6393
+scale 0.01 0.01 0.01
+model SM_StairsYSeparated_A
+material MI_Stairs_Fence
+type 2 emission
+END
+
+[0] MESH
+sysname SM_StairsYSeparated_B_3
+position 26.691 -29.5835 -0.0091
+direction -0.0404 0.4032 -0.7199 0.5635
+scale 0.01 0.01 0.01
+model SM_StairsYSeparated_B
+material MI_Stairs_Fence
+type 2 emission
+END
+
+[0] MESH
+sysname SM_StairsYSeparated_C_1
+position 28.4519 -26.0384 6.2555
+direction -0.0608 -0.3689 0.8241 0.4255
+scale 0.01 0.01 0.01
+model SM_StairsYSeparated_C
+material MI_Stairs_Fence
+type 2 emission
+END
+
+[0] MESH
+sysname SM_StairsYSeparated_D_0
+position 28.2752 -31.5667 2.6391
+direction 0.0803 0.0788 -0.6083 -0.7857
+scale 0.01 0.01 0.01
+model SM_StairsYSeparated_D
+material MI_Stairs_Fence
+type 2 emission
+END
+
+[0] MESH
+sysname SM_StairsYSeparated_D_1
+position 28.442 -26.0972 6.1266
+direction 0.0 -0.0 -0.0708 0.9975
+scale 0.01 0.01 0.01
+model SM_StairsYSeparated_D
+material MI_Stairs_Fence
+type 2 emission
+END
+
+[0] MESH
+sysname SM_StairsYSeparated_D_3
+position 28.3 -33.4 2.4
+direction 0.0057 0.038 -0.1272 -0.9911
+scale 0.01 0.01 0.01
+model SM_StairsYSeparated_D
+material MI_Stairs_Fence
+type 2 emission
+END
+
+[0] MESH
+sysname SM_StreetPole_2
+position 21.6372 -35.1502 1.1511
+direction 0.0 -0.0 0.0 1.0
+scale 0.02 0.02 0.0129
+model SM_StreetPole
+material MI_StreetPoleYellow
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_StreetPole_3
+position 26.3234 -35.1502 1.2364
+direction 0.0 -0.0 0.0 1.0
+scale 0.02 0.02 0.011
+model SM_StreetPole
+material MI_StreetPoleYellow
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_StreetPole_8
+position 28.2405 -32.0694 1.1186
+direction 0.0019 0.0132 0.1405 0.99
+scale 0.02 0.02 0.0165
+model SM_StreetPole
+material MI_StreetPoleYellow
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_StreetPole_9
+position 23.8234 -33.7862 1.3359
+direction 0.766 0.0 0.0 0.6428
+scale 0.02 0.02 0.0114
+model SM_StreetPole
+material MI_StreetPoleYellow
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_StreetPole_11
+position 21.6372 -33.7862 1.181
+direction 0.0 -0.0 0.0 1.0
+scale 0.02 0.02 0.0122
+model SM_StreetPole
+material MI_StreetPoleYellow
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_StreetPole_13
+position 18.0338 -33.7862 0.1165
+direction 0.0 -0.0 0.0 1.0
+scale 0.02 0.02 0.0117
+model SM_StreetPole
+material MI_StreetPoleYellow
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_StreetPole_14
+position 23.8234 -35.1502 1.3878
+direction 0.766 0.0 0.0 0.6428
+scale 0.02 0.02 0.0098
+model SM_StreetPole
+material MI_StreetPoleYellow
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_StreetPole_15
+position 18.0338 -35.1502 0.1559
+direction 0.0 -0.0 0.0 1.0
+scale 0.02 0.02 0.0117
+model SM_StreetPole
+material MI_StreetPoleYellow
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_StreetPole_17
+position 26.3234 -33.7862 1.2188
+direction 0.0 -0.0 0.0 1.0
+scale 0.02 0.02 0.012
+model SM_StreetPole
+material MI_StreetPoleYellow
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_WallWhite_M_0
+position 26.6002 -26.4786 2.7078
+direction 1.0 0.0 0.0 0.0
+scale 0.015 0.0135 0.015
+model SM_WallWhite_M
+material MI_Trim_Gray
+type 1 transparent
+type 2 emission
+material MI_Ceiling_Black
+type 1 transparent
+type 2 emission
+material MI_Trim_White
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_WallWhite_M_1
+position 26.6002 -23.5286 2.7078
+direction 1.0 0.0 0.0 0.0
+scale 0.015 0.0135 0.015
+model SM_WallWhite_M
+material MI_Trim_Gray
+type 1 transparent
+type 2 emission
+material MI_Ceiling_Black
+type 1 transparent
+type 2 emission
+material MI_Trim_White
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_WallWhite_M_2
+position 23.2502 -20.2286 2.7078
+direction 0.7071 0.0 0.0 0.7071
+scale 0.015 0.011 0.015
+model SM_WallWhite_M
+material MI_Trim_Gray
+type 1 transparent
+type 2 emission
+material MI_Ceiling_Black
+type 1 transparent
+type 2 emission
+material MI_Trim_White
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_WallWhite_M_3
+position 25.7002 -20.2286 2.7078
+direction 0.7071 0.0 0.0 0.7071
+scale 0.015 0.011 0.015
+model SM_WallWhite_M
+material MI_Trim_Gray
+type 1 transparent
+type 2 emission
+material MI_Ceiling_Black
+type 1 transparent
+type 2 emission
+material MI_Trim_White
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_WallWhite_M_4
+position 26.6002 -29.4286 2.7078
+direction 1.0 0.0 0.0 0.0
+scale 0.015 0.0135 0.015
+model SM_WallWhite_M
+material MI_Trim_Gray
+type 1 transparent
+type 2 emission
+material MI_Ceiling_Black
+type 1 transparent
+type 2 emission
+material MI_Trim_White
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_WallWhite_M_5
+position 26.6002 -32.3786 2.7078
+direction 1.0 0.0 0.0 0.0
+scale 0.015 0.0135 0.015
+model SM_WallWhite_M
+material MI_Trim_Gray
+type 1 transparent
+type 2 emission
+material MI_Ceiling_Black
+type 1 transparent
+type 2 emission
+material MI_Trim_White
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_WallWhite_S_0
+position 26.6002 -26.7286 2.7078
+direction 1.0 0.0 0.0 0.0
+scale 0.015 0.01 0.015
+model SM_WallWhite_S
+material MI_Trim_Gray
+type 1 transparent
+type 2 emission
+material MI_Ceiling_Black
+type 1 transparent
+type 2 emission
+material MI_Trim_White
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_WallWhite_S_1
+position 26.6002 -20.8286 2.7078
+direction 1.0 0.0 0.0 0.0
+scale 0.015 0.01 0.015
+model SM_WallWhite_S
+material MI_Trim_Gray
+type 1 transparent
+type 2 emission
+material MI_Ceiling_Black
+type 1 transparent
+type 2 emission
+material MI_Trim_White
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_WallWhite_S_2
+position 26.6002 -32.6286 2.7078
+direction 1.0 0.0 0.0 0.0
+scale 0.015 0.01 0.015
+model SM_WallWhite_S
+material MI_Trim_Gray
+type 1 transparent
+type 2 emission
+material MI_Ceiling_Black
+type 1 transparent
+type 2 emission
+material MI_Trim_White
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_WallWhite_S_3
+position 25.9502 -20.2286 2.7078
+direction 0.7071 0.0 0.0 0.7071
+scale 0.015 0.01 0.015
+model SM_WallWhite_S
+material MI_Trim_Gray
+type 1 transparent
+type 2 emission
+material MI_Ceiling_Black
+type 1 transparent
+type 2 emission
+material MI_Trim_White
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_WallWhite_S_4
+position 21.0502 -20.2286 2.7078
+direction 0.7071 0.0 0.0 0.7071
+scale 0.015 0.01 0.015
+model SM_WallWhite_S
+material MI_Trim_Gray
+type 1 transparent
+type 2 emission
+material MI_Ceiling_Black
+type 1 transparent
+type 2 emission
+material MI_Trim_White
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_WallWhite_S_5
+position 23.5002 -20.2286 2.7078
+direction 0.7071 0.0 0.0 0.7071
+scale 0.015 0.01 0.015
+model SM_WallWhite_S
+material MI_Trim_Gray
+type 1 transparent
+type 2 emission
+material MI_Ceiling_Black
+type 1 transparent
+type 2 emission
+material MI_Trim_White
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_WallWhite_S_6
+position 26.6002 -23.7786 2.7078
+direction 1.0 0.0 0.0 0.0
+scale 0.015 0.01 0.015
+model SM_WallWhite_S
+material MI_Trim_Gray
+type 1 transparent
+type 2 emission
+material MI_Ceiling_Black
+type 1 transparent
+type 2 emission
+material MI_Trim_White
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_WallWhite_S_7
+position 26.6002 -29.6786 2.7078
+direction 1.0 0.0 0.0 0.0
+scale 0.015 0.01 0.015
+model SM_WallWhite_S
+material MI_Trim_Gray
+type 1 transparent
+type 2 emission
+material MI_Ceiling_Black
+type 1 transparent
+type 2 emission
+material MI_Trim_White
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_YellowFence_2
+position 28.1834 -20.5752 7.3748
+direction 1.0 0.0 0.0 -0.0
+scale 0.01 0.0125 0.0125
+model SM_YellowFence
+material MI_Stairs_Fence
+type 2 emission
+END
+
+[0] MESH
+sysname SM_YellowFence_6
+position 29.206 -22.7828 7.3748
+direction 0.7071 0.0 0.0 -0.7071
+scale 0.01 0.0125 0.0125
+model SM_YellowFence
+material MI_Stairs_Fence
+type 2 emission
+END
+
+[0] MESH
+sysname SM_YellowFence_7
+position 29.206 -24.1361 7.3748
+direction 0.7181 -0.0087 0.009 -0.6959
+scale 0.01 0.0125 0.0125
+model SM_YellowFence
+material MI_Stairs_Fence
+type 2 emission
+END
+
+[0] MESH
+sysname SM_YellowFence_14
+position 29.206 -25.4273 6.7389
+direction 0.6855 0.1737 0.2961 -0.6421
+scale 0.0125 0.0125 0.0125
+model SM_YellowFence
+material MI_Stairs_Fence
+type 2 emission
+END
+
+[0] MESH
+sysname SM_YellowFence_17
+position 18.5991 -35.3011 1.3378
+direction 0.9948 0.0943 -0.0051 0.0389
+scale 0.0145 0.0125 0.0125
+model SM_YellowFence
+material MI_Stairs_Fence
+type 2 emission
+END
+
+[0] MESH
+sysname SM_YellowFence_19
+position 29.123 -32.3542 2.7261
+direction 0.6878 0.1638 -0.0184 0.7069
+scale 0.0133 0.0125 0.0125
+model SM_YellowFence
+material MI_Stairs_Fence
+type 2 emission
+END
+
+[0] MESH
+sysname SM_YellowFence_26
+position 20.5886 -35.2843 2.0021
+direction 0.9576 0.065 -0.2802 0.0137
+scale 0.0125 0.0125 0.0125
+model SM_YellowFence
+material MI_Stairs_Fence
+type 2 emission
+END
+
+[0] MESH
+sysname SM_YellowFence_29
+position 29.3623 -25.9894 5.355
+direction 0.6818 -0.1417 0.7125 -0.0863
+scale 0.0125 0.0125 0.0125
+model SM_YellowFence
+material MI_Stairs_Fence
+type 2 emission
+END
+
+[0] MESH
+sysname SM_YellowFence_31
+position 16.9141 -35.3573 0.8919
+direction 0.9504 0.1373 -0.2622 0.0952
+scale 0.0125 0.0125 0.0125
+model SM_YellowFence
+material MI_Stairs_Fence
+type 2 emission
+END
+
+[0] MESH
+sysname SM_YellowFence_34
+position 28.9376 -30.6614 1.8612
+direction 0.619 -0.2192 0.4063 0.6353
+scale 0.0133 0.0125 0.0125
+model SM_YellowFence
+material MI_Stairs_Fence
+type 2 emission
+END
+
+[0] MESH
+sysname SM_YellowFenceCorner_4
+position 28.764 -35.419 2.4683
+direction 0.007 -0.0012 0.0036 -1.0
+scale 0.0125 0.0125 0.0125
+model SM_YellowFenceCorner
+material MI_Stairs_Fence
+type 2 emission
+END
+
+[0] MESH
+sysname SM_YellowFenceCorner_8
+position 28.9004 -20.5769 7.4056
+direction -0.0 1.0 -0.0 0.0
+scale -0.0125 -0.01 -0.0125
+model SM_YellowFenceCorner
+material MI_Stairs_Fence
+type 2 emission
+END
+
+[0] MESH
+sysname SM_YellowFenceCorner_9
+position 27.4191 -33.3872 2.469
+direction -0.0017 0.7171 -0.6969 -0.0034
+scale -0.0125 -0.0125 -0.0125
+model SM_YellowFenceCorner
+material MI_Stairs_Fence
+type 2 emission
+END
+
+[0] MESH
+sysname SM_ConcreteColunm_1
+position 20.4034 -20.2377 -0.2484
+direction 0.7071 0.0 0.0 -0.7071
+scale 0.0187 0.0187 0.0187
+model SM_ConcreteColunm
+material MI_ConcreteColumn
+type 2 emission
+material M_AridGravelGround
+type 2 emission
+END
+
+[0] MESH
+sysname SM_ConcreteColunm_3
+position 16.4332 -20.2377 -0.2484
+direction 0.7071 0.0 0.0 -0.7071
+scale 0.0187 0.0187 0.0187
+model SM_ConcreteColunm
+material MI_ConcreteColumn
+type 2 emission
+material M_AridGravelGround
+type 2 emission
+END
+
+[0] MESH
+sysname SM_ConcreteColunm_5
+position 20.3823 -33.0063 -0.2484
+direction 0.7071 0.0 0.0 0.7071
+scale 0.0187 0.0187 0.0187
+model SM_ConcreteColunm
+material MI_ConcreteColumn
+type 2 emission
+material M_AridGravelGround
+type 2 emission
+END
+
+[0] MESH
+sysname SM_ConcreteColunm_6
+position 16.4265 -33.0063 -0.2484
+direction 0.7071 0.0 0.0 0.7071
+scale 0.0187 0.0187 0.0187
+model SM_ConcreteColunm
+material MI_ConcreteColumn
+type 2 emission
+material M_AridGravelGround
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Barrel_c_1
+position 21.8201 -21.0122 2.7707
+direction 0.5103 0.0 0.0 -0.86
+scale 0.01 0.01 0.01
+model SM_Barrel_c
+material MI_MetalPanelWhiteFill_1
+type 1 transparent
+type 2 emission
+material M_Trims
+type 1 transparent
+type 2 emission
+material M_Floaters
+type 1 transparent
+type 2 emission
+material M_Steel_3
+type 2 emission
+material M_Signs_4
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Barrel_c_5
+position 20.7901 -20.9889 2.7707
+direction 0.9877 0.0 0.0 -0.1561
+scale 0.01 0.01 0.01
+model SM_Barrel_c
+material MI_MetalPanelWhiteFill_1
+type 1 transparent
+type 2 emission
+material M_Trims
+type 1 transparent
+type 2 emission
+material M_Floaters
+type 1 transparent
+type 2 emission
+material M_Steel_3
+type 2 emission
+material M_Signs_4
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Barrel_d_0
+position 25.0275 -27.1325 2.9962
+direction 0.2937 -0.5231 -0.4758 0.6432
+scale 0.01 0.01 0.01
+model SM_Barrel_d
+material MI_Barrel_PlasticA
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Barrel_d_1
+position 25.8083 -27.6837 2.739
+direction 1.0 0.0 0.0 0.0
+scale 0.01 0.01 0.01
+model SM_Barrel_d
+material MI_Barrel_PlasticA
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripPillar_a_0
+position -43.913 -49.676 4.2122
+direction 1.0 0.0 0.0 0.0
+scale 1.9651 1.9651 1.5046
+model SM_CaveDripPillar_a
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripPillar_a_1
+position -44.9329 -32.3139 3.6442
+direction 0.6554 0.0 0.0 -0.7553
+scale 1.3461 1.3461 1.2113
+model SM_CaveDripPillar_a
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripPillar_a_2
+position -20.831 -50.7238 -2.8147
+direction 0.2647 0.0 0.0 0.9643
+scale 1.4163 1.4163 1.3776
+model SM_CaveDripPillar_a
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripPillar_a_3
+position -14.0842 -43.9825 -2.325
+direction 0.9843 -0.0546 0.0335 0.1642
+scale 2.0639 2.0639 1.1831
+model SM_CaveDripPillar_a
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripPillar_b_0
+position -20.7126 -50.6996 -5.0313
+direction 0.672 0.0 0.0 -0.7406
+scale 2.9612 2.2459 1.3613
+model SM_CaveDripPillar_b
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripPillar_b_1
+position -15.5174 -46.9741 -5.3949
+direction 0.9524 0.0 0.0 -0.305
+scale 2.6585 1.8295 1.1544
+model SM_CaveDripPillar_b
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripPillar_b_2
+position -22.8054 -48.5986 -5.0313
+direction 0.9908 0.0 0.0 0.135
+scale 3.268 2.4786 1.6344
+model SM_CaveDripPillar_b
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripPillar_c_0
+position -31.3003 -34.3165 0.8125
+direction 0.9925 0.0 0.0 -0.1219
+scale 2.8958 2.8958 1.0799
+model SM_CaveDripPillar_c
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripPillar_c_1
+position 12.5596 46.5808 9.2315
+direction 0.1795 0.0119 0.0106 0.9836
+scale 3.148 3.148 1.1988
+model SM_CaveDripPillar_c
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripPillar_c_2
+position -15.7172 -41.2033 -0.1334
+direction 0.7843 0.0 0.0 -0.6204
+scale 2.3421 2.3421 1.1357
+model SM_CaveDripPillar_c
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripPillar_c_3
+position -10.4932 -41.3708 -1.1
+direction 0.9925 0.0 0.0 -0.1219
+scale 3.3339 3.3339 1.5403
+model SM_CaveDripPillar_c
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripPillar_c_4
+position 10.7012 -40.9484 -3.3639
+direction 0.5514 -0.0552 -0.6862 0.4713
+scale 2.9457 3.3339 3.4306
+model SM_CaveDripPillar_c
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripPillar_c_5
+position 29.4052 42.2575 8.8146
+direction 0.9511 0.015 -0.0054 0.3086
+scale 3.5828 3.5828 1.3341
+model SM_CaveDripPillar_c
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripPillar_c_6
+position 16.5242 36.0871 7.3953
+direction 0.8494 0.0257 -0.0078 0.5271
+scale 3.2625 3.2625 1.7845
+model SM_CaveDripPillar_c
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripPillar_c_7
+position 29.2208 33.5998 6.9969
+direction 0.6873 0.0637 -0.0106 -0.7235
+scale 3.6033 3.6033 2.1092
+model SM_CaveDripPillar_c
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripstone_a_0
+position -44.3339 -37.7927 12.2436
+direction -0.0 0.0 1.0 -0.0
+scale 1.4437 1.4437 1.4437
+model SM_CaveDripstone_a
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripstone_a_1
+position -19.9633 -50.0825 -2.6578
+direction 0.562 0.0 0.0 -0.8271
+scale 1.805 1.805 1.805
+model SM_CaveDripstone_a
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripstone_a_2
+position -27.8113 -36.636 -0.6537
+direction 0.9347 0.0 0.0 -0.3554
+scale 1.7289 1.7289 1.7289
+model SM_CaveDripstone_a
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripstone_a_3
+position -39.6975 -49.5721 13.3203
+direction 0.0 -0.8493 0.5279 -0.0
+scale 1.0 1.0 1.0
+model SM_CaveDripstone_a
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripstone_a_4
+position -34.2669 -35.3795 1.0182
+direction 0.8143 0.0118 -0.0165 0.5801
+scale 1.0249 1.0249 1.0249
+model SM_CaveDripstone_a
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripstone_a_5
+position -18.5153 -48.3358 -3.5165
+direction 0.9784 0.0 0.0 -0.2068
+scale 1.805 1.805 1.3513
+model SM_CaveDripstone_a
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripstone_a_6
+position -13.9962 -46.5206 -2.9258
+direction 0.9944 0.0 0.0 0.106
+scale 1.5845 1.5845 1.3548
+model SM_CaveDripstone_a
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripstone_a_7
+position -10.8813 -55.437 -0.9198
+direction 0.9293 0.0 0.0 0.3694
+scale 1.3123 1.3123 1.1497
+model SM_CaveDripstone_a
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripstone_a_8
+position -16.0079 -44.3231 -1.004
+direction 0.7152 0.0 0.0 -0.6989
+scale 1.463 1.463 1.463
+model SM_CaveDripstone_a
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripstone_a_9
+position -12.0307 -44.0321 -1.4334
+direction 0.6869 0.0 0.0 0.7267
+scale 1.8161 1.8161 1.7743
+model SM_CaveDripstone_a
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripstone_a_10
+position -17.825 -45.1784 -3.5165
+direction 0.2569 0.0 0.0 0.9664
+scale 1.805 1.805 1.0622
+model SM_CaveDripstone_a
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripstone_a_11
+position -16.4079 -51.4999 -3.0164
+direction 0.9293 0.0 0.0 0.3694
+scale 2.4176 2.4176 1.0753
+model SM_CaveDripstone_a
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripstone_a_12
+position -9.4585 -52.424 -3.0164
+direction 0.9293 0.0 0.0 0.3694
+scale 1.6297 1.6297 0.9115
+model SM_CaveDripstone_a
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripstone_a_13
+position 34.725 16.4566 6.2694
+direction 0.6696 0.0 0.0 0.7427
+scale 2.0031 2.0031 1.0696
+model SM_CaveDripstone_a
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripstone_a_14
+position 33.5529 25.6979 4.0574
+direction 0.4817 -0.0845 0.0433 -0.8712
+scale 2.0031 2.0031 1.3735
+model SM_CaveDripstone_a
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripstone_a_15
+position 34.1162 22.6694 3.9905
+direction 0.1909 -0.0671 0.0672 -0.977
+scale 2.5201 2.5201 0.9622
+model SM_CaveDripstone_a
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripstone_a_16
+position 36.6532 19.5544 4.8563
+direction 0.25 -0.0358 0.0298 -0.9671
+scale 2.0031 2.0031 0.8213
+model SM_CaveDripstone_a
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripstone_a_19
+position -17.3558 -47.5034 -3.5406
+direction 0.9708 0.0 0.0 0.2398
+scale 1.805 2.6036 1.0622
+model SM_CaveDripstone_a
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripstone_b_0
+position -35.7296 -36.4337 11.934
+direction 1.0 0.0 0.0 0.0
+scale 2.3215 2.3215 1.2277
+model SM_CaveDripstone_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripstone_b_1
+position -35.8469 -50.8275 12.6842
+direction 0.3295 0.0 0.0 0.9441
+scale 1.7153 1.7153 1.7153
+model SM_CaveDripstone_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripstone_b_2
+position -18.4093 -43.6525 11.5711
+direction 1.0 0.0 0.0 0.0
+scale 1.0 1.0 1.0
+model SM_CaveDripstone_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripstone_b_3
+position -5.8706 -43.1425 15.8949
+direction 0.9945 0.0 0.0 0.1046
+scale 1.8045 1.8045 1.8045
+model SM_CaveDripstone_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripstone_b_4
+position -6.2485 -40.9701 14.9488
+direction 0.8746 0.0 0.0 -0.4848
+scale 1.694 1.694 1.694
+model SM_CaveDripstone_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripstone_b_5
+position -8.568 -47.3048 15.2403
+direction 0.6694 0.0 0.0 0.7429
+scale 2.0045 2.0045 1.5358
+model SM_CaveDripstone_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripstone_b_6
+position -24.3434 -40.1874 10.2291
+direction 1.0 0.0 0.0 0.0
+scale 1.2248 1.2248 1.2248
+model SM_CaveDripstone_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripstone_b_7
+position -2.4463 -30.3769 19.7536
+direction 0.8746 0.0 0.0 -0.4848
+scale 1.694 1.694 1.694
+model SM_CaveDripstone_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripstone_b_8
+position 6.328 38.6884 20.6023
+direction 0.1562 0.0 0.0 0.9877
+scale 1.5176 1.5176 1.5176
+model SM_CaveDripstone_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripstone_b_9
+position 17.9815 42.5452 19.9224
+direction 0.1562 0.0 0.0 0.9877
+scale 1.0351 1.0351 1.0351
+model SM_CaveDripstone_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripstone_b_10
+position 19.9784 39.8625 20.6997
+direction 0.5216 0.0 0.0 0.8532
+scale 0.7754 0.7754 0.7754
+model SM_CaveDripstone_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripstone_b_11
+position 21.8714 36.0975 21.1404
+direction 0.8701 0.0 0.0 0.493
+scale 1.2014 1.2014 0.7754
+model SM_CaveDripstone_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripstone_b_12
+position 19.2361 31.6439 21.7394
+direction 0.3962 0.0 0.0 0.9182
+scale 1.6004 1.2068 1.2068
+model SM_CaveDripstone_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripstone_b_13
+position 24.4788 30.4436 21.7798
+direction 0.7734 0.0 0.0 0.6339
+scale 1.3594 1.2068 0.9362
+model SM_CaveDripstone_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripstone_b_14
+position 36.4002 23.3518 13.6201
+direction 0.4661 0.0 0.0 -0.8847
+scale 0.9008 0.9008 0.9008
+model SM_CaveDripstone_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripstone_b_15
+position 39.8377 18.8689 12.7423
+direction 0.4389 0.0 0.0 -0.8985
+scale 0.9008 0.9008 0.9008
+model SM_CaveDripstone_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripstone_b_16
+position 40.5984 21.7033 12.3773
+direction 0.8471 0.0 0.0 -0.5314
+scale 0.5819 0.5819 0.5819
+model SM_CaveDripstone_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripstone_b_17
+position 37.6063 17.8483 13.0932
+direction 0.2754 0.0 0.0 -0.9613
+scale 0.6128 0.6128 0.6128
+model SM_CaveDripstone_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripstone_b_18
+position 12.9904 36.8264 20.6023
+direction 0.4661 0.0 0.0 -0.8847
+scale 0.9008 0.9008 0.9008
+model SM_CaveDripstone_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripstone_c_0
+position -15.116 -49.4514 14.2713
+direction 1.0 0.0 0.0 0.0
+scale 2.0 2.0 1.62
+model SM_CaveDripstone_c
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CaveDripstone_c_1
+position -25.4437 -45.5948 11.286
+direction 0.474 0.0 0.0 -0.8806
+scale 1.59 1.59 1.2696
+model SM_CaveDripstone_c
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Cliff_a_0
+position 13.8916 -53.241 1.596
+direction 0.8439 -0.4331 -0.2164 0.2312
+scale 1.0 1.0 1.0
+model SM_Cliff_a
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Cliff_a_1
+position 2.0338 -47.0607 -1.0626
+direction 0.1284 -0.0446 0.3998 -0.9065
+scale 1.1924 1.2413 1.3212
+model SM_Cliff_a
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Cliff_a_2
+position 22.5731 -47.7586 1.8921
+direction 0.8731 -0.4677 -0.125 0.0571
+scale 1.3322 1.3322 1.3322
+model SM_Cliff_a
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Cliff_a_3
+position 17.0326 -14.2025 -1.2728
+direction 0.5458 -0.2156 0.3458 -0.7322
+scale 1.5334 1.2413 1.3212
+model SM_Cliff_a
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Cliff_b_0
+position -1.1625 -56.4983 -1.5268
+direction 0.9226 -0.3274 -0.0798 0.1879
+scale 1.2 1.4313 0.9336
+model SM_Cliff_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Cliff_b_1
+position -35.4792 -50.0657 -1.1561
+direction 0.1182 -0.0862 -0.3483 0.9259
+scale 1.5462 1.5462 1.5462
+model SM_Cliff_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Cliff_b_2
+position -34.7906 -44.3877 -2.4597
+direction 0.5769 -0.177 -0.1719 0.7787
+scale 2.1889 2.5679 1.342
+model SM_Cliff_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Cliff_c_0
+position 45.134 2.8883 30.1239
+direction 0.0482 -0.7315 0.1302 0.6675
+scale 1.1739 2.063 1.1739
+model SM_Cliff_c
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Cliff_c_1
+position -24.578 -31.6755 -2.3693
+direction 0.9969 -0.01 0.0753 -0.0185
+scale 0.6347 1.2056 1.5661
+model SM_Cliff_c
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_Cliff_c_2
+position 48.6968 -27.5431 10.8512
+direction 0.4937 0.5398 -0.5356 -0.4218
+scale 1.6905 3.0225 1.1739
+model SM_Cliff_c
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CliffRock_a_0
+position 28.9498 -35.7378 -3.0305
+direction 0.9997 0.0 0.0233 0.0
+scale 1.0 1.6142 1.0
+model SM_CliffRock_a
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CliffRock_a_1
+position 23.157 -33.6475 -3.0305
+direction 0.9997 0.0 0.0233 0.0
+scale 0.3822 0.5782 1.0
+model SM_CliffRock_a
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CliffRock_b_0
+position 44.8194 -8.5836 4.7233
+direction 0.9732 0.1193 -0.195 -0.0239
+scale 1.0 1.0 1.0
+model SM_CliffRock_b
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CliffRock_b_1
+position 37.8557 -25.8125 -3.5701
+direction 1.0 0.0 0.0 0.0
+scale 0.2943 0.4614 1.0
+model SM_CliffRock_b
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_CliffRock_b_2
+position 30.335 -14.5919 -4.5188
+direction 0.9694 -0.0001 0.005 0.2454
+scale 0.2819 0.5995 1.0
+model SM_CliffRock_b
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_a_0
+position -44.634 -7.0707 10.825
+direction 0.9982 0.0391 -0.0444 -0.0017
+scale 6.9246 6.9246 7.4365
+model SM_RockBoulder_a
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_a_1
+position -39.2212 -5.7574 7.5872
+direction 0.8925 0.0754 -0.1619 -0.4141
+scale 5.5687 6.2221 6.1969
+model SM_RockBoulder_a
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_a_2
+position -37.5454 -14.5102 12.3181
+direction 0.8618 -0.1474 -0.4228 -0.2383
+scale 8.0249 8.0249 8.0249
+model SM_RockBoulder_a
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_a_3
+position -37.9433 -6.4203 13.7734
+direction 0.4906 0.8538 -0.1744 0.0047
+scale 4.1986 4.6913 4.6723
+model SM_RockBoulder_a
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_b_0
+position 36.32 -6.43 17.95
+direction 0.1274 0.2146 -0.0283 -0.9679
+scale 1.0 1.0 1.0
+model SM_RockBoulder_b
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_b_1
+position 35.77 -18.54 3.23
+direction 0.1274 0.2146 -0.0283 -0.9679
+scale 1.0 1.0 1.0
+model SM_RockBoulder_b
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_c_0
+position 32.6737 -17.5331 0.2023
+direction 1.0 0.0 0.0 0.0
+scale 1.0 1.0 1.0
+model SM_RockBoulder_c
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_c_1
+position -8.7809 -3.263 6.6855
+direction 0.8246 0.0 -0.5657 0.0
+scale 1.5003 1.5003 1.5003
+model SM_RockBoulder_c
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_c_2
+position 32.1558 -14.8435 0.2023
+direction 1.0 0.0 0.0 0.0
+scale 1.8829 1.8829 1.8829
+model SM_RockBoulder_c
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_c_3
+position 35.1903 22.2734 5.4314
+direction 0.686 0.0371 0.0667 0.7236
+scale 2.2052 1.5003 1.5003
+model SM_RockBoulder_c
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_d_0
+position 34.4771 -23.0129 -0.0183
+direction 0.473 0.0 0.0 0.8811
+scale 1.0 1.0 1.0
+model SM_RockBoulder_d
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_d_1
+position -24.268 -17.4848 10.4959
+direction 0.4262 0.846 0.3129 -0.069
+scale 4.1479 4.1479 4.1479
+model SM_RockBoulder_d
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_d_2
+position 39.1036 -24.0492 3.4558
+direction 0.8811 -0.0997 -0.0486 -0.4598
+scale 1.4656 1.4656 1.4656
+model SM_RockBoulder_d
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_e_0
+position -19.1148 -17.0068 8.5304
+direction 0.4917 -0.4164 -0.3128 0.6978
+scale 2.1778 2.569 3.975
+model SM_RockBoulder_e
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_e_1
+position 10.8665 -48.8194 0.289
+direction 0.362 0.0 0.0 -0.9322
+scale 2.4007 3.0029 2.8474
+model SM_RockBoulder_e
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_e_2
+position -1.5191 -57.5853 -0.0833
+direction 0.362 0.0 0.0 -0.9322
+scale 2.5457 2.5457 2.5457
+model SM_RockBoulder_e
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_e_3
+position 13.0338 -48.7488 1.7563
+direction 0.2547 0.0 0.0 -0.967
+scale 2.1456 2.1456 2.1456
+model SM_RockBoulder_e
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_e_4
+position 6.8605 -51.4004 1.0608
+direction 0.7234 -0.5734 -0.1929 0.3328
+scale 0.9708 1.1762 1.0873
+model SM_RockBoulder_e
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_e_5
+position -5.2969 -62.3313 -0.452
+direction 0.5063 0.1062 -0.15 -0.8426
+scale 3.2175 3.3404 3.3735
+model SM_RockBoulder_e
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_e_6
+position -7.6367 -60.6702 3.5055
+direction 0.0414 -0.9705 0.2066 0.1169
+scale 3.2175 3.1283 2.18
+model SM_RockBoulder_e
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_e_7
+position -13.3968 -59.4425 3.7752
+direction 0.1164 0.3171 0.9392 0.0617
+scale 3.1111 5.0007 3.982
+model SM_RockBoulder_e
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_e_8
+position -8.5202 -59.8042 3.5771
+direction 0.1142 0.2028 0.9698 0.0732
+scale 2.6863 3.1283 2.3166
+model SM_RockBoulder_e
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_e_9
+position -12.0149 -59.0006 -1.3149
+direction 0.7732 0.0489 0.0574 0.6297
+scale 2.0129 3.3404 3.3735
+model SM_RockBoulder_e
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_f_0
+position -18.3889 -14.9833 8.8565
+direction 0.6615 0.0992 -0.0097 -0.7433
+scale 1.0 1.0 1.0
+model SM_RockBoulder_f
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_f_1
+position -8.7007 1.2572 6.9593
+direction 0.9947 0.0 -0.1026 0.0
+scale 1.0 1.0 1.0
+model SM_RockBoulder_f
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_f_2
+position 33.9991 -19.4293 -0.0291
+direction 1.0 0.0 0.0 0.0
+scale 1.0 1.0 1.0
+model SM_RockBoulder_f
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_f_3
+position 26.6841 37.9491 9.4244
+direction 0.9035 0.1016 -0.1625 -0.3833
+scale 2.0624 1.5786 2.1548
+model SM_RockBoulder_f
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_f_4
+position -11.2896 -12.6532 5.9549
+direction 0.7308 0.1091 0.0673 0.6704
+scale 1.0 1.0 1.0
+model SM_RockBoulder_f
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_f_5
+position 18.0983 36.5279 10.0033
+direction 0.595 -0.352 0.5479 -0.4711
+scale 1.091 1.4098 1.5372
+model SM_RockBoulder_f
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_f_6
+position -7.0929 4.9239 7.1188
+direction 0.6332 0.1056 -0.2528 -0.7239
+scale 1.6262 1.5067 1.5751
+model SM_RockBoulder_f
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_f_7
+position 18.9698 43.016 9.3589
+direction 0.9647 -0.1816 0.0732 0.176
+scale 1.0 1.0 1.0
+model SM_RockBoulder_f
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_f_8
+position 25.9381 31.1964 2.0484
+direction 0.826 0.552 -0.0707 0.0895
+scale 3.1075 2.3785 3.2467
+model SM_RockBoulder_f
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_f_9
+position 30.5266 27.8721 2.0484
+direction 0.8283 0.5295 -0.1713 -0.0643
+scale 3.1075 2.3785 3.2467
+model SM_RockBoulder_f
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_g_0
+position 17.0224 -28.0992 -0.9756
+direction 0.9304 0.0 0.0 -0.3665
+scale 1.0 1.0 1.0
+model SM_RockBoulder_g
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_g_1
+position 34.6611 -30.573 0.1593
+direction 0.9579 0.1242 -0.2571 -0.0291
+scale 2.2828 2.2828 2.2828
+model SM_RockBoulder_g
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_g_2
+position -7.8325 -5.4204 6.851
+direction 0.8305 0.0747 0.0388 -0.5506
+scale 1.0 1.278 1.3871
+model SM_RockBoulder_g
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_h_0
+position -28.2011 -47.5097 13.0099
+direction 0.6693 0.5873 0.3739 0.2595
+scale 2.6678 2.6678 2.6678
+model SM_RockBoulder_h
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_h_1
+position 19.1798 -8.19 0.4229
+direction 0.9105 -0.1861 -0.3649 0.0573
+scale 1.1356 2.2398 1.843
+model SM_RockBoulder_h
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_h_2
+position -15.0352 -13.9309 8.8047
+direction 0.9847 0.0 0.0 0.174
+scale 1.0 1.0 1.0
+model SM_RockBoulder_h
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_h_3
+position 21.6027 -9.4319 0.296
+direction 0.2367 -0.3679 -0.6585 0.6123
+scale 1.0 1.0 1.0
+model SM_RockBoulder_h
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_h_4
+position -35.6658 13.9107 7.443
+direction 0.8194 -0.3557 0.0161 0.4491
+scale 1.4762 1.4762 1.4762
+model SM_RockBoulder_h
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_h_5
+position -34.1128 -54.1325 13.7433
+direction 0.3793 0.2765 -0.6027 -0.6453
+scale 2.6678 2.6678 2.6678
+model SM_RockBoulder_h
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_h_6
+position -12.7691 -14.9065 9.2019
+direction 0.1007 -0.0897 -0.6587 0.7402
+scale 1.0 1.0 1.0
+model SM_RockBoulder_h
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_h_7
+position -34.0337 18.9593 10.6763
+direction 0.9549 -0.0856 -0.0559 0.2789
+scale 1.7289 1.7289 1.7594
+model SM_RockBoulder_h
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_h_8
+position -42.6041 4.4829 11.4754
+direction 0.6321 -0.6395 -0.2792 0.337
+scale 0.9764 0.9764 0.9764
+model SM_RockBoulder_h
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_h_9
+position -36.8095 9.1719 8.8072
+direction 0.4451 -0.608 -0.4888 0.4396
+scale 0.511 0.511 0.511
+model SM_RockBoulder_h
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_h_10
+position -34.754 -3.1687 8.6969
+direction 0.2633 -0.3227 -0.6546 0.6309
+scale 0.7878 0.7878 1.1522
+model SM_RockBoulder_h
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_h_11
+position -39.0389 -3.4395 13.3124
+direction 0.3996 -0.7174 -0.3174 0.4742
+scale 0.6012 0.8753 1.1819
+model SM_RockBoulder_h
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_h_12
+position -42.5261 6.0166 12.6636
+direction 0.8108 0.0638 -0.5686 0.1235
+scale 0.9689 0.9689 0.9689
+model SM_RockBoulder_h
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_h_13
+position 17.0566 -26.4401 -0.9312
+direction 0.4645 0.2335 -0.5816 -0.6257
+scale 1.0 1.2299 1.0
+model SM_RockBoulder_h
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_h_14
+position 16.7698 -22.2555 -1.3362
+direction 0.613 0.0704 -0.2657 0.7407
+scale 1.0 1.2299 1.0
+model SM_RockBoulder_h
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_h_15
+position 17.4686 -23.7777 -1.0079
+direction 0.4793 0.2837 -0.5328 -0.6371
+scale 1.0 1.2299 1.0
+model SM_RockBoulder_h
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_h_16
+position 23.5128 -21.8706 0.3462
+direction 0.1424 -0.7407 0.6466 -0.1136
+scale 1.0 1.2299 1.0
+model SM_RockBoulder_h
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_h_17
+position -11.7549 -13.9643 7.5648
+direction 0.0465 -0.0288 -0.6648 0.745
+scale 1.3008 1.3008 1.3008
+model SM_RockBoulder_h
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_i_0
+position -26.109 -19.4926 8.8405
+direction 0.2189 -0.1597 -0.7771 -0.5681
+scale 1.9868 1.9868 1.9868
+model SM_RockBoulder_i
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_i_1
+position -44.3887 -31.8516 12.6626
+direction 0.9876 0.0388 -0.1499 -0.0258
+scale 2.6564 3.4562 2.0453
+model SM_RockBoulder_i
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_j_0
+position 18.9328 -40.0472 0.2113
+direction 0.5695 -0.0587 0.0418 -0.8188
+scale 1.4 1.4 1.4
+model SM_RockBoulder_j
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_j_1
+position 21.1646 -40.3519 1.835
+direction 0.8799 0.0 0.0 0.4752
+scale 1.2584 1.2584 1.2584
+model SM_RockBoulder_j
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_j_2
+position 1.3294 -29.1083 -1.0286
+direction 0.7345 0.219 0.5801 -0.2758
+scale 1.9999 1.9999 1.9999
+model SM_RockBoulder_j
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_j_3
+position -3.4544 -1.2417 6.9138
+direction 0.0636 0.0901 0.9892 -0.0967
+scale 1.858 1.858 1.858
+model SM_RockBoulder_j
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_j_4
+position -8.159 -0.664 6.4426
+direction 0.8301 0.0 0.0 -0.5576
+scale 1.3471 1.3471 1.3471
+model SM_RockBoulder_j
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_j_5
+position -36.4112 -16.5772 5.7939
+direction 0.6863 -0.0566 -0.2102 -0.694
+scale 1.2576 1.2576 1.2576
+model SM_RockBoulder_j
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_j_6
+position -33.5594 -24.5097 7.1731
+direction 0.5778 0.1982 -0.0851 -0.7872
+scale 2.0027 2.0027 2.6604
+model SM_RockBoulder_j
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_j_7
+position -1.5246 -12.226 5.2936
+direction 0.1006 -0.3353 -0.905 0.2417
+scale 2.0 2.0 2.0
+model SM_RockBoulder_j
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_j_8
+position -40.2683 -25.2466 16.3189
+direction 0.9772 0.0969 -0.1348 -0.1321
+scale 2.7072 3.781 2.2272
+model SM_RockBoulder_j
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_j_9
+position 3.4964 -54.4962 1.0696
+direction 0.9968 0.0 0.0 0.0805
+scale 1.4 1.4 1.4
+model SM_RockBoulder_j
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_j_10
+position -32.9886 -23.8142 15.6605
+direction 0.9763 0.1062 -0.1336 -0.1334
+scale 2.4153 3.3732 3.3024
+model SM_RockBoulder_j
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_j_11
+position -36.9113 -19.4707 4.2565
+direction 0.1591 -0.2261 -0.1941 -0.9412
+scale 1.501 1.501 1.501
+model SM_RockBoulder_j
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_j_12
+position -41.1314 -21.7643 3.6343
+direction 0.9318 0.0807 -0.285 -0.2099
+scale 1.7044 1.6878 1.6878
+model SM_RockBoulder_j
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_j_13
+position -5.8129 -61.6812 3.4425
+direction 0.8548 0.1923 0.1489 -0.4584
+scale 1.4587 1.6238 1.722
+model SM_RockBoulder_j
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_j_14
+position -11.1755 -59.2885 3.4425
+direction 0.5074 -0.1374 0.2007 0.8267
+scale 1.4587 0.9096 1.722
+model SM_RockBoulder_j
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_j_15
+position 28.9377 -37.1503 1.2161
+direction 0.9719 0.0 0.0 -0.2355
+scale 1.4094 1.4094 1.2584
+model SM_RockBoulder_j
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_j_16
+position -1.6368 -49.6575 -1.1857
+direction 0.2927 -0.0012 0.2866 -0.9123
+scale 1.0 1.0 1.3582
+model SM_RockBoulder_j
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockBoulder_j_17
+position 4.3653 -47.5502 -0.8314
+direction 0.347 0.0167 0.2999 -0.8885
+scale 1.0 1.0 1.3582
+model SM_RockBoulder_j
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockFiller_a_0
+position 20.3592 -47.7427 -4.1071
+direction 0.4999 0.0031 -0.0588 -0.8641
+scale 1.0 1.0 0.7791
+model SM_RockFiller_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockFiller_a_1
+position 8.6 -65.6 7.6
+direction 0.633 0.133 -0.1116 -0.7544
+scale 1.0 1.0 1.0
+model SM_RockFiller_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockFiller_a_2
+position 45.5371 -23.9738 -0.2
+direction 0.9419 0.0312 -0.0814 -0.3243
+scale 1.0 1.0 1.0
+model SM_RockFiller_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockFiller_a_3
+position -32.5271 -0.5341 37.9124
+direction 0.1305 0.6837 -0.7061 -0.1301
+scale 1.0 1.0 1.0
+model SM_RockFiller_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockFiller_a_4
+position 29.7604 46.9138 21.1309
+direction 0.7887 0.4064 -0.4465 -0.116
+scale 1.3458 0.6792 1.5877
+model SM_RockFiller_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockFiller_a_5
+position 31.4513 41.484 20.6318
+direction 0.8542 0.3825 -0.2719 -0.2236
+scale 1.1059 1.1059 1.4468
+model SM_RockFiller_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockFiller_a_6
+position 29.1672 48.5184 10.9366
+direction 0.9924 0.0692 -0.1008 0.0156
+scale 1.0 1.0 1.0785
+model SM_RockFiller_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockFiller_a_7
+position 41.6865 -33.778 -0.1686
+direction 0.8516 0.0285 -0.0052 -0.5234
+scale 1.0 1.0 1.2091
+model SM_RockFiller_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockFiller_a_8
+position 40.3676 -39.1586 5.493
+direction 0.762 0.0553 -0.0821 -0.6399
+scale 1.0 1.0 1.2091
+model SM_RockFiller_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockFiller_a_9
+position -2.065 -55.8959 -7.5817
+direction 0.4214 0.0039 -0.0423 -0.9059
+scale 1.5368 1.2624 0.7791
+model SM_RockFiller_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockFiller_a_11
+position 50.1706 6.4877 -2.0967
+direction 0.0835 0.0165 0.1339 0.9873
+scale 2.0 1.4329 2.0
+model SM_RockFiller_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockFiller_a_12
+position 64.5632 18.5257 -1.7146
+direction 0.2275 0.0646 -0.139 -0.9616
+scale 2.4804 1.4329 1.8314
+model SM_RockFiller_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockFiller_a_13
+position 68.4194 31.6688 -1.7146
+direction 0.4286 0.093 -0.1219 -0.8904
+scale 2.4804 1.4329 1.8314
+model SM_RockFiller_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockFiller_a_14
+position 33.4236 39.0057 11.7646
+direction 0.3669 0.1414 0.0129 -0.9194
+scale 1.0 1.0 1.1857
+model SM_RockFiller_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockFiller_b_0
+position -16.2983 -30.867 24.6631
+direction 0.3204 -0.8538 0.3821 -0.1494
+scale 0.7 1.0 1.0
+model SM_RockFiller_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockFiller_b_1
+position -47.7837 -58.0225 2.7
+direction 0.6226 0.0866 0.1726 0.7584
+scale 0.6778 0.8661 1.1574
+model SM_RockFiller_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockFiller_b_2
+position 35.7259 -28.1135 43.9846
+direction 0.2869 -0.5623 -0.6086 -0.4807
+scale 1.1697 1.0 1.8322
+model SM_RockFiller_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockFiller_b_3
+position -53.793 -49.8817 2.7
+direction 0.7022 0.1051 0.162 0.6853
+scale 0.6778 1.0 1.0
+model SM_RockFiller_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockFiller_b_4
+position -35.1775 -27.2488 2.6768
+direction 0.7549 0.1474 0.0624 -0.636
+scale 0.287 0.3667 0.6569
+model SM_RockFiller_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockFiller_c_0
+position 45.6174 -12.2704 22.3672
+direction 0.7209 0.2175 -0.2592 -0.6049
+scale 1.0 1.0 1.0
+model SM_RockFiller_c
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockFiller_c_1
+position -15.8796 -30.2427 -0.7062
+direction 0.9482 0.0781 0.0253 -0.3068
+scale 1.0 1.0 1.0
+model SM_RockFiller_c
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockFiller_c_2
+position -54.5 -39.5 2.9992
+direction 0.6964 0.1228 0.1228 0.6964
+scale 1.0 1.0 1.0
+model SM_RockFiller_c
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockFiller_c_3
+position -48.41 -33.6181 -4.6217
+direction 0.6088 0.0 0.0 0.7933
+scale 1.0 1.0 1.0
+model SM_RockFiller_c
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockFiller_c_4
+position 8.4427 -47.1861 -10.0509
+direction 0.531 0.0238 -0.018 -0.8468
+scale 1.2107 1.0 1.0
+model SM_RockFiller_c
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockFiller_c_5
+position -48.0178 -45.917 -4.9881
+direction 0.4244 0.0 0.0 0.9055
+scale 1.0 1.0 1.0
+model SM_RockFiller_c
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockFiller_c_6
+position -50.7121 -24.6595 2.7442
+direction 0.5336 0.0941 0.0011 0.8405
+scale 1.0 1.0 1.7885
+model SM_RockFiller_c
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockFiller_c_7
+position -39.1547 -31.2386 -0.557
+direction 0.8957 0.097 -0.0426 0.4319
+scale 0.8643 0.8643 0.3018
+model SM_RockFiller_c
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockFiller_c_8
+position -7.3512 -34.7279 -3.8199
+direction 0.7655 0.0106 0.0152 0.6432
+scale 0.8027 1.0 1.4174
+model SM_RockFiller_c
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockFiller_d_0
+position 44.191 -35.5262 -2.2
+direction 0.6428 0.0 0.0 -0.766
+scale 1.0 1.0 1.0
+model SM_RockFiller_d
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockFiller_d_1
+position -9.0757 -38.4508 19.1227
+direction 0.1058 0.0026 -0.968 -0.2275
+scale 1.0 1.0 1.0
+model SM_RockFiller_d
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockFiller_d_2
+position -28.6685 -58.7682 2.3389
+direction 0.3191 -0.112 0.0503 0.9397
+scale 1.0 1.5652 1.445
+model SM_RockFiller_d
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockFiller_d_3
+position -26.3758 -61.3588 -6.6439
+direction 0.8777 -0.083 -0.0025 0.472
+scale 1.231 0.8517 1.5841
+model SM_RockFiller_d
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockFiller_d_4
+position -37.4032 -64.3568 2.3389
+direction 0.4774 -0.1016 0.069 0.8701
+scale 1.0 1.5652 1.445
+model SM_RockFiller_d
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockFiller_e_0
+position 2.438 -59.6859 -0.4
+direction 0.5 -0.0 -0.0 -0.866
+scale 1.0 1.0 1.0
+model SM_RockFiller_e
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockFiller_e_2
+position -5.1325 -61.6897 5.8591
+direction 0.4639 0.2698 -0.6554 -0.5314
+scale 0.7755 1.0 1.6479
+model SM_RockFiller_e
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockFiller_e_3
+position -13.6131 -59.1147 3.7845
+direction 0.4317 0.2181 -0.6818 -0.5488
+scale 0.6159 0.821 1.0681
+model SM_RockFiller_e
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockFiller_a_10
+position 29.4475 31.3924 0.5811
+direction 0.0311 0.8983 -0.4379 -0.0183
+scale 0.8545 0.6798 1.6541
+model SM_RockFiller_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockFiller_a_15
+position 44.7426 35.4289 3.8916
+direction 0.1298 -0.979 -0.1526 -0.0381
+scale 2.2817 1.5961 1.7214
+model SM_RockFiller_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_a_0
+position -2.4377 -5.0597 2.4501
+direction 0.8627 0.0096 0.0838 -0.4986
+scale 1.8231 1.7355 1.5117
+model SM_RockMedium_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_a_1
+position -43.5359 10.0834 7.7523
+direction 0.4188 0.09 0.0318 0.9031
+scale 1.4762 1.4762 1.8241
+model SM_RockMedium_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_a_2
+position -22.7804 -22.8828 10.1338
+direction 0.6386 -0.2397 0.257 0.6846
+scale 1.4762 1.4762 1.4762
+model SM_RockMedium_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_a_3
+position 14.2792 33.8064 6.6755
+direction 0.1535 0.0925 -0.0808 -0.9805
+scale 1.6735 1.1356 1.2852
+model SM_RockMedium_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_b_0
+position -7.8482 -37.487 -3.4138
+direction 0.9319 0.0 0.0 0.3628
+scale 1.1346 1.6116 1.9709
+model SM_RockMedium_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_b_1
+position -2.3296 -21.6507 0.8385
+direction 0.975 -0.0497 0.2162 -0.0112
+scale 0.7506 1.1625 1.2003
+model SM_RockMedium_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_b_2
+position -15.9501 -46.3284 -5.5012
+direction 0.3073 0.0 0.0 -0.9516
+scale 1.1201 1.1301 0.926
+model SM_RockMedium_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_b_3
+position -4.5821 -4.9591 4.9876
+direction 0.2206 0.0272 0.2086 -0.9524
+scale 1.0 1.2694 0.8583
+model SM_RockMedium_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_b_4
+position -2.849 -13.4974 3.3582
+direction 0.6456 0.3436 -0.6206 0.2829
+scale 0.4619 1.1396 0.3463
+model SM_RockMedium_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_c_0
+position 33.6581 -3.1704 7.1352
+direction 0.8851 0.1579 -0.4019 0.1736
+scale 1.7994 2.0889 1.7994
+model SM_RockMedium_c
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_c_1
+position 0.1216 -10.9192 0.8819
+direction 0.8285 0.2016 0.1748 0.4923
+scale 1.5097 2.084 2.3809
+model SM_RockMedium_c
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_c_2
+position -1.1114 -7.1877 3.5982
+direction 0.1062 0.2208 -0.0113 0.9695
+scale 1.664 1.9674 1.9513
+model SM_RockMedium_c
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_c_3
+position 1.8212 -10.803 -0.4231
+direction 0.8514 0.0266 0.1598 0.499
+scale 1.5332 1.9264 2.326
+model SM_RockMedium_c
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_c_4
+position 1.6 3.8008 4.4406
+direction 0.1643 0.1436 0.0808 0.9725
+scale 1.8647 2.1688 1.0
+model SM_RockMedium_c
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_c_5
+position 20.4012 2.3324 3.5051
+direction 0.3334 0.0095 0.0034 0.9427
+scale 1.4294 1.5607 1.0
+model SM_RockMedium_c
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_c_6
+position 27.2577 4.6814 2.5319
+direction 0.5728 -0.0062 -0.0216 -0.8194
+scale 2.0522 2.2408 1.4357
+model SM_RockMedium_c
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_d_0
+position 14.6712 -45.8222 0.1776
+direction 0.3516 0.0 0.0 0.9361
+scale 1.0 1.0 1.0
+model SM_RockMedium_d
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_d_1
+position 20.9094 42.6964 7.5475
+direction 0.7225 0.0329 -0.0198 -0.6904
+scale 2.0736 2.1323 1.1016
+model SM_RockMedium_d
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_d_2
+position 5.1553 -16.6272 -2.0384
+direction 0.9524 0.0306 0.2474 -0.1753
+scale 1.4748 1.3611 0.9209
+model SM_RockMedium_d
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_d_3
+position 23.0528 -38.8734 0.4836
+direction 0.5536 0.0 0.0 0.8328
+scale 1.0 1.0 1.0
+model SM_RockMedium_d
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_d_4
+position 33.3733 -34.6877 0.0319
+direction 0.4936 0.0 0.0 0.8697
+scale 1.4647 1.4647 1.0
+model SM_RockMedium_d
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_d_5
+position 35.3507 -38.9788 1.697
+direction 0.203 0.0033 0.0841 0.9756
+scale 1.7816 1.7816 1.7816
+model SM_RockMedium_d
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_d_6
+position 19.4535 -48.621 3.4188
+direction 0.3516 0.0 0.0 0.9361
+scale 1.0 1.0 1.0
+model SM_RockMedium_d
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_d_7
+position -36.7304 -3.3991 8.5511
+direction 0.9866 0.0259 0.0116 0.1604
+scale 0.8672 0.9479 1.3189
+model SM_RockMedium_d
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_d_8
+position -41.3142 3.9792 7.9258
+direction 0.9873 -0.0101 -0.0179 -0.1574
+scale 2.3316 2.3313 1.385
+model SM_RockMedium_d
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_d_11
+position 31.3119 -43.9072 4.2545
+direction 0.3094 -0.4143 0.3095 0.798
+scale 2.4489 2.4489 2.4489
+model SM_RockMedium_d
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_d_12
+position -30.6316 -11.1674 6.3698
+direction 0.2831 -0.0338 -0.0196 -0.9583
+scale 2.563 2.2388 0.9259
+model SM_RockMedium_d
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_d_13
+position -40.2737 5.4524 6.9631
+direction 0.7243 -0.0062 0.0036 0.6895
+scale 2.6553 2.7129 0.5778
+model SM_RockMedium_d
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_d_14
+position -23.4138 -1.5954 5.097
+direction 0.9733 0.0269 0.013 0.2277
+scale 2.9422 2.4115 1.4446
+model SM_RockMedium_d
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_d_15
+position -10.7464 -9.3424 4.4995
+direction 0.9335 -0.0073 -0.0395 -0.3564
+scale 1.4496 1.8887 0.8563
+model SM_RockMedium_d
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_d_16
+position 18.4764 44.1137 8.5277
+direction 0.977 0.0501 -0.0455 -0.2022
+scale 1.4694 1.511 0.9948
+model SM_RockMedium_d
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_d_17
+position -37.3412 -9.064 8.9557
+direction 0.9612 0.1034 0.2009 -0.158
+scale 0.8672 1.306 1.7394
+model SM_RockMedium_d
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_d_18
+position -4.7739 -50.8102 -2.7151
+direction 0.6544 0.0505 -0.0737 0.7508
+scale 1.0 1.0 1.3814
+model SM_RockMedium_d
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_d_19
+position -21.6554 -52.6555 -4.1962
+direction 0.9874 -0.0006 0.0182 -0.1572
+scale 1.0 1.0 2.3546
+model SM_RockMedium_d
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_d_20
+position -9.3713 -54.4627 -3.6837
+direction 0.4683 0.0502 -0.0111 0.8821
+scale 1.0 1.0 1.7861
+model SM_RockMedium_d
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_d_21
+position 10.0847 -39.0198 -3.49
+direction 0.2449 0.0126 0.009 0.9694
+scale 1.0 1.5131 1.6613
+model SM_RockMedium_d
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_d_22
+position 14.4901 -32.313 -3.9792
+direction 0.9791 -0.0085 0.013 -0.2026
+scale 1.0 1.0758 1.6613
+model SM_RockMedium_d
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_d_23
+position -16.0053 -55.9107 -5.0846
+direction 0.5151 -0.0153 0.0026 -0.857
+scale 1.7848 1.4266 1.2588
+model SM_RockMedium_d
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_d_24
+position -26.8652 -4.581 6.3691
+direction 0.4449 -0.0051 -0.0089 -0.8955
+scale 2.6553 2.602 0.9313
+model SM_RockMedium_d
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_d_25
+position -12.3803 -62.6855 -5.456
+direction 0.9298 -0.0871 0.0905 -0.3461
+scale 1.0 1.787 2.2583
+model SM_RockMedium_d
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_d_26
+position -4.4942 32.0081 7.3425
+direction 0.732 0.0254 0.0149 -0.6807
+scale 2.7319 2.2477 1.186
+model SM_RockMedium_d
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_d_27
+position 16.5946 -15.0154 -5.1497
+direction 0.0496 0.0346 0.0054 0.9982
+scale 1.0 2.4115 2.3531
+model SM_RockMedium_d
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_d_32
+position 15.395 -22.2634 -5.3266
+direction 0.1011 0.0311 -0.0239 0.9941
+scale 1.0 2.4115 2.3531
+model SM_RockMedium_d
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_e_0
+position 28.1458 -44.3515 3.8156
+direction 0.8662 -0.3694 -0.2442 0.2317
+scale 2.4071 3.3851 2.5287
+model SM_RockMedium_e
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_e_1
+position 36.9112 -23.0049 0.2
+direction 0.4391 0.0 0.0 0.8984
+scale 1.5034 1.5034 2.0089
+model SM_RockMedium_e
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_e_2
+position -4.1974 -29.7848 -1.1229
+direction 0.6584 -0.2915 0.1975 -0.6652
+scale 2.3529 4.3334 4.6618
+model SM_RockMedium_e
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_e_3
+position -3.7287 -21.8329 6.5385
+direction 0.2196 0.2084 0.1514 0.941
+scale 1.0 1.5655 1.0
+model SM_RockMedium_e
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_f_0
+position -12.4944 43.0546 -2.2015
+direction 0.4265 0.0366 -0.0291 0.9033
+scale 1.2842 1.4122 1.081
+model SM_RockMedium_f
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_f_1
+position -27.4618 -55.7239 -5.3833
+direction 0.4961 -0.0243 -0.0293 -0.8674
+scale 0.752 0.752 0.4604
+model SM_RockMedium_f
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_f_2
+position 23.2972 48.2776 8.0539
+direction 0.8018 0.016 -0.0769 0.5924
+scale 0.4431 0.4431 0.3047
+model SM_RockMedium_f
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_f_3
+position 17.269 48.7225 8.0539
+direction 0.5553 0.0409 -0.067 0.8279
+scale 0.4431 0.6591 0.3047
+model SM_RockMedium_f
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_d_9
+position -4.0959 28.0783 5.889
+direction 0.5093 -0.0449 -0.0296 0.8589
+scale 2.0049 1.9878 1.6057
+model SM_RockMedium_d
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_d_10
+position -8.4663 23.5627 5.0174
+direction 0.0011 -0.8302 -0.553 0.0705
+scale 2.3316 1.3049 1.1652
+model SM_RockMedium_d
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_d_29
+position -1.0467 -15.2911 2.8038
+direction 0.5825 -0.6408 -0.3035 -0.3975
+scale 1.1555 0.6676 0.5467
+model SM_RockMedium_d
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_d_30
+position -2.6078 -18.9442 1.8765
+direction 0.6035 0.7661 0.0044 -0.2212
+scale 1.3867 0.8843 1.0943
+model SM_RockMedium_d
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_d_31
+position -8.367 -15.9528 7.1647
+direction 0.2543 -0.066 -0.7376 0.622
+scale 1.0907 0.8843 1.1692
+model SM_RockMedium_d
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_d_36
+position -0.4539 -16.024 3.6534
+direction 0.0065 -0.2006 -0.7158 -0.6689
+scale 0.6021 0.6676 0.2907
+model SM_RockMedium_d
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_d_37
+position -3.4299 -19.9175 4.4477
+direction 0.2946 -0.0195 -0.7703 0.5653
+scale 1.3867 0.8843 1.528
+model SM_RockMedium_d
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockMedium_d_38
+position -5.9219 -16.9868 4.9074
+direction 0.4823 0.1619 -0.7242 0.4655
+scale 1.0907 0.8843 0.9921
+model SM_RockMedium_d
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockPlate_a_1
+position -31.6027 27.887 8.3153
+direction 0.9474 0.0418 0.0097 0.3171
+scale 1.3721 1.3721 2.5347
+model SM_RockPlate_a
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockPlate_a_3
+position -25.9944 -53.9042 -1.7353
+direction 1.0 0.0 0.0 0.0
+scale 1.0 1.0 1.6504
+model SM_RockPlate_a
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockPlate_a_4
+position -26.5217 -55.5009 3.2052
+direction 0.9571 0.0 0.2899 0.0
+scale 1.0 1.0 1.6504
+model SM_RockPlate_a
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockPlate_a_5
+position -13.2418 -58.3279 -3.5554
+direction 0.8501 -0.0341 -0.021 -0.5251
+scale 0.4798 0.4798 1.117
+model SM_RockPlate_a
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockPlate_a_6
+position -13.3953 -59.0471 -0.7263
+direction 0.6598 0.1194 -0.3622 -0.6475
+scale 0.4798 0.4798 0.7873
+model SM_RockPlate_a
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockPlate_b_0
+position -2.7336 -6.9857 1.8445
+direction 0.3254 -0.0909 0.0314 -0.9407
+scale 1.7025 1.1571 1.1285
+model SM_RockPlate_b
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockPlate_b_1
+position 14.7374 -2.9831 -4.2911
+direction 0.2839 -0.0814 0.0511 -0.954
+scale 2.301 0.9448 1.4683
+model SM_RockPlate_b
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockPlate_c_0
+position 27.593 44.182 5.9004
+direction 0.9807 0.0794 -0.0525 0.1709
+scale 1.0 1.0 1.0
+model SM_RockPlate_c
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockPlate_c_1
+position 26.9913 -2.6986 0.6376
+direction 0.7182 0.0 0.0 -0.6958
+scale 1.0 1.0 1.1801
+model SM_RockPlate_c
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockPlate_c_2
+position 38.5162 25.3688 24.9057
+direction 0.3013 0.7423 -0.1781 -0.5714
+scale 1.447 1.1053 1.5305
+model SM_RockPlate_c
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockPlate_c_3
+position 48.792 21.6419 20.2505
+direction 0.0764 0.07 -0.9946 0.0065
+scale 2.1816 1.1053 1.8407
+model SM_RockPlate_c
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockPlate_c_4
+position 35.4648 18.9749 0.0432
+direction 0.9998 0.0105 0.0061 -0.0182
+scale 0.6889 1.0899 1.2147
+model SM_RockPlate_c
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockPlate_c_5
+position 33.8622 3.7712 1.1732
+direction 0.9549 0.0281 -0.0566 -0.2901
+scale 1.0 1.0 1.2147
+model SM_RockPlate_c
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockPlate_c_6
+position 42.4779 11.3354 2.8285
+direction 0.6643 -0.1879 0.0461 -0.722
+scale 1.0157 0.9084 1.4578
+model SM_RockPlate_c
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockPlate_c_7
+position 36.1724 8.6861 2.8285
+direction 0.9298 -0.1186 -0.1529 0.313
+scale 1.0157 0.9084 1.4578
+model SM_RockPlate_c
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockPlate_c_9
+position 12.2199 -1.402 -0.1014
+direction 0.7313 0.0125 0.021 0.6816
+scale 0.6889 1.0 1.0522
+model SM_RockPlate_c
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockPlate_d_0
+position -18.1138 -29.9457 16.8573
+direction 0.275 0.0122 0.6432 0.7145
+scale 1.0 1.0 1.2391
+model SM_RockPlate_d
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockPlate_d_1
+position -17.2182 -25.7792 5.9651
+direction 0.3617 -0.0393 -0.0656 -0.9291
+scale 1.0 1.0 1.0
+model SM_RockPlate_d
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockPlate_a_2
+position 42.632 7.5535 8.6165
+direction 0.1205 0.8156 -0.558 0.0943
+scale 1.6303 1.4907 3.0707
+model SM_RockPlate_a
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockPlate_a_7
+position 37.0598 34.1156 7.7952
+direction 0.0462 0.0931 -0.9901 -0.0949
+scale 1.7234 1.5622 2.3622
+model SM_RockPlate_a
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockPlate_c_8
+position 11.3218 -0.3935 0.5651
+direction 0.1417 -0.692 0.7036 0.0781
+scale 0.9072 1.1122 1.0
+model SM_RockPlate_c
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_0
+position -0.0321 -60.2243 6.7
+direction 0.6803 -0.4905 -0.5328 0.1125
+scale 1.0 1.0 1.0
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_1
+position 18.6503 -19.5281 -2.8966
+direction 0.5619 0.0605 -0.0447 0.8238
+scale 1.0 1.0 0.8719
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_2
+position -13.7393 -53.6576 14.1941
+direction 0.6659 -0.4417 -0.3652 0.4776
+scale 1.0 1.0 1.5555
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_3
+position -4.5954 -62.0296 5.0442
+direction 0.2288 0.3169 -0.3075 0.8675
+scale 0.7891 0.7891 0.7891
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_4
+position -9.2757 -56.0835 11.5494
+direction -0.0813 -0.2645 -0.8541 -0.4403
+scale 1.4256 1.6417 0.9094
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_5
+position 9.1368 -55.8606 1.9483
+direction 0.2243 0.1673 -0.6729 -0.6847
+scale 1.353 1.353 1.353
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_6
+position -15.5328 -39.3066 -2.8386
+direction 0.0106 0.0543 -0.0528 0.9971
+scale 0.9491 1.0 1.0
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_8
+position 17.6109 -31.3908 -3.8143
+direction 0.5595 -0.0672 0.0052 -0.8261
+scale 1.0 1.0 1.0
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_9
+position -7.7461 -25.0834 10.2668
+direction 0.7445 -0.1167 0.6266 0.1989
+scale 1.1468 1.1468 1.1468
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_10
+position -32.3465 20.8602 8.0304
+direction 0.5544 -0.0404 0.0416 -0.8302
+scale 1.0 1.0 1.0
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_11
+position 13.4962 44.7701 21.9177
+direction 0.9766 -0.1096 -0.1459 0.1138
+scale 1.0 1.0 1.1823
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_12
+position -26.6973 -22.3531 8.4116
+direction 0.9184 0.068 0.0361 0.3882
+scale 1.0 1.1951 1.497
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_13
+position 17.5236 30.8037 28.5741
+direction 0.4493 0.0004 -0.0831 -0.8895
+scale 1.0091 1.5456 1.1921
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_14
+position -38.3223 -23.7502 1.7532
+direction 0.7263 0.0618 0.0625 -0.6817
+scale 1.0 1.0 1.0
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_15
+position -14.7083 -22.9876 12.4472
+direction 0.6085 -0.2936 0.4836 0.5565
+scale 1.0 1.1951 1.497
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_16
+position -23.6429 -24.3639 15.8979
+direction 0.5764 -0.3525 0.5363 0.5059
+scale 1.0 1.1951 1.497
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_17
+position 11.9033 37.2893 9.9605
+direction 0.3717 -0.0091 -0.0393 -0.9275
+scale 0.743 1.0 0.5513
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_18
+position -29.0335 -1.1517 43.6609
+direction 0.184 -0.3078 0.5264 0.7709
+scale 1.8355 2.1936 2.7479
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_19
+position 12.3307 42.2709 45.8268
+direction 0.0676 -0.0037 -0.7409 0.6682
+scale 2.7289 2.0043 3.1015
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_20
+position -26.787 -23.1999 15.8073
+direction 0.7135 -0.3826 -0.5802 -0.0886
+scale 1.0 1.1951 1.497
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_21
+position -2.5372 -9.254 5.9072
+direction 0.7621 0.5776 0.1806 0.2303
+scale 0.7303 0.594 1.0
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_22
+position -42.8996 1.1052 11.6535
+direction 0.901 -0.0889 0.1073 -0.4108
+scale 0.5721 0.5721 0.5721
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_23
+position -23.8416 -36.9796 -3.4923
+direction 0.2659 -0.0723 0.0245 -0.961
+scale 0.9491 1.0 0.7507
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_24
+position -33.472 -50.1048 -0.537
+direction 0.8989 0.032 -0.0275 0.4362
+scale 0.6033 0.7462 0.6704
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_25
+position -11.847 -42.7961 -2.9758
+direction 0.5487 -0.0394 0.0646 -0.8326
+scale 0.6898 1.0 0.9774
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_28
+position 9.4317 41.2989 29.0381
+direction 0.8978 0.0337 0.0979 -0.4281
+scale 1.2264 2.0589 1.8154
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_29
+position -3.5185 37.9236 40.8346
+direction 0.4938 0.2342 -0.2114 0.8103
+scale 0.8775 1.835 1.8154
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_30
+position 3.1858 32.2142 6.6446
+direction 0.4946 0.0695 -0.1019 -0.8604
+scale 1.2197 1.0 1.0559
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_31
+position 9.7106 34.2041 9.9764
+direction 0.2148 0.0839 -0.5563 -0.7984
+scale 0.803 0.7318 0.5725
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_32
+position -2.4085 -19.7488 2.8952
+direction 0.6902 0.7068 -0.1525 0.0288
+scale 0.6271 0.9056 0.8988
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_33
+position -2.1048 -10.0942 5.3306
+direction 0.8216 0.1212 0.0156 0.5568
+scale 0.7303 0.6672 1.0
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_35
+position 24.2043 29.8989 30.326
+direction 0.7164 0.0277 -0.0783 -0.6927
+scale 0.7585 2.1619 0.7415
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_36
+position 20.6814 36.3746 36.5086
+direction 0.6985 0.0387 0.2579 -0.6664
+scale 0.8156 1.7239 1.8154
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_37
+position 24.52 30.2171 26.3111
+direction 0.9806 0.0044 -0.0919 -0.1733
+scale 1.0 1.0 1.1823
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_40
+position 0.9923 18.7654 2.3326
+direction -0.0005 0.988 0.1504 0.0365
+scale 1.0688 1.9422 0.6581
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_42
+position 8.2125 36.1616 6.8046
+direction 0.9554 -0.1428 -0.1316 0.2225
+scale 1.0 1.0 1.0
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_44
+position 1.6939 28.5366 3.6079
+direction 0.0556 -0.9522 0.2837 0.0989
+scale 0.8363 1.5196 0.9098
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_b_2
+position -16.9002 -23.184 42.3544
+direction 0.2935 -0.2216 0.8435 0.3914
+scale 2.8915 3.2883 2.8915
+model SM_RockShard_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_b_3
+position -0.7178 -32.2944 34.7157
+direction 0.0902 0.0271 0.8076 0.5821
+scale 2.447 2.447 2.447
+model SM_RockShard_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_b_4
+position 16.3382 -41.805 31.5044
+direction 0.3748 0.6044 0.6807 -0.1754
+scale 1.5022 4.6922 4.0399
+model SM_RockShard_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_b_5
+position -28.3 -38.8 12.5084
+direction 0.9507 0.0 0.0 -0.3101
+scale 1.1896 1.1896 0.7801
+model SM_RockShard_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_b_6
+position -35.7598 -36.0401 14.6854
+direction 0.9855 0.0068 0.0407 -0.1644
+scale 1.5057 2.4391 0.7659
+model SM_RockShard_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_b_7
+position -18.5417 -35.3979 11.3451
+direction -0.026 -0.1234 -0.8078 -0.5759
+scale 1.0 1.0 1.5496
+model SM_RockShard_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_b_8
+position 9.5413 40.223 24.3897
+direction 0.7211 -0.2522 -0.2569 -0.5919
+scale 1.205 1.8925 1.2916
+model SM_RockShard_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_b_9
+position -46.5934 -0.8985 13.4145
+direction 0.8335 0.0 0.0 -0.5525
+scale 1.0 1.0 1.0
+model SM_RockShard_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_b_10
+position 39.2032 7.2226 44.7552
+direction 0.1493 0.0593 -0.4878 -0.858
+scale 1.1654 1.1654 1.3316
+model SM_RockShard_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_b_11
+position -21.2972 -22.4107 35.2122
+direction 0.1454 0.0644 0.8075 0.5681
+scale 2.447 2.447 2.447
+model SM_RockShard_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_b_12
+position -32.4795 -48.9657 16.5835
+direction 0.4366 -0.069 -0.1085 -0.8904
+scale 1.9787 1.9787 1.287
+model SM_RockShard_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_b_13
+position -6.5565 -31.7453 23.9045
+direction 0.0627 -0.1132 -0.967 -0.2193
+scale 1.2945 1.5704 1.4966
+model SM_RockShard_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_b_14
+position 45.883 9.5757 47.1889
+direction 0.0585 -0.2127 0.6791 0.7001
+scale 1.5277 1.5277 1.7456
+model SM_RockShard_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_b_15
+position 26.3991 -24.8516 44.895
+direction 0.1375 0.4217 -0.7683 -0.4614
+scale 2.5685 2.5685 2.5685
+model SM_RockShard_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_b_16
+position 41.194 -8.9577 41.2172
+direction 0.1706 0.8352 -0.002 -0.5229
+scale 2.2517 2.7763 2.2517
+model SM_RockShard_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_b_17
+position 2.8949 -33.1754 47.2897
+direction 0.4406 0.8935 0.0724 -0.0475
+scale 3.0636 3.0636 3.0636
+model SM_RockShard_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_b_18
+position -38.0417 -18.5691 25.5686
+direction 0.2493 -0.1233 0.7137 0.6429
+scale 2.5685 2.5685 2.5685
+model SM_RockShard_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_b_19
+position -41.1346 9.6045 21.551
+direction 0.4329 -0.1716 0.8842 0.0367
+scale 1.0 1.0 1.0
+model SM_RockShard_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_b_20
+position -19.2693 43.2557 45.6882
+direction 0.8817 -0.241 0.1107 -0.3902
+scale 3.1999 3.1999 3.7832
+model SM_RockShard_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_b_21
+position 15.3541 35.3375 24.9892
+direction 0.9703 -0.1719 -0.0399 -0.1655
+scale 1.4645 1.8925 1.2916
+model SM_RockShard_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_c_0
+position -21.9831 -52.0351 14.8334
+direction 0.6273 -0.5751 -0.4601 0.2531
+scale 1.1613 1.1613 1.6588
+model SM_RockShard_c
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_c_1
+position -18.3288 -42.1 16.2
+direction 0.2418 0.2418 -0.6645 -0.6645
+scale 1.0 1.0 1.0
+model SM_RockShard_c
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_c_2
+position -4.8935 -30.3978 4.7276
+direction 0.4507 -0.4201 -0.7097 0.3416
+scale 0.8821 0.8821 0.8821
+model SM_RockShard_c
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_c_3
+position -15.091 -39.903 11.7077
+direction 0.9151 -0.1018 0.2334 -0.3127
+scale 1.11 1.5496 1.0
+model SM_RockShard_c
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_c_4
+position -20.3038 -23.7733 11.8954
+direction 0.9769 0.1822 -0.0087 0.1113
+scale 1.4846 1.4846 1.4469
+model SM_RockShard_c
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_c_5
+position 39.8544 1.7185 47.3947
+direction 0.2542 -0.2168 0.9414 -0.0463
+scale 1.445 1.445 1.445
+model SM_RockShard_c
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_c_6
+position 10.6206 -30.9104 35.1519
+direction 0.6198 -0.1843 0.7311 -0.2175
+scale 1.0 1.0 1.0
+model SM_RockShard_c
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_c_7
+position 32.5749 -39.2528 25.9847
+direction 0.8938 -0.1369 -0.1519 0.3992
+scale 2.2681 2.2681 2.9117
+model SM_RockShard_c
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_c_8
+position 42.9763 -12.3548 15.3239
+direction 0.8962 0.0 -0.4438 0.0
+scale 1.0 1.0 1.0
+model SM_RockShard_c
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_c_9
+position -29.415 10.2284 37.2604
+direction 0.9651 0.0621 -0.2541 0.013
+scale 2.046 2.0087 1.4072
+model SM_RockShard_c
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_c_10
+position -40.2572 15.5214 8.3142
+direction -0.0692 0.4874 -0.8448 0.2099
+scale 1.2726 1.2726 1.2167
+model SM_RockShard_c
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_c_11
+position 10.8796 36.9154 33.7633
+direction 0.3047 -0.5601 -0.4636 -0.6153
+scale 1.125 1.5778 1.1725
+model SM_RockShard_c
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_c_12
+position -7.5278 -33.2076 13.742
+direction 0.6063 -0.0676 -0.7566 -0.2353
+scale 1.1504 1.3711 1.2026
+model SM_RockShard_c
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_c_13
+position 25.0482 33.6188 40.0987
+direction 0.3775 -0.581 0.6633 0.2828
+scale 1.0889 1.3056 1.3056
+model SM_RockShard_c
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_c_14
+position -53.6878 -41.5943 18.5459
+direction 0.9233 0.2089 0.3192 0.0438
+scale 2.3248 2.3855 2.2658
+model SM_RockShard_c
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_c_15
+position -47.5372 -55.2078 14.118
+direction 0.9761 0.0435 -0.1315 0.1673
+scale 2.3248 2.9511 1.3225
+model SM_RockShard_c
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_c_16
+position -2.333 -27.8646 1.8661
+direction 0.4507 -0.4201 -0.7097 0.3416
+scale 0.8821 0.8821 0.8821
+model SM_RockShard_c
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_c_17
+position -12.6597 -43.5491 14.7502
+direction 0.9761 -0.2068 0.0652 0.0138
+scale 1.11 1.5496 1.0
+model SM_RockShard_c
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_c_19
+position -15.5705 29.6193 8.4994
+direction 0.1733 -0.9235 0.2119 0.2687
+scale 1.2727 1.2727 1.2167
+model SM_RockShard_c
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_c_20
+position -8.6689 34.5856 8.8973
+direction 0.3269 0.1385 -0.4996 -0.7901
+scale 1.2727 1.2727 1.2167
+model SM_RockShard_c
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_c_21
+position 8.7233 37.4053 41.1588
+direction 0.5258 -0.4513 0.5568 0.4581
+scale 1.0889 1.3056 1.3056
+model SM_RockShard_c
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_c_22
+position -34.0937 24.2977 32.6636
+direction 0.7756 0.0677 0.1304 0.6139
+scale 3.9733 0.1927 9.2483
+model SM_RockShard_c
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_d_0
+position 1.7267 -23.4675 -3.7039
+direction 0.8307 0.1221 0.1008 0.5338
+scale 1.0 1.0 1.0
+model SM_RockShard_d
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_d_1
+position 35.9957 20.1592 34.4462
+direction 0.2521 0.6582 0.1751 -0.6874
+scale 1.3207 1.3401 1.2845
+model SM_RockShard_d
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_d_2
+position 24.8723 -28.2603 38.224
+direction 0.9864 0.0 0.0 0.1645
+scale 1.7078 1.7078 1.7078
+model SM_RockShard_d
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_d_3
+position -17.8185 -6.2224 50.3481
+direction 0.3312 0.6105 0.5618 0.4494
+scale 2.0869 2.0869 2.0869
+model SM_RockShard_d
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_d_4
+position 23.5525 -32.7942 31.6824
+direction 0.984 0.1363 0.0158 0.1138
+scale 1.3934 1.851 1.0
+model SM_RockShard_d
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_d_5
+position -38.8757 0.4367 27.691
+direction 0.9633 0.0 0.0 -0.2684
+scale 1.0 1.0 1.0
+model SM_RockShard_d
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_d_6
+position -20.6606 9.4383 45.2503
+direction 0.5794 0.3034 0.6446 -0.3958
+scale 1.0 1.0 1.0
+model SM_RockShard_d
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_d_7
+position -36.6446 14.1785 25.5316
+direction 0.0644 0.9357 0.3429 0.0523
+scale 1.0 1.0 1.0
+model SM_RockShard_d
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_d_8
+position 30.9233 30.2731 41.9753
+direction 0.5993 0.1358 -0.759 0.2153
+scale 1.2333 1.8677 1.8677
+model SM_RockShard_d
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_d_9
+position -40.0205 18.4637 17.3802
+direction 0.6469 -0.6273 -0.3073 0.3058
+scale 1.4119 1.4119 1.4119
+model SM_RockShard_d
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_d_10
+position 6.1079 47.8407 12.6062
+direction 0.984 0.0032 -0.0179 0.1775
+scale 0.9533 1.4119 1.8219
+model SM_RockShard_d
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_e_0
+position 7.2095 40.8036 34.402
+direction 0.637 0.1514 -0.0913 0.7503
+scale 1.3521 1.0 1.7366
+model SM_RockShard_e
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_e_1
+position -26.3308 -28.0486 13.8113
+direction 0.9967 0.0 -0.0806 0.0
+scale 1.8451 1.8451 1.8451
+model SM_RockShard_e
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_e_2
+position -18.6466 17.3621 51.1033
+direction 0.4426 -0.4667 0.5225 -0.5596
+scale 1.0 1.0 1.0
+model SM_RockShard_e
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_e_3
+position -50.6364 -16.4503 6.8345
+direction 0.4751 -0.2179 -0.7134 0.4667
+scale 1.2749 1.2749 1.2749
+model SM_RockShard_e
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_e_4
+position -46.3726 -11.8685 4.3493
+direction 0.0056 0.6167 0.783 -0.0811
+scale 1.6067 1.6067 1.6067
+model SM_RockShard_e
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_e_5
+position -53.7023 -17.548 13.7188
+direction 0.3967 -0.417 -0.6398 0.5093
+scale 0.4592 2.9268 4.0488
+model SM_RockShard_e
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_e_6
+position -34.4538 -32.3591 5.3288
+direction 0.5628 0.4814 -0.5773 0.3439
+scale 0.9021 0.8963 0.8963
+model SM_RockShard_e
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_e_7
+position -8.7563 36.7532 11.2597
+direction 0.2359 0.0289 -0.0797 -0.9681
+scale 1.439 1.439 1.6043
+model SM_RockShard_e
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_e_8
+position 7.2939 41.0593 11.5922
+direction 0.1325 0.0094 -0.1125 -0.9847
+scale 0.7651 0.7651 0.7651
+model SM_RockShard_e
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_e_9
+position 3.2795 39.1238 11.1231
+direction 0.1675 -0.1072 0.0711 -0.9774
+scale 0.7651 0.7651 0.7651
+model SM_RockShard_e
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_e_10
+position 5.5492 42.3126 18.2289
+direction 0.3617 -0.0283 0.3526 -0.8626
+scale 0.7651 0.7651 0.7651
+model SM_RockShard_e
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_e_12
+position -12.25 29.8891 37.4157
+direction 0.1957 0.0126 0.6677 -0.7182
+scale 1.0916 1.0916 1.0916
+model SM_RockShard_e
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_7
+position -3.4571 2.63 5.3427
+direction 0.0227 0.5863 -0.8087 0.041
+scale 0.75 1.0 1.2562
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_26
+position 14.8791 -29.5037 -2.6663
+direction 0.4478 0.3665 -0.5675 -0.5858
+scale 0.5774 0.4711 0.468
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_34
+position -2.9756 0.1643 5.2738
+direction -0.0579 0.3896 0.8871 -0.2407
+scale 0.7373 1.0966 1.4742
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_38
+position -0.1255 27.1468 7.2701
+direction 0.4432 0.0199 -0.0727 0.8932
+scale 0.4579 1.5196 0.3982
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_39
+position -2.6386 13.9277 4.0171
+direction 0.1511 0.0332 0.0217 -0.9877
+scale 1.0325 1.5196 0.3982
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_41
+position 4.7851 5.3889 3.3149
+direction 0.2521 0.0011 0.0092 -0.9677
+scale 0.8363 1.5196 0.6953
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_43
+position 12.5129 3.2331 2.4432
+direction 0.9857 -0.0038 0.0443 -0.1627
+scale 1.0325 1.5196 0.7411
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_a_45
+position 21.4675 4.1211 1.6538
+direction 0.999 0.0031 0.0443 -0.0096
+scale 1.0325 1.5196 0.7411
+model SM_RockShard_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_c_18
+position -24.2571 28.4145 7.956
+direction 0.3348 0.4909 -0.0494 -0.8028
+scale 1.5936 1.5936 1.5532
+model SM_RockShard_c
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockShard_e_13
+position 32.6061 30.1199 30.7994
+direction 0.2582 -0.0794 0.3677 -0.8898
+scale 1.439 2.0663 2.5298
+model SM_RockShard_e
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockWall_a_0
+position 44.6459 -9.9223 -1.1412
+direction 0.9018 -0.0451 0.0415 -0.4278
+scale 0.5375 0.5375 0.5375
+model SM_RockWall_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockWall_a_1
+position 59.9139 -26.3971 16.1539
+direction 0.9283 0.0625 -0.2066 -0.3026
+scale 1.0 1.0 1.0
+model SM_RockWall_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockWall_a_2
+position -39.5614 28.7027 24.807
+direction 0.8818 0.2707 0.134 0.3623
+scale 1.0545 0.5766 1.3701
+model SM_RockWall_a
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockWall_b_0
+position 54.1676 16.7291 23.2636
+direction 0.9962 0.0 -0.0872 0.0
+scale 1.0 1.0 1.2089
+model SM_RockWall_b
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockWall_b_1
+position -6.389 -50.3389 41.198
+direction 0.2482 0.9215 -0.2729 0.1216
+scale 1.0 0.9397 1.0
+model SM_RockWall_b
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockWall_b_2
+position 20.7171 -55.8967 6.2108
+direction 0.8417 -0.0332 -0.12 -0.5254
+scale 0.3854 1.1175 0.8136
+model SM_RockWall_b
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockWall_b_3
+position 31.5847 -34.959 53.1554
+direction 0.157 0.7527 0.6282 -0.1189
+scale 1.0 1.0 1.0
+model SM_RockWall_b
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockWall_b_4
+position -11.0845 -63.6154 18.0932
+direction 0.6132 -0.41 -0.3392 -0.5838
+scale 0.5189 1.1175 1.1158
+model SM_RockWall_b
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockWall_b_5
+position 17.9535 -63.0447 14.3476
+direction 0.7128 -0.1682 -0.3859 -0.561
+scale 0.5189 1.1175 1.1158
+model SM_RockWall_b
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockWall_b_6
+position 39.104 -44.5714 14.3453
+direction 0.8419 -0.1225 -0.2381 -0.4686
+scale 0.3854 0.7633 1.0874
+model SM_RockWall_b
+material grass_path_2
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockWall_c_0
+position -23.1164 33.6697 34.8578
+direction 0.0209 -0.9709 -0.2385 -0.0091
+scale 1.7219 1.8473 1.7084
+model SM_RockWall_c
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockWall_c_1
+position 41.8392 -1.8724 29.0179
+direction -0.0104 -0.7614 0.6476 -0.0283
+scale 1.1408 1.0 1.6155
+model SM_RockWall_c
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockWall_c_2
+position -42.6857 4.9591 32.581
+direction 0.1202 -0.757 -0.6358 0.0914
+scale 1.6071 1.5375 1.5375
+model SM_RockWall_c
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockWall_c_3
+position -30.6958 -10.1584 35.4654
+direction 0.1396 -0.4429 -0.8495 0.2504
+scale 1.68 1.3798 1.6106
+model SM_RockWall_c
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockWall_c_4
+position -18.3897 -11.2748 50.3069
+direction 0.1576 -0.5231 -0.794 0.2665
+scale 1.7219 2.1965 1.7084
+model SM_RockWall_c
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockWall_d_0
+position -10.3157 -22.1551 34.4781
+direction 0.0808 0.8647 -0.2542 -0.4255
+scale 1.2914 1.1558 1.4889
+model SM_RockWall_d
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_RockWall_d_1
+position -0.5109 38.1755 13.2854
+direction 0.9899 0.0498 -0.0216 0.1308
+scale 1.0 0.4897 1.3704
+model SM_RockWall_d
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_SoilFlat_a_0
+position -29.8436 -4.3525 8.0024
+direction 0.8647 -0.0024 -0.0042 -0.5023
+scale 0.342 0.3358 0.2389
+model SM_SoilFlat_a
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_SoilFlat_a_1
+position -32.0143 7.912 7.1999
+direction 0.7894 -0.0104 0.0797 0.6086
+scale 0.342 0.3638 0.3191
+model SM_SoilFlat_a
+material MI_Rock_Jungle_Large
+type 1 transparent
+type 2 emission
+END
+
+[0] MESH
+sysname SM_SoilFlat_b_0
+position -7.5843 -63.1273 0.0328
+direction 0.9146 0.0 0.0 0.4045
+scale 3.4355 3.4355 1.5801
+model SM_SoilFlat_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_SoilFlat_b_1
+position 8.8945 -28.5382 -3.5569
+direction 0.4367 -0.0295 -0.0181 -0.8989
+scale 3.4355 3.4355 1.5801
+model SM_SoilFlat_b
+material MI_Rock_Jungle_Debris
+type 2 emission
+END
+
+[0] MESH
+sysname SM_SoilFlat_b_2
+position -10.9574 -71.2839 -0.1646
+direction 0.9146 0.0 0.0 0.4045
+scale 3.4355 3.4355 1.5801
+model SM_SoilFlat_b
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 

@@ -4,6 +4,8 @@
 layout(triangles, invocations = 6) in;
 layout(triangle_strip, max_vertices = 3) out;
 
+layout(location = 0) in vec4 WorldPos[3];
+
 
 mat4 lookAtRH(vec3 eye, vec3 center, vec3 up)
 {
@@ -78,11 +80,12 @@ void main()
 	//	PV2[4] = proj * lookAtRH( lightPos, lightPos + vec3(0,0,1), vec3(0,-1,0) );
 	//	PV2[5] = proj * lookAtRH( lightPos, lightPos + vec3(0,0,1), vec3(0,-1,0) );
 
-    for (int i = 0; i < 3; i++) {
-        gl_Position = PV[gl_InvocationID] * gl_in[i].gl_Position; // non-linear!
-		FragPos = gl_in[i].gl_Position;
-		//gl_Position.z = pow(gl_Position.z, 10.5);
-		//gl_Position.z /= gl_Position.w;
+    for (int i = 0; i < 3; i++) 
+	{
+        gl_Position = PV[gl_InvocationID] * WorldPos[i];//gl_in[i].gl_Position; // non-linear!
+		FragPos = WorldPos[i];//gl_in[i].gl_Position;
+	//	//gl_Position.z = pow(gl_Position.z, 10.5);
+	//	//gl_Position.z /= gl_Position.w;
         EmitVertex();
     }
     EndPrimitive();

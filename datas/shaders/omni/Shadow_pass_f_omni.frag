@@ -29,11 +29,9 @@ layout(binding = 1, std140) uniform DynamicLightSourceInfo {
 
 void main() 
 {
-	float far_plane = 40;
-		far_plane = illuminationInfos.illuminationInfo.radius;
+	float far_plane = illuminationInfos.illuminationInfo.radius;
 		
-	vec3 lightPos = vec3(6.97, 6.97, 2.96);
-		lightPos = illuminationInfos.illuminationInfo.position;
+	vec3 lightPos = illuminationInfos.illuminationInfo.position;
 		
     // вычисление расстояния между фрагментом и источником 
     float lightDistance = length(FragPos.xyz - lightPos);
@@ -44,5 +42,4 @@ void main()
     // запись результата в результирующую глубину фрагмента
     gl_FragDepth = lightDistance; // linear
 	
-	//depth = lightDistance;
 }

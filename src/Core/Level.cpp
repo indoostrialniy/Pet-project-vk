@@ -148,7 +148,7 @@ bool Level::loadLevel()
 					Slovo = getValue(StrVar, 0); //выдрали первое слово из строки
 
 					//if (StrVar[0] == '[') 	{								rookie.initType 	= getValue(StrVar, 1); }
-					if (Slovo == "type") 	{								rookie.initType 	= stof(getValue(StrVar, 1)); }
+					if (Slovo == "type") 	{								rookie.initType 	|= stoi(getValue(StrVar, 1)); } // reading flags
 
 					if (Slovo == "sysname") { 								rookie.initSysname 	= getValue(StrVar, 1); }
 					if (Slovo == "position") { for (int i = 0; i < 3; i++) 	rookie.initPos[i] 	= stof(getValue(StrVar, i + 1)); }

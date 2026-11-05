@@ -60,18 +60,18 @@ public:
 	uint8_t materialRetargets[48] {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
 		
     // G-pass section start
-	void createEntityMaterialInfoBuffer();
-	void destroyEntityMaterialInfoBuffer();
-	void updateEntityMaterialInfoBuffer(uint32_t currentImage);
+	//~ void createEntityMaterialInfoBuffer();
+	//~ void destroyEntityMaterialInfoBuffer();
+	//~ void updateEntityMaterialInfoBuffer(uint32_t currentImage);
 
-	VkDescriptorSet GpassDescriptorSet;	// объект, определяющий, какие именно ресурсы надо привязать к шейдеру. ubo (PVM) + texture. Биндится для отрисовки. Не надо удалять вручную. Удаляются автоматически вместе с пулом
+	//~ VkDescriptorSet GpassDescriptorSet;	// объект, определяющий, какие именно ресурсы надо привязать к шейдеру. ubo (PVM) + texture. Биндится для отрисовки. Не надо удалять вручную. Удаляются автоматически вместе с пулом
 
-    void createEntityGpassDescriptorSet( std::vector<std::shared_ptr<Material>> material, std::string entityName ); // текстура и сэмплер для нее встраиваются в descriptor set. удаление не нужно, ибо происходит автоматически
+    //~ void createEntityGpassDescriptorSet( std::vector<std::shared_ptr<Material>> material, std::string entityName ); // текстура и сэмплер для нее встраиваются в descriptor set. удаление не нужно, ибо происходит автоматически
 
 	//~ // material infos buffer
-	VkBuffer 		 			materialInfoBuffer;							// host-side хэндлер буфера для переменных (матриц)		
-	VkDeviceMemory  			materialInfoBufferMemory;					// кусок видеопамяти для буфера переменных
-	void*					 	materialInfoBufferMapped;					// адрес видеопамяти для прямого доступа из функции updateEntityUniformBuffer() и т.п.
+	//~ VkBuffer 		 			materialInfoBuffer;							// host-side хэндлер буфера для переменных (матриц)		
+	//~ VkDeviceMemory  			materialInfoBufferMemory;					// кусок видеопамяти для буфера переменных
+	//~ void*					 	materialInfoBufferMapped;					// адрес видеопамяти для прямого доступа из функции updateEntityUniformBuffer() и т.п.
 	// G-pass section end
 	
 	
