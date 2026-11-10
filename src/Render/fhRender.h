@@ -15,7 +15,7 @@
 class Mesh;
 class VkTexture;
 class Material;
-
+class Entity;
 
 const std::vector<const char*> validationLayers = {
 	"VK_LAYER_KHRONOS_validation"
@@ -105,6 +105,14 @@ public:
 		void destroyGpassGeneralInfoBuffer();
 		void updateGpassGeneralInfoBuffer();
     //FhGeneralInfo buffer creation end
+    
+    
+    void processObject(	std::shared_ptr<Entity>& entity, 
+					std::unordered_map<std::string, std::tuple<std::shared_ptr<Mesh>, int, std::array<FhGpassPushConstantsInfo, MAX_ENTITIES_IN_ACTION>>>& uniques,
+					FhGpassPushConstantsInfo& constants);
+					
+	void drawInstances(int& offset, FhGpassPushConstantsInfo& constants, int& uniqueEntitieInstancesCount, std::tuple<std::shared_ptr<Mesh>, int,	std::array<FhGpassPushConstantsInfo, MAX_ENTITIES_IN_ACTION>> instance, std::array<VkDeviceSize, 1>& offsets);
+
     
     //~ // material infos buffer
 	VkBuffer 		 			materialInfoBuffer;							// host-side хэндлер буфера для переменных (матриц)		

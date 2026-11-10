@@ -255,18 +255,18 @@ bool  Material::loadMaterial(std::string& name)
 				
 				if( getValue(StrVar, 0) == "Metallic")
 				{
-					 materialData.metallicDefault = stoi(getValue(StrVar, 1));
+					 materialData.metallicDefault = stof(getValue(StrVar, 1));
 					 //materialData.metallicAddress = 0;
 				}
 				
 				if( getValue(StrVar, 0) == "Roughness")
 				{
-					 materialData.roughnessDefault = stoi(getValue(StrVar, 1));
+					 materialData.roughnessDefault = stof(getValue(StrVar, 1));
 					 //materialData.roughnessAddress = 0;
 				}
 				if( getValue(StrVar, 0) == "Alpha")
 				{
-					 materialData.alphaDefault = stoi(getValue(StrVar, 1));
+					 materialData.alphaDefault = stof(getValue(StrVar, 1));
 				}
 				if( getValue(StrVar, 0) == "Emission")
 				{

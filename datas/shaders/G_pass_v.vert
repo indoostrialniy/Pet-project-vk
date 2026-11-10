@@ -13,7 +13,8 @@ layout(location = 4) out mat3 txrxMatrix;
 layout(location = 7) out float sysTime;
 layout(location = 8) out vec3 tangent;
 layout(location = 9) out uint Type;
-layout(location = 10) out struct VSOut
+layout(location = 10) out vec3 POV;
+layout(location = 11) out struct VSOut
 {
 	uint v[48];	// прямая переиндексация 48 материалов, назначенных объекту
 } vs_out;
@@ -153,7 +154,7 @@ void main()
 
 	tangent = inTangent;
 
-	
+	POV = commonData.cameraPos;
 	
 	#ifdef INSTANCED_RENDERING
 		// unpack material indexes for instances

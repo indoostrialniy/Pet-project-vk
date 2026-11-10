@@ -51,7 +51,7 @@ DynamicLight::DynamicLight( const FhMicroWorldInitializationInfo& info ) : Micro
 		
 		case FH_DYNAMIC_LIGHTSOURCE_SPOT: 				dynamicLightMapsCount = 1; createShadowpassSpot(); break;
 		
-		//case FH_DYNAMIC_LIGHTSOURCE_SUN: 				dynamicLightMapsCount = 1; createShadowpassSun(); break;
+		case FH_DYNAMIC_LIGHTSOURCE_SUN: 				dynamicLightMapsCount = 1; createShadowpassSpot(); break; // spot not error
 	};
 }
 	
@@ -68,7 +68,7 @@ DynamicLight::~DynamicLight()
 		
 		case FH_DYNAMIC_LIGHTSOURCE_SPOT: 				destroyShadowpassSpot(); break;
 		
-		//case FH_DYNAMIC_LIGHTSOURCE_SUN: 				destroyShadowpassSun(); break;
+		case FH_DYNAMIC_LIGHTSOURCE_SUN: 				destroyShadowpassSpot(); break;
 	};
 }
 
@@ -770,24 +770,63 @@ FhDynamicLightSourceInfo DynamicLight::getLightSourceInfo()
 			
 		}
 		
+		if(type == FH_DYNAMIC_LIGHTSOURCE_SUN )
+		{
+			glm::vec3 POV = getActorPosition();
+			glm::vec3 DOV = POV + getActorForwardVector();
+			glm::vec3 UP = getActorUpVector();
+					
+			glm::mat4 view = glm::lookAt(POV, DOV, UP);
+			
+			float s = 100.0f; // shadow frustum size, подбери под сцену
+			glm::mat4 proj = glm::ortho(-s/2.0f, s/2.0f, s/2.0f, -s/2.0f, fLightViewNear, radius);
+					//proj[1][1] *= -1; 
+			//~ glm::mat4 proj = glm::perspective(glm::radians(sector), (float) shadowExtent.width / (float) shadowExtent.height, fLightViewNear, radius );
+				//~ proj[1][1] *= -1; // GLM was originally designed for OpenGL, where the Y coordinate of the clip coordinates is inverted. 
+					
+			sourceInfo.PV[0]	= proj*view; //getLightSourcePV(); //
+		}
+		
 	return sourceInfo;
 }
 
 
 glm::mat4 DynamicLight::getLightSourcePV()
 {
-	glm::vec3 POV = getActorPosition();
-	glm::vec3 DOV = POV + getActorForwardVector();
-	glm::vec3 UP = getActorUpVector();
-			
-	glm::mat4 view = glm::lookAt(POV, DOV, UP);
-	
+	if(type == FH_DYNAMIC_LIGHTSOURCE_SUN )
+	{
+		glm::vec3 POV = getActorPosition();
+		glm::vec3 DOV = POV + getActorForwardVector();
+		glm::vec3 UP = getActorUpVector();
+				
+		glm::mat4 view = glm::lookAt(POV, DOV, UP);
 		
-	glm::mat4 proj = glm::perspective(glm::radians(sector), (float) shadowExtent.width / (float) shadowExtent.height, fLightViewNear, radius );
-			proj[1][1] *= -1; // GLM was originally designed for OpenGL, where the Y coordinate of the clip coordinates is inverted. 
+		float s = 100.0f; // shadow frustum size, подбери под сцену
+		glm::mat4 proj = glm::ortho(-s/2.0f, s/2.0f, s/2.0f, -s/2.0f, fLightViewNear, radius);
+			//proj[1][1] *= -1; 
+		
+		//~ glm::mat4 proj = glm::perspective(glm::radians(sector), (float) shadowExtent.width / (float) shadowExtent.height, fLightViewNear, radius );
+				//~ proj[1][1] *= -1; // GLM was originally designed for OpenGL, where the Y coordinate of the clip coordinates is inverted. 
+		
+		
+		return proj * view;
+	}
+	
+	if(type == FH_DYNAMIC_LIGHTSOURCE_SPOT)
+	{
+		glm::vec3 POV = getActorPosition();
+		glm::vec3 DOV = POV + getActorForwardVector();
+		glm::vec3 UP = getActorUpVector();
+				
+		glm::mat4 view = glm::lookAt(POV, DOV, UP);
+		
+		glm::mat4 proj = glm::perspective(glm::radians(sector), (float) shadowExtent.width / (float) shadowExtent.height, fLightViewNear, radius );
+				proj[1][1] *= -1; // GLM was originally designed for OpenGL, where the Y coordinate of the clip coordinates is inverted. 
+		
+		return proj * view;
+	}
 	
 	
-	return proj * view;
 }
 
 
@@ -889,7 +928,7 @@ void DynamicLight::recordShadowpassCommand( VkCommandBuffer& commandBuffer )
 				{
 					vkCmdBindDescriptorSets( commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout_Shadow, 0, 1, &dynamicLightOmniSet, 0, nullptr);	// привязали дексриптор, где хранятся ссылки на наши матрицы PVM и текстуры
 				}
-				if( type == FH_DYNAMIC_LIGHTSOURCE_SPOT)
+				if( type == FH_DYNAMIC_LIGHTSOURCE_SPOT || type == FH_DYNAMIC_LIGHTSOURCE_SUN)
 				{
 					vkCmdBindDescriptorSets( commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout_Shadow, 0, 1, &dynamicLightSpotSet, 0, nullptr);	// привязали дексриптор, где хранятся ссылки на наши матрицы PVM и текстуры
 				}
@@ -1721,5 +1760,649 @@ void DynamicLight::update()
 	
 	
 }
+
+
+
+
+void DynamicLight::createShadowpassSun()
+{
+	if( !HANDLE_VALID(g_GraphicsCore.logicalDevice) ) {return;}
+	
+	// 1 - Renderpass attachments
+	if( HANDLE_NULL(renderPass_Shadow) )
+	{
+		VkAttachmentDescription depthAttachment;
+			depthAttachment.format = VK_FORMAT_D32_SFLOAT;//g_GraphicsCore.findDepthFormat();
+			depthAttachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+			depthAttachment.flags = 0;
+			depthAttachment.samples = VK_SAMPLE_COUNT_1_BIT;						// 1 => без мультисемплинга
+			// loadOp и storeOp относятся к цвету и глубине 
+			// мы знаем, что координаты модели после всех матричных умножений преобразуются в вектор, у которого X и Y это экранные координаты,
+			// а компонента Z - экранная глубина пикселя
+			depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;					// заливать буфер одним цветом перед каждым кадром (назначать всем значениям некую константу)
+			depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;					// результат отрисовки будет сохранен в память и может быть считан потом
+			// пока что нам плевать на буфер трафарета, поэтому DONT_CARE
+			depthAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+			depthAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+			// текстуры и фреймбуферы  представляются как VkImage с определенным форматом пикселей, однако расположение пикселей в памяти может меняться
+			// в зависимости от того, что мы пытаемся сделать с изображением
+			depthAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;			// плевать, где текстурное прикрепление было расположено ранее
+			// VK_IMAGE_LAYOUT_UNDEFINED не гарантирует, что данные из изображения будут сохранены, но мы все равно собирались делать заливку VK_ATTACHMENT_LOAD_OP_CLEAR
+			depthAttachment.finalLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;		// (автоматически) целевое расположение текстурного прикрепления - цепочка показа
+			// изображение должно быть перенесено в специальное расположение, доступное той функции/операции, которая будет обрабатывать это изображение далее
+
+		// 1.1 - субпасс
+		// рендерпасс может состоять из множества субпассов. Субпассы это операции рендеринга, зависящие от содержимого фреймбуфера от предыдущего рендерпасса
+		// (к примеру, последовательность пост-процессинговых эффектов, применяющихся друг за другом)
+		// Если сгруппировать эти операции рендеринга в едииный рендерпасс, то Vulkan может их реорганизовать и выжать больше производительности .
+		// Для тестового треугольника оставим одиночный субпасс
+		// каждый субпасс ссылается на 1 или несколько прикреплений, описанных ранее. Эти ссылки и есть структуры VkAttachmentReference
+		
+		// 1.2 - references
+		
+		std::array<VkAttachmentReference, 1> depthAttachmentsRefs {};
+			depthAttachmentsRefs[0].attachment = 0;
+			depthAttachmentsRefs[0].layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+			
+		// а можно и в один массив все засунуть с pColorAttachments указывать весь colorAttachmentsRefs.data() но число минус 1, а в depth класть последнюю ячейку из него
+			
+		// 2.2 - subpass
+		VkSubpassDescription subpass{};
+			subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;	// т.к. Vulkan также может подерживать compute subpasses, надо явно указать, что этот субпасс - графический!
+			subpass.colorAttachmentCount = 0;//static_cast<uint32_t>(colorAttachmentsRefs.size());			// количество цветовых прикреплений
+			subpass.pColorAttachments = nullptr;//colorAttachmentsRefs.data();				// ссылка на текстурное прикрепление цвета
+			
+			subpass.pDepthStencilAttachment = depthAttachmentsRefs.data();	//&depthAttachmentRef;
+		// субпассы автоматически учитывают изменения в расположении изображений 
+		// эти переходы контролируются зависимостями субпасса, которые определяют память и исполнительные зависимости между субпассами
+		
+		
+		// 3 - dependencies
+		VkSubpassDependency dependency{};
+			dependency.srcSubpass = VK_SUBPASS_EXTERNAL;	// VK_SUBPASS_EXTERNAL refers to the implicit subpass before or after the render pass
+			dependency.dstSubpass = 0;		// The index 0 refers to our subpass, which is the first and only one
+			// The dstSubpass must always be higher than srcSubpass to prevent cycles
+			dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT;	// ожидающие операции. wait for the swap chain to finish reading from the image
+			dependency.srcAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;	// этапы, на которых эти ожидающие операции появляются
+			dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+			dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+
+
+		// 4 - renderpass creation
+		VkRenderPassCreateInfo renderPassInfo{};
+			renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+			renderPassInfo.attachmentCount = 1;							//static_cast<uint32_t>(attachments.size());				// указание количества прикреплений
+			renderPassInfo.pAttachments = &depthAttachment;				//attachments.data();										// привязка прикреплений к рендерпасу
+			renderPassInfo.subpassCount = 1;
+			renderPassInfo.pSubpasses = &subpass;
+			renderPassInfo.dependencyCount = 1;
+			renderPassInfo.pDependencies = &dependency;
+
+		VkResult result = vkCreateRenderPass(g_GraphicsCore.logicalDevice, &renderPassInfo, nullptr, &renderPass_Shadow);
+
+		if( result != VK_SUCCESS ) 
+		{
+			g_GraphicsCore.checkResult(result);
+			DEBUG_INFO
+			throw std::runtime_error("failed to create Shadow render pass!");
+		}
+		
+		#ifdef DYNAMICLIGHT_DEBUG
+			printMessage("Shadow render pass OK")
+			DEBUG_INFO
+		#endif
+	}
+	
+	
+	// 2 - Images
+	{
+		dynamicLightShadowImage.resize(dynamicLightMapsCount, VK_NULL_HANDLE);
+		dynamicLightShadowImageMemory.resize(dynamicLightMapsCount, VK_NULL_HANDLE);
+		dynamicLightShadowImageView.resize(dynamicLightMapsCount, VK_NULL_HANDLE);
+		dynamicLightShadowImageSampler.resize(dynamicLightMapsCount, VK_NULL_HANDLE);
+				
+			
+		for(int i=0; i<dynamicLightMapsCount; i++)
+		{
+			// depth
+			VkFormat depthFormat = g_GraphicsCore.findDepthFormat();	// VK_FORMAT_D32_SFLOAT;//
+			
+			g_GraphicsCore.createImage(shadowExtent.width, shadowExtent.height, depthFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 
+						dynamicLightShadowImage[i], dynamicLightShadowImageMemory[i] );
+			
+			//~ dynamicLightShadowImageView[i] = g_GraphicsCore.createImageView( dynamicLightShadowImage[i], depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT);
+				// 1 - указание данных об изображении
+				VkImageViewCreateInfo viewInfo{};									// структура для настройка обертки изображения
+					viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+					viewInfo.image = dynamicLightShadowImage[i];	//VkImage
+					viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+					viewInfo.format = depthFormat;	//VK_FORMAT_R8G8B8A8_SRGB
+					viewInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;//VK_IMAGE_ASPECT_COLOR_BIT;
+					viewInfo.subresourceRange.baseMipLevel = 0;
+					viewInfo.subresourceRange.levelCount = 1;
+					viewInfo.subresourceRange.baseArrayLayer = 0;
+					viewInfo.subresourceRange.layerCount = 1;
+
+				VkResult result = vkCreateImageView(g_GraphicsCore.logicalDevice, &viewInfo, nullptr, &dynamicLightShadowImageView[i]);
+				if( result != VK_SUCCESS) 
+				{
+					g_GraphicsCore.checkResult(result);
+					DEBUG_INFO
+					throw std::runtime_error("failed to create image view!");
+				}
+			
+			g_GraphicsCore.createTextureSampler( dynamicLightShadowImageSampler[i] );
+		}
+		#ifdef DYNAMICLIGHT_DEBUG
+			printMessage("Shadow images OK")
+			DEBUG_INFO
+		#endif
+	}
+	
+	
+	// 3 - Framebuffer
+	if( HANDLE_NULL(frameBuffer_Shadow) && HANDLE_VALID(renderPass_Shadow) )
+	{		
+		VkFramebufferCreateInfo framebufferInfo{};
+			framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+			framebufferInfo.renderPass = renderPass_Shadow;	// с каким рендерпасом фреймбуфер должен быть совместим
+			framebufferInfo.attachmentCount = static_cast<uint32_t>(dynamicLightShadowImageView.size());
+			framebufferInfo.pAttachments = dynamicLightShadowImageView.data();
+			framebufferInfo.width = shadowExtent.width;
+			framebufferInfo.height = shadowExtent.height;
+			framebufferInfo.layers = dynamicLightMapsCount;			// 1. Количество под-изображений. у кубмапы было бы 6, а у фонаря - одно
+
+		if( vkCreateFramebuffer(g_GraphicsCore.logicalDevice, &framebufferInfo, nullptr, &frameBuffer_Shadow) != VK_SUCCESS )
+		{
+			throw std::runtime_error("failed to create Shadow framebuffer!");
+		}
+		
+		#ifdef DYNAMICLIGHT_DEBUG
+			printMessage("Shadow framebuffer OK")
+			DEBUG_INFO
+		#endif
+	}
+	
+	
+	// 4 - DescriptorSetLayout
+	if( HANDLE_NULL(descriptorSetLayout_Shadow)  )
+	{
+		// схема разъема. описание точек привязки только ресурсов (буферов, изображений) к шейдерам
+		/*
+			VkDescriptorSetLayout describes shader binding points - which types of resource to bind to which place
+			For example: to vertex shader we connect un UBO - this will be "binding 0"
+						 to fragment shader we connect texture sampler - this will be "binding 1"
+		*/
+		
+		std::array<VkDescriptorSetLayoutBinding, 1> bindings = {};
+			// binding 0 -  project and view matrices - layout(binding = 0) uniform FhGeneralInfo {} commonData
+				bindings[0].binding = 0;												// индекс точки привязки: layout(binding = 0) uniform DynamicLightSourceInfo из фрагментного шейдера
+				bindings[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;			// тип - uniform buffer
+				bindings[0].descriptorCount = 1;										// UBO-шек может быть много, но сейчас в массиве - только одна. This could be used to specify a transformation for each of the bones in a skeleton for skeletal animation, for example
+				bindings[0].stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;					// определили этап конвейера, на котором будет обращение шейдера к UBO. Сейчас - вершинный шейдер
+				bindings[0].pImmutableSamplers = nullptr; 								// Optional. Для изображений (image sampling)	
+		
+		// 3 - summarize all binding
+		VkDescriptorSetLayoutCreateInfo layoutInfo{};
+			layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+			layoutInfo.bindingCount = static_cast<uint32_t>(bindings.size());
+			layoutInfo.pBindings = bindings.data();
+			//~ layoutInfo.bindingCount = 0;
+			//~ layoutInfo.pBindings = nullptr;
+			
+			
+		// 4 - create VkDescriptorSetLayout
+		VkResult result = vkCreateDescriptorSetLayout(g_GraphicsCore.logicalDevice, &layoutInfo, nullptr, &descriptorSetLayout_Shadow);
+		if( result != VK_SUCCESS) 
+		{
+			g_GraphicsCore.checkResult(result);
+			throw std::runtime_error("Failed to create Shadow descriptor set layout!");
+		}
+		#ifdef DYNAMICLIGHT_DEBUG
+			printMessage("Shadow DescriptorSetLayout OK")
+			DEBUG_INFO
+		#endif
+	}
+	
+	
+	// 5 - Descriptor Pool
+	if( HANDLE_NULL(descriptorPool_Shadow)  )
+	{
+		// набор разъемов. создание общего перечня сетов.
+		/*
+			Descriptor pool — это объект, из которого Vulkan выделяет descriptor set-ы. Ты заранее указываешь, сколько дескрипторов каких типов тебе нужно, и pool использует это как резерв памяти/ресурсов для будущих set-ов.
+
+			VkDescriptorPool представляет собой ресурс, используемый для управления набором дескрипторов. 
+			Pool позволяет эффективно управлять созданием и удалением дескрипторных наборов (descriptor sets).
+			VkDescriptorPool служит инструментом эффективного распределения и повторного использования ресурсов, позволяя избежать 
+			затратных операций выделения памяти при каждом изменении состояния графического конвейера.
+
+		*/
+		
+		
+		//printVarComment("Descriptor pool size: ", MAX_ENTITIES_IN_ACTION)
+		//DEBUG_INFO
+		
+		// 1 - Сначала нужно описать, какие типы дескрипторов содержатся в сетах дескрипторов, и их количество/
+		// То есть какие патроны набивать в магазин, помещаемый в разгрузку (пул)
+		// Есть пока всего 2 типа передаваемых в шейдер (конвейер) ресурсов - UBO и Image sampler, создадим массив с описанием обоих типов ресурсов
+		std::array<VkDescriptorPoolSize, 1> poolSizes{};
+			// 1.0 - в движке будет (MAX_FRAMES_IN_FLIGHT * MAX_ENTITIES_IN_ACTION) UBO-шек FhGeneralInfo
+			poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+			poolSizes[0].descriptorCount =  10; // дескриптор нужен для хранения инфы о самом источнике, а не объектах сцены
+			
+		// 2 - зная все возможные дескрипторы, описываем общий пул для хранения дескрипторов
+		VkDescriptorPoolCreateInfo poolInfo{};
+			poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+			poolInfo.poolSizeCount = static_cast<uint32_t>( poolSizes.size() );
+			poolInfo.pPoolSizes = poolSizes.data();
+			//~ poolInfo.poolSizeCount = 0;
+			//~ poolInfo.pPoolSizes = nullptr;
+			
+			int deferredFrames = 1; 			// при отложенном рендеринге буферизация одинарная, всего один кадр
+			poolInfo.maxSets = deferredFrames;// * MAX_ENTITIES_IN_ACTION; //  но зато отрисовываемых сущностей - ого-го!
+
+		// 3 - и выделяем непрерывный блок памяти (pool memory) достаточного размера
+		VkResult result = vkCreateDescriptorPool(g_GraphicsCore.logicalDevice, &poolInfo, nullptr, &descriptorPool_Shadow);
+		if( result != VK_SUCCESS) 
+		{
+			g_GraphicsCore.checkResult(result);
+			throw std::runtime_error("failed to create Shadow descriptor pool!");
+		}
+		
+		#ifdef DYNAMICLIGHT_DEBUG
+			printMessage("Shadow pool OK")
+			DEBUG_INFO
+		#endif   
+	}
+	
+	
+	//~ createLightSourceDataBuffer();
+	//~ updateLightSourceDataBuffer();
+	
+	// Descriptor Set
+	// 5.1 - dynamicLightSpotSet
+	if(    HANDLE_NULL(dynamicLightSpotSet) 
+		&& HANDLE_VALID(descriptorPool_Shadow) 
+		&& HANDLE_VALID(descriptorSetLayout_Shadow) 
+		&& HANDLE_VALID(g_GraphicsCore.LpassDynamicLightSourceInfoBuffer) )
+	{
+		VkDescriptorSetAllocateInfo allocInfo{};
+			allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+			allocInfo.descriptorPool = descriptorPool_Shadow;				// указываем пул			
+			allocInfo.descriptorSetCount = 1;										// и число сетов
+			allocInfo.pSetLayouts = &descriptorSetLayout_Shadow; 			// указываем схему описания подключения ресурсов к конвейеру
+	
+		// 2 - вырезали кусок памяти из pool memory для конкретного descriptor set (взяли розетки со склада)
+		VkResult result = vkAllocateDescriptorSets( g_GraphicsCore.logicalDevice, &allocInfo, &dynamicLightSpotSet );
+
+		if( result != VK_SUCCESS) 
+		{
+			g_GraphicsCore.checkResult(result);
+			DEBUG_INFO
+			throw std::runtime_error("Failed to allocate L-pass spot descriptor set!");
+		}
+		
+		// 3 - связываем реальные ресурсы с дескрипторами
+		// 3.1 информация о буфере матриц PVM	
+		
+		// Получаем лимит устройства (один раз при инициализации)
+		//~ uint64_t alignment = 64;//g_GraphicsCore.deviceLimits.minUniformBufferOffsetAlignment; 
+
+		// Твой текущий расчет
+		//~ uint64_t rawOffset = DynamicLight::index * sizeof(FhDynamicLightSourceInfo);
+
+		// ОКРУГЛЕНИЕ ВВЕРХ до ближайшего кратного alignment
+		// Формула: ((x + alignment - 1) / alignment) * alignment
+		//~ uint64_t alignedOffset = (rawOffset + alignment - 1) & ~(alignment - 1); 
+		// Или более читаемый вариант:
+		// uint64_t alignedOffset = ((rawOffset + alignment - 1) / alignment) * alignment;
+
+		//~ bufferInfos[0].offset = alignedOffset;
+		//~ bufferInfos[0].range = sizeof(FhDynamicLightSourceInfo); // Диапазон оставляем как есть
+		
+		//~ const uint32_t stride = sizeof(FhDynamicLightSourceInfo); // 512
+		//~ const VkDeviceSize offset = static_cast<VkDeviceSize>(DynamicLight::index) * stride; // 0, 512, 1024, ...\	
+		
+		//~ printMessage("\n\n\n\n=========================================")
+		//~ printVariable(stride)
+		//~ printVariable(offset)
+		
+			
+		std::array<VkDescriptorBufferInfo, 1> bufferInfos{};
+			// binding 0
+			bufferInfos[0].buffer = g_GraphicsCore.LpassDynamicLightSourceInfoBuffer;	// ссылка на конкретный буфер на 16 структур об источниках UBO
+			bufferInfos[0].offset = DynamicLight::index * sizeof(FhDynamicLightSourceInfo);// 512;// offset;// alignedOffset;//DynamicLight::index * sizeof(FhDynamicLightSourceInfo); // из 16 подряд структур сместимся до нужного куска
+			bufferInfos[0].range = sizeof(FhDynamicLightSourceInfo);				// и от начала нужного куска нужна только одна структура
+				
+		// 4 - описание дескрипторов
+		std::array<VkWriteDescriptorSet, 1> descriptorWrites{};
+
+			// 4.1 6 PV matrices buffer: struct FhShadowpassCubeEdgesInfo
+			descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			descriptorWrites[0].dstSet = dynamicLightSpotSet;
+			descriptorWrites[0].dstBinding = 0;							// во фрагментном (!) шейдере: layout(binding = 0) uniform DynamicLightSourceInfo
+			descriptorWrites[0].dstArrayElement = 0;
+			descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+			descriptorWrites[0].descriptorCount = 1;
+			descriptorWrites[0].pBufferInfo = &bufferInfos[0];
+
+		// 5 - обновление содержимого
+		vkUpdateDescriptorSets( g_GraphicsCore.logicalDevice, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
+
+		#ifdef DYNAMICLIGHT_DEBUG
+			printMessage("\t Descriptor set of Shadow spot-pass updated!") 
+		#endif
+	}
+	
+	
+	
+	// 6 - Graphics Pipeline Layout
+	if( HANDLE_NULL(pipelineLayout_Shadow) && HANDLE_VALID(descriptorSetLayout_Shadow) )
+	{
+		// схема прибора. объединение VkDescriptorSetLayout + Push-Constants: общее описание точек привязки данных (ресурсов и переменных)
+		// Даже если не намерены передавать в шейдер данные, все равно обязательно нужно создать один пустой VkPipelineLayout!
+		// VkPipelineLayout надо обязательно прописать до создания самого конвейера!
+		
+		//setup push constants
+		VkPushConstantRange push_constant;
+			push_constant.offset = 0;									//this push constant range starts at the beginning
+			push_constant.size = sizeof(FhShadowpassPushConstantsInfo);				//this push constant range takes up the size of a MeshPushConstants struct
+			push_constant.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;		//this push constant range is accessible only in the vertex shader
+		
+		
+		VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
+			pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+			
+			// конвейеру должны быть доступны:
+			// 1 - описания точек привязки буферов и изображений
+			pipelineLayoutInfo.setLayoutCount = 1;						
+			pipelineLayoutInfo.pSetLayouts = &descriptorSetLayout_Shadow; 		// тут может быть массив, но пока только один
+			
+			// 2 - описания т.н. пуш-констант, которые являются другим способом передачи динамических значений в шейдер
+			pipelineLayoutInfo.pushConstantRangeCount = 1;
+			pipelineLayoutInfo.pPushConstantRanges = &push_constant;
+		
+		VkResult result = vkCreatePipelineLayout(g_GraphicsCore.logicalDevice, &pipelineLayoutInfo, nullptr, &pipelineLayout_Shadow);
+		if( result != VK_SUCCESS ) 
+		{
+			g_GraphicsCore.checkResult(result);
+			throw std::runtime_error("failed to create Shadow pipeline layout!");
+		}
+		
+		#ifdef DYNAMICLIGHT_DEBUG
+			printMessage("Shadow pipeline layout OK")
+			DEBUG_INFO
+		#endif
+	}
+	
+	
+	// 7 - Graphics Pipeline
+	if( HANDLE_NULL(pipeline_Shadow) && HANDLE_VALID(renderPass_Shadow) && HANDLE_VALID(pipelineLayout_Shadow) )
+	{
+		// создание графического конвейера: этапы, шейдеры, смешивание + описание точек привязки для передачи данных в конвейер
+		// 1 - программируемые этапы конвейера
+		// 1.1 - загрузить байт-код
+		auto vertShaderCode = g_GraphicsCore.readFile( FH_SHADER_PATH  "spot\\Shadow_pass_v.spv");		// auto vertShaderCode - это статичный вектор символов-байтов
+		auto fragShaderCode = g_GraphicsCore.readFile( FH_SHADER_PATH  "spot\\Shadow_pass_f.spv");
+
+		// 1.2 - собрать из байт-кода шейдерный модуль ("обернуть" байт-код в Vulkan)
+		VkShaderModule vertShaderModule = g_GraphicsCore.createShaderModule(vertShaderCode);
+		VkShaderModule fragShaderModule = g_GraphicsCore.createShaderModule(fragShaderCode);
+		
+		//~ Shader modules are just a thin wrapper around the shader bytecode that we’ve
+		//~ previously loaded from a file and the functions defined in it. The compilation
+		//~ and linking of the SPIR-V bytecode to machine code for execution by the GPU
+		//~ doesn’t happen until the graphics pipeline is created.
+		
+		// VkShaderModule располагается тут локально, так как не будет нужен после завершения настройки Pipeline,
+		// поэтому в конце данной функции он вручную удаляется	
+
+		// 1.3 - преобразуем шейдерные модули в шейдерные программы для этапов: вершинного и фрагментного
+		VkPipelineShaderStageCreateInfo vertShaderStageInfo{};
+			vertShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;	// 18
+			vertShaderStageInfo.stage = VK_SHADER_STAGE_VERTEX_BIT;								// 0x00000001
+			vertShaderStageInfo.module = vertShaderModule;
+			vertShaderStageInfo.pName = "main";
+			//vertShaderStageInfo.pSpecializationInfo = nullptr; // сюда можно указать заранее известные шейдерные константы, ради оптимизации
+
+		VkPipelineShaderStageCreateInfo fragShaderStageInfo{};
+			fragShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;	// 18
+			fragShaderStageInfo.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
+			fragShaderStageInfo.module = fragShaderModule;
+			fragShaderStageInfo.pName = "main";
+			//fragShaderStageInfo.pSpecializationInfo = nullptr;
+
+		// 1.4 - в нижеприведенном массиве описываем последовательность графических этапов: сначала обработка вершин, потом - фрагментов
+		// также сюда можно потом дополнительно добавлять геометрические, тесселяцию и т.д.
+		VkPipelineShaderStageCreateInfo shaderStages[] = {vertShaderStageInfo, fragShaderStageInfo};
+
+		// 2 - фиксированные этапы конвейера		
+		// VkPipelineVertexInputStateCreateInfo describes the format of the vertex data that will be passed to the vertex shader
+		VkPipelineVertexInputStateCreateInfo vertexInputInfo{};			
+			vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;	// 19
+			
+		auto bindingDescription = Vertex2::getBindingDescription();
+		auto attributeDescriptions = Vertex2::getAttributeDescriptions();
+		
+			vertexInputInfo.vertexBindingDescriptionCount = 1;						// количество привязок вершин
+			vertexInputInfo.pVertexBindingDescriptions = &bindingDescription; 		// настройка привязки
+			vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>( attributeDescriptions.size() );		// количество атрибутов
+			vertexInputInfo.pVertexAttributeDescriptions = attributeDescriptions.data(); 	// данные об атрибутах
+			
+			// в случае, если вершинные данные захардкожены, нечего настраивать
+			//~ vertexInputInfo.vertexBindingDescriptionCount = 0;			// привязок нет. spacing between data and whether the data is per-vertex or per-instance
+			//~ vertexInputInfo.pVertexBindingDescriptions = nullptr; 		// Optional
+			//~ vertexInputInfo.vertexAttributeDescriptionCount = 0;		// атрибутов нет
+			//~ vertexInputInfo.pVertexAttributeDescriptions = nullptr; 	// Optional
+			
+			
+		// 2.2 - Input assembly stage		
+		// VkPipelineInputAssemblyStateCreateInfo describes two things: what kind of geometry will be drawn from the vertices (point, line, triangle etc)
+		// and if primitive restart should be enabled.
+		VkPipelineInputAssemblyStateCreateInfo inputAssembly{};
+			inputAssembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;	// 20
+			inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;		//рисовать треугольники
+			inputAssembly.primitiveRestartEnable = VK_FALSE;
+		// используя Elements Buffer, можно переиспользовать вершины при отрисовке. Это плюс к оптимизации.
+
+
+		// 2.3 - Viewport and Scissor
+		// Вьюпорт описывает область фреймбуфера, куда выход будет рендерить. Почти всегда размер вьюпорта совпадает с размерами окна.
+		// viewports define the transformation from the image to the framebuffer
+		// влияет на сжатие/растяжение изображения на экране
+		
+		// Ножничные прямоугольники определяют, в каком регионе по-настоящему будут размещены пиксели. (это связано с перемещением окна по экрану?)
+		// Любые пиксели вне этого прямоугольника будут отброшены растеризатором.
+		// Т.е. ножницы работают скорее как фильтр, а не преобразователь
+		
+		// Viewport и scissors можно задать либо как статическую часть графического конвейера либо как динамическое состояние, задаваемое через command buffer
+
+		// 2.3.1 - ДИНАМИЧЕСКИ ИЗМЕНЯЕМОЕ СОСТОЯНИЕ
+		// при динамическом состоянии нужно явно указать в dynamicStates, какие именно параметры (а их не слишком много) будут динамически изменяемы (без пересоздания конвейера)
+		// в большинстве случаем это более удобный/предпочитаемый вариант - дает больше гибкости
+		// Нужно активировать соответствующие состояния для конвейера...
+		std::vector<VkDynamicState> dynamicStates = {
+			VK_DYNAMIC_STATE_VIEWPORT,
+			VK_DYNAMIC_STATE_SCISSOR
+		};
+		
+		VkPipelineDynamicStateCreateInfo dynamicState{};
+			dynamicState.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
+			dynamicState.dynamicStateCount = static_cast<uint32_t>( dynamicStates.size() );
+			dynamicState.pDynamicStates = dynamicStates.data();
+			
+		// ... и прописать их количество в viewportState ...
+		VkPipelineViewportStateCreateInfo viewportState{};
+			viewportState.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;	// 22
+			viewportState.viewportCount = 1;
+			viewportState.scissorCount = 1;	
+		// ... а реальные вьюпорт и ножницы затем можно будет указывать во время отрисовки (через command buffer)
+		
+		
+		// 2.3.2 - СТАТИЧЕСКОЕ СОСТОЯНИЕ
+		// при статическом состоянии, вьюпорт VkViewport и ножницы VkRect2D должны быть захардкожены в нижеприведенную структуру VkPipelineViewportStateCreateInfo
+		// при этом их уже не получится менять - нужно будет переделывать полностью весь конвейер
+		// закомментируем, так как намерены использовать динамическое состояние
+		//~ VkViewport viewport{};
+			//~ viewport.x = 0.0f;
+			//~ viewport.y = 0.0f;
+			//~ viewport.width = (float) swapChainExtent.width;
+			//~ viewport.height = (float) swapChainExtent.height;
+			//~ viewport.minDepth = 0.0f;
+			//~ viewport.maxDepth = 1.0f;
+		
+		//~ VkRect2D scissor{};
+			//~ scissor.offset = {0, 0};
+			//~ scissor.extent = swapChainExtent;
+		
+		//~ VkPipelineViewportStateCreateInfo viewportState{};
+			//~ viewportState.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;	// 22
+			//~ viewportState.viewportCount = 1;
+			//~ viewportState.pViewports = &viewport;
+			//~ viewportState.scissorCount = 1;	
+			//~ viewportState.pScissors = &scissor;			
+			
+		// независимо от состояния, параметры передаются как массивы, поскольку на некоторых видеокартах допускается использование нескольких viewport и scissors
+			
+			
+					
+		// 2.4 - растеризатор
+		// performs depth testing, face culling and the scissor test, and it can be configured to output fragments that fill entire polygons or just the edges (wireframe rendering).
+		VkPipelineRasterizationStateCreateInfo rasterizer{};
+			rasterizer.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
+			rasterizer.depthClampEnable = VK_FALSE;
+			rasterizer.rasterizerDiscardEnable = VK_FALSE;	// если true, то это отключает вывод во фреймбуфер
+			rasterizer.polygonMode = VK_POLYGON_MODE_FILL; // заполнение полигона (еще есть линии и точки)
+			rasterizer.lineWidth = 1.0f;
+			rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;
+			rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE; //VK_FRONT_FACE_CLOCKWISE; // порядок следования вершин полигона для понимания, передний или задний он
+			
+			rasterizer.depthBiasEnable = VK_FALSE;
+
+		// 2.5 - мультисемплер
+		// способ сглаживать изображение. Требуется подключить фичу GPU
+		VkPipelineMultisampleStateCreateInfo multisampling{};
+			multisampling.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
+			multisampling.sampleShadingEnable = VK_FALSE;
+			multisampling.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
+
+
+		VkPipelineDepthStencilStateCreateInfo depthStencil{};
+			depthStencil.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
+			depthStencil.depthTestEnable = VK_TRUE;		// тест глубины разрешен
+			depthStencil.depthWriteEnable = VK_TRUE;	// запись в буфер глубины разрешена
+			depthStencil.depthCompareOp = VK_COMPARE_OP_LESS;	// предпочитаем МЕНЬШИЕ значения
+			depthStencil.depthBoundsTestEnable = VK_FALSE;
+			depthStencil.stencilTestEnable = VK_FALSE;	 // make sure that the format of the depth/stencil image contains a stencil component.
+
+
+		// 2.6 - смешивание цветов
+		// Когда фрагментный шейдер рассчитал цвет пикселя, надо правильно его совместить с цветом из буфера - смешать или скомбинировать.
+		// конфигурация привязанного фреймбуфера:
+		//~ VkPipelineColorBlendAttachmentState colorBlendAttachment{};
+			//~ colorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
+			//~ colorBlendAttachment.blendEnable = VK_FALSE; // не совмещать (новый цвет заменяет старый из буфера)
+		//~ std::array<VkPipelineColorBlendAttachmentState, 1> colorBlendAttachments = {colorBlendAttachment};
+
+		// глобальные настройки совмещения цветов (между буферами?):
+		VkPipelineColorBlendStateCreateInfo colorBlending{};
+			colorBlending.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
+			colorBlending.logicOpEnable = VK_FALSE;
+			colorBlending.logicOp = VK_LOGIC_OP_COPY;
+			colorBlending.attachmentCount = 0;//static_cast<uint32_t>( colorBlendAttachments.size() );	//1;
+			colorBlending.pAttachments = nullptr;//colorBlendAttachments.data();//&colorBlendAttachment;
+			colorBlending.blendConstants[0] = 0.0f;
+			colorBlending.blendConstants[1] = 0.0f;
+			colorBlending.blendConstants[2] = 0.0f;
+			colorBlending.blendConstants[3] = 0.0f;
+
+
+		// pipeline layout
+		// 2.8 - объединим всю информацию для создания дескриптора графического конвейера
+		VkGraphicsPipelineCreateInfo pipelineInfo{};
+			pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;		//28
+			pipelineInfo.stageCount = 2;
+			pipelineInfo.pStages = shaderStages;				// массив описаний этапов рендера
+			pipelineInfo.pVertexInputState = &vertexInputInfo;
+			pipelineInfo.pInputAssemblyState = &inputAssembly;
+			pipelineInfo.pViewportState = &viewportState;
+			pipelineInfo.pRasterizationState = &rasterizer;
+			pipelineInfo.pMultisampleState = &multisampling;
+			pipelineInfo.pColorBlendState = &colorBlending;
+			pipelineInfo.pDynamicState = &dynamicState;
+			// Then we reference all of the structures describing the fixed-function stage.
+			pipelineInfo.layout = pipelineLayout_Shadow;
+			pipelineInfo.renderPass = renderPass_Shadow;			// createRenderPass() должна быть вызвана ДО этого момента!
+			pipelineInfo.subpass = 0;
+			pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
+			
+			pipelineInfo.pDepthStencilState = &depthStencil;
+
+		VkResult result2 = vkCreateGraphicsPipelines(g_GraphicsCore.logicalDevice, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &pipeline_Shadow);
+		if ( result2!= VK_SUCCESS)
+		{
+			g_GraphicsCore.checkResult(result2);
+			throw std::runtime_error("failed to create Shadow graphics pipeline!");
+		}
+
+		// после создания конвейера отдельные шейдеры (вершинный/фрагментный) уже не нужны
+		vkDestroyShaderModule(g_GraphicsCore.logicalDevice, fragShaderModule, nullptr);
+		vkDestroyShaderModule(g_GraphicsCore.logicalDevice, vertShaderModule, nullptr);
+		
+		#ifdef DYNAMICLIGHT_DEBUG
+			printMessage("Shadow Pipeline OK")
+			DEBUG_INFO
+		#endif
+	}
+	
+	
+	
+	status = true;
+	
+	#ifdef DYNAMICLIGHT_DEBUG
+		printMessage("Shadowpass spot created")
+	#endif
+}
+   
+void DynamicLight::destroyShadowpassSun()
+{
+	//~ destroyLightSourceDataBuffer();
+	
+	if( !status ) return;
+	
+	vkDestroyPipeline(g_GraphicsCore.logicalDevice, pipeline_Shadow, nullptr);
+
+	vkDestroyPipelineLayout(g_GraphicsCore.logicalDevice, pipelineLayout_Shadow, nullptr);  
+	
+	vkDestroyDescriptorPool(g_GraphicsCore.logicalDevice, descriptorPool_Shadow, nullptr);
+	
+	vkDestroyDescriptorSetLayout(g_GraphicsCore.logicalDevice, descriptorSetLayout_Shadow, nullptr);
+	
+	if(frameBuffer_Shadow != VK_NULL_HANDLE) vkDestroyFramebuffer(g_GraphicsCore.logicalDevice, frameBuffer_Shadow, nullptr);
+	
+	for(auto img : dynamicLightShadowImageSampler)
+	{
+		vkDestroySampler(g_GraphicsCore.logicalDevice, 	img, nullptr);
+	}
+	
+	for(auto img : dynamicLightShadowImageView)
+	{
+		vkDestroyImageView(g_GraphicsCore.logicalDevice, 	img, 	nullptr);
+	}
+	
+	for(auto img : dynamicLightShadowImageMemory)
+	{
+		vkFreeMemory(g_GraphicsCore.logicalDevice, 		img, nullptr);
+	}
+	
+	for(auto img : dynamicLightShadowImage)
+	{
+		vkDestroyImage(g_GraphicsCore.logicalDevice, 		img, 		nullptr);
+	}
+	
+	vkDestroyRenderPass(g_GraphicsCore.logicalDevice, renderPass_Shadow, nullptr);
+}
+
 
 

@@ -152,7 +152,7 @@ float shadowCalculation(int index)
 
 	//outColor = vec4(texture(shadowMaps[index], POS.xy).rrr,1);
 
-	return shadow  < currentDepth - bias ? 0.03 : 0.9 ;
+	return shadow  < currentDepth - bias ? 0.0 : 1.0 ;
 }
 
 float shadowCube(int index) 
@@ -170,7 +170,7 @@ float shadowCube(int index)
 
 	float shadow = texture(shadowMapsOmni[index], vec3(dir)).r;
 		
-	return shadow < currentDepth - bias ? 0.0 : 0.99 ;
+	return shadow < currentDepth - bias ? 0.0 : 1.0 ;
 }
 
 float calculateShadow(int index)
@@ -230,7 +230,7 @@ vec3 getLightSourceInfluence(int index)
 
 	vec3 ambient = vec3(0.0) * albedo;
 
-	float lightVolumeRadius = 70;//illuminationInfos.illuminationInfo[index].radius;	//радиус влияния источника света
+	float lightVolumeRadius = illuminationInfos.illuminationInfo[index].radius;	//радиус влияния источника света
 	if( distance > lightVolumeRadius )
 	{
 		//return (ambient/(ambient+1.0))*(ambient/(ambient+1.0));//
@@ -241,36 +241,54 @@ vec3 getLightSourceInfluence(int index)
 		//return finalColor*finalColor;
 	}
 
+	
+
     vec3 V = normalize(f3_BUF_POSITION(fragTexCoord)-cameraPos2); 
 	
-	vec3 lightColor = illuminationInfos.illuminationInfo[index].color;
-	float lightIntensity = illuminationInfos.illuminationInfo[index].power*4;
+	vec3 lightColor = illuminationInfos.illuminationInfo[index].color; // pink
+	
+
+	float lightIntensity = illuminationInfos.illuminationInfo[index].power;
 
 
 	//if(index == 2) lightIntensity*=100;
 
 	vec3 lightSourceDir = normalize(illuminationInfos.illuminationInfo[index].direction);
+	float attenuation = 1.0 / (distance * distance);
 
     vec3 L = normalize(lightPos - fragWorldPos);
-    vec3 H = normalize(V + L);
-    float attenuation = 1.0 / (distance * distance);
 
-
-    float Kc = 1.00; //для истанции 32 метра
-    float Kl = 4.5/lightVolumeRadius;
-    float Kq = pow(9/lightVolumeRadius,2);
-    float fatt = 1 / ( Kc + Kl*distance + Kq*distance*distance );
-	attenuation = fatt;
+	
 
 	float d = distance;
 	float t = 1.0 - d/lightVolumeRadius;
 	attenuation = smoothstep(0.0, 1.0, t);
 
+	if(illuminationInfos.illuminationInfo[index].type == 2) // if ortho sun
+	{
+		L = -lightSourceDir;  // rays are parallel
+		attenuation = 1.0;		// no attenuation
+		//lightIntensity *= 2;
+		lightColor = vec3(1, 0.958, 0.541);//255;
+	}
+
+    vec3 H = normalize(V + L);
+    
+
+
+    //float Kc = 1.00; //для истанции 32 метра
+    //float Kl = 4.5/lightVolumeRadius;
+    //float Kq = pow(9/lightVolumeRadius,2);
+    //float fatt = 1 / ( Kc + Kl*distance + Kq*distance*distance );
+	//attenuation = fatt;
+
+	
+
 	//attenuation = 0.5;
 
     vec3 radiance = lightColor * lightIntensity * attenuation;
 
-
+	
 
 
     vec3 F0 = vec3(0.04);
@@ -292,9 +310,11 @@ vec3 getLightSourceInfluence(int index)
     float NdotL = max(dot(N, L), 0.0);
 
     vec3 Lo = (kD * albedo / PI + specular) * radiance * NdotL;
-
+	
+	
 		
-	if( illuminationInfos.illuminationInfo[index].type == 1)
+	if( illuminationInfos.illuminationInfo[index].type == 1 
+		|| illuminationInfos.illuminationInfo[index].type == 2 )
 	{
 		float spotSectorAngleFullDark = illuminationInfos.illuminationInfo[index].sector; // out there is total no light
 			float blendWidthDegree = 25;	// width of the fade of the spot
@@ -304,18 +324,18 @@ vec3 getLightSourceInfluence(int index)
 		Lo *= spot;
 	}
 
-    
+    //return Lo;
 
     vec3 finalColor = ambient + Lo;
 		//finalColor *= spot;
-    finalColor = finalColor / (finalColor + 1.0);
+    //finalColor = finalColor / (finalColor + 1.0);
     //finalColor = pow(finalColor, vec3(1.0 / 2.2));
-	return finalColor*finalColor;
+	return finalColor;//*finalColor;
 }
 
 void main() 
 {
-	outColor = vec4(f3_BUF_COLOR(fragTexCoord), 1);//texture(maps[0], fragTexCoord);
+	//outColor = vec4(f3_BUF_COLOR(fragTexCoord), 1);//texture(maps[0], fragTexCoord);
 	//vec3 normal = f3_BUF_NORMAL(fragTexCoord);
 	//FhDynamicLightSourceInfo info = illuminationInfos.illuminationInfo[0];
 	//vec3 position = f3_BUF_POSITION(fragTexCoord);
@@ -323,58 +343,49 @@ void main()
 	//vec3 finalColor0 = getLightSourceInfluence(0);
 	//vec3 finalColor1 = getLightSourceInfluence(1);
 	
-	vec3 finalColor = outColor.rgb*0.2;
-	//int l=1;
+	vec3 albedo = f3_BUF_COLOR(fragTexCoord); // линейный RGB [0..1]
+		albedo = pow(albedo, vec3(2.2)); // на случай, если текстура была sRGBв шейдере (грубее, но работает).
+
+	vec3 finalColor = vec3(0.0);
+	//finalColor += ambientIrradiance * albedo / PI;  // ambient как свет
+
+	// Направление «небо → земля», можно получить из матрицы view или захардкодить
+	const vec3 up = vec3(0.0, 1.0, 0.0);
+
+	vec3 N = f3_BUF_NORMAL(fragTexCoord);
+
+	vec3 E_ambient = mix(vec3(0.05, 0.06, 0.08),   // снизу: тёмный «подпольный» свет
+                     vec3(0.25, 0.30, 0.40),   // сверху: цвет неба
+                     N.y * 0.5 + 0.5);
+	
+	vec3 ambient = E_ambient * albedo / PI;
+
+	finalColor += ambient;
+
 	for(int l=0; l<16; l++)
-	{
-		//break;
-		//if(l==0) continue;	// skip player torch
-		
+	{		
 		if( illuminationInfos.illuminationInfo[l].exists != 1) continue;	// discard non existing lightsources
 		
-		vec3 color = getLightSourceInfluence(l);
-		
+		vec3 Lo = getLightSourceInfluence(l);
+		float shadow = 1.0;
+
 		#ifdef SHADOWS_ON
-			if( l != 0 ) color *= illuminationInfos.illuminationInfo[l].type == 1 ? shadowCalculation(l) : shadowCube(l);
-			//if(l==1) color *= illuminationInfos.illuminationInfo[l].type == 1 ? shadowCalculation(1) : shadowCube(1);//
-			//if(l==2) color *= illuminationInfos.illuminationInfo[l].type == 1 ? shadowCalculation(2) : shadowCube(2);//
-		#endif
-		//	//
-		
-		finalColor += color;
-		
+			if( l != 0 ) 
+			{
+				switch( illuminationInfos.illuminationInfo[l].type )
+				{
+					case 0 : shadow = shadowCube(l); break; // omni
+					case 1 : shadow = shadowCalculation(l); break; // spot
+					case 2 : shadow = shadowCalculation(l); break; // sun
+				}
+			}
+			finalColor += Lo*shadow;
+		#endif		
 	}
-
-	outColor = vec4(sqrt(finalColor), 1.0);
+	finalColor += f3_BUF_EMISSION(fragTexCoord);
+	outColor = vec4(finalColor, 1.0);
 	
-
-
-	//float r = sqrt( pow(finalColor0.r, 2) + pow(finalColor1.r, 2) );
-	//float g = sqrt( pow(finalColor0.g, 2) + pow(finalColor1.g, 2) );
-	//float b = sqrt( pow(finalColor0.b, 2) + pow(finalColor1.b, 2) );
-
-	//r,g,b);
-		//finalColor +=finalColor0;
-		//finalColor +=finalColor1;
-	//shadowCube();
-
-	//outColor = vec4( texture(shadowMaps[1], fragTexCoord).xxx, 1);
-
-	//for(int i=0; i<16; i++)
-	{
-		//vec4 shadmap0 = texture(shadowMaps[i], fragTexCoord);
-	}
-	
-
+	//outBloom  = vec4(max(finalColor - 1.0, vec3(0.0)), 1.0);
 
 	outBloom = vec4(f3_BUF_EMISSION(fragTexCoord),1);
-
-	if(outColor.r > 0.5)
-	{
-		outBloom += outColor;
-	}
-	else
-	{
-		//outBloom = vec4(1,0,0,1);
-	}
 }

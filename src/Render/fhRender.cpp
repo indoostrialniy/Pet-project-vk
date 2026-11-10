@@ -432,6 +432,80 @@ void Graphics::recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t image
 
 
 
+void Graphics::processObject(	std::shared_ptr<Entity>& entity, 
+					std::unordered_map<std::string, std::tuple<std::shared_ptr<Mesh>, int, std::array<FhGpassPushConstantsInfo, MAX_ENTITIES_IN_ACTION>>>& uniques,
+					FhGpassPushConstantsInfo& constants)
+{
+	glm::mat4 temp = glm::mat4(0.0f);
+	
+	entity->configureModelMatrix( temp );	
+	
+	constants.model = entity->entityMatrix;	//modelMatrix;
+	
+	for(int i=0; i<48; i++)
+	{
+		constants.materialIndexes[i] = entity->materialRetargets[i];
+	}
+	constants.type = entity->entityType;
+	constants.uboOffset = 0;//entityLevelIndex*10;
+	constants.reserve2 = 0.0f;
+	constants.reserve3 = 0.0f;
+	
+	//#ifdef INSTANCED_RENDERING
+		
+	if( uniques.count(entity->entityMeshPtr->getResourceName()) == 0)	// если таких мешей еще не было
+	{
+		std::array<FhGpassPushConstantsInfo, MAX_ENTITIES_IN_ACTION> constants2;
+		constants2[0] = constants;
+		
+		uniques[entity->entityMeshPtr->getResourceName()] = std::tuple<std::shared_ptr<Mesh>, int, std::array<FhGpassPushConstantsInfo, MAX_ENTITIES_IN_ACTION>>(entity->entityMeshPtr, 1, constants2); // кладем указатель и счетчик
+	}
+	else
+	{
+		if( get<1>( uniques[entity->entityMeshPtr->getResourceName()] ) < MAX_ENTITIES_IN_ACTION )
+		{
+			int newIndex = get<1>( uniques[entity->entityMeshPtr->getResourceName()] ) + 1;	// increment counter
+			get<1>( uniques[entity->entityMeshPtr->getResourceName()] ) = newIndex; 	// save new index
+			get<2>( uniques[entity->entityMeshPtr->getResourceName()] )[newIndex-1] = constants; // new pushconstants
+		}
+		else
+		{
+			printMessage("Current entity could`t be drawed because it`s index is bigger than limit MAX_ENTITIES_IN_ACTION")
+		}
+	}
+}
+
+void Graphics::drawInstances(int& offset, FhGpassPushConstantsInfo& constants, int& uniqueEntitieInstancesCount, 
+							std::tuple<std::shared_ptr<Mesh>, int,	std::array<FhGpassPushConstantsInfo, MAX_ENTITIES_IN_ACTION>> instance, 
+							std::array<VkDeviceSize, 1>& offsets)
+{
+	if( CHECK_PTR( get<0>(instance) ) ) // проверка умного указателя на меш
+	{
+		constants.uboOffset = offset;
+		
+		glm::vec3 POV = CHECK_PTR(g_Camera) ? g_Camera->getActorPosition() : glm::vec3(-1.0f, 0.0f, 0.1f);
+		glm::vec3 DOV = POV + (CHECK_PTR(g_Camera) ? g_Camera->getActorForwardVector() : glm::vec3(1.0f, 0.0f, 0.0f));//*Camera::rotation;	//glm::vec3(0.0f, 0.0f, 0.0f);
+		glm::vec3 UP = glm::vec3(0.0f, 0.0f, 1.0f);
+		
+		glm::mat4 view = glm::lookAt(POV, DOV, UP);
+		
+		glm::mat4 proj;
+		if(CHECK_PTR(g_Camera)) proj = glm::perspective(glm::radians(g_Camera->fCameraFOV), (float) swapChainExtent.width / (float) swapChainExtent.height, g_Camera->fCameraViewNear, g_Camera->fCameraViewDepth);
+		proj[1][1] *= -1; // GLM was originally designed for OpenGL, where the Y coordinate of the clip coordinates is inverted. 
+		
+		constants.model = proj * view;
+									
+		memcpy( instancedPushInfoBufferMapped + offset*sizeof(FhGpassPushConstantsInfo), get<2>(instance).data(), uniqueEntitieInstancesCount * sizeof(FhGpassPushConstantsInfo)); // memcpy)dest, src, count
+
+		vkCmdBindVertexBuffers(_frames[currentFrame].commandBuffer, 0, 1, &get<0>(instance)->getMeshVertexBuffer(), offsets.data());	
+
+		vkCmdPushConstants(_frames[currentFrame].commandBuffer, pipelineLayout_G, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(FhGpassPushConstantsInfo), &constants);	//upload the matrix to the GPU via push constants
+				
+		vkCmdDraw(_frames[currentFrame].commandBuffer, static_cast<uint32_t>(get<0>(instance)->getVerticesCount()), uniqueEntitieInstancesCount, 0, 0);	//vkCmdDraw(commandBuffer, vertexCount, instanceCount, firstVertexOffset, firstInstanceOffset);
+	}
+	
+}
+
 void Graphics::drawFrame() 
 {
 	GLFW::updateInputs();	// update states of almost all buttons on keyboard
@@ -568,8 +642,10 @@ void Graphics::drawFrame()
 				// 3.3 привязываем VBO
 				// Параметр массива VkBuffer в команде vkCmdBindVertexBuffers() нужен для поддержки сложных моделей вершинных данных, когда каждая такая часть хранится в отдельном буфере: VkBuffer vertexBuffers[] = { vertexBuffer, colorBuffer, uvBuffer };
 				//VkBuffer vertexBuffers[] = { gameObjects[0]->vertexBuffer /*colorBuffer, uvBuffer*/ };
-				VkDeviceSize offsets[] = {0 /*,0,0*/ }; // массив отступов по соответствующим буферам: vertex, color, uv etc
+				//VkDeviceSize offsets[] = {0 /*,0,0*/ }; // массив отступов по соответствующим буферам: vertex, color, uv etc
 				//#define offsets 0
+				std::array<VkDeviceSize, 1> offsets;// массив отступов по соответствующим буферам: vertex, color, uv etc
+				offsets[0] = 0;
 				
 				FhGpassPushConstantsInfo constants;			// PUSH CONSTANTS
 					//constants.data = glm::vec4( 1,1,0,1);
@@ -589,17 +665,29 @@ void Graphics::drawFrame()
 					
 					std::unordered_map<std::string, std::tuple<std::shared_ptr<Mesh>, 
 										int,
-										std::array<FhGpassPushConstantsInfo, MAX_ENTITIES_IN_ACTION>>> uniqs;
+										std::array<FhGpassPushConstantsInfo, MAX_ENTITIES_IN_ACTION>>> unique_opaques;
+										
+					std::unordered_map<std::string, std::tuple<std::shared_ptr<Mesh>, 
+										int,
+										std::array<FhGpassPushConstantsInfo, MAX_ENTITIES_IN_ACTION>>> unique_giantes;
 					
-
+					std::unordered_map<std::string, std::tuple<std::shared_ptr<Mesh>, 
+										int,
+										std::array<FhGpassPushConstantsInfo, MAX_ENTITIES_IN_ACTION>>> unique_transparents;
+										
 					int entityLevelIndex = 0;
 					
+					std::vector<std::shared_ptr<Entity>> transparents; // временный массив для АБСОЛЮТНО ВСЕХ прозрачных объектов
+					
+					std::vector<std::shared_ptr<Entity>> giantes; // временный массив для слишком больших объектов
+
+					
+					int offset = 0; // смещение в буфере instancedPushInfoBuffer, который FhGpassPushConstantsInfo[MAX_ENTITIES_IN_ACTION]
+
+					
+					// 1.1 - отфильтруем все объекты, кроме прозрачных
 					for(auto act : g_Lab->actors)
-					{
-						//int i=0;
-						
-						//std::array<FhGpassPushConstantsInfo, MAX_ENTITIES_FOR_INSTANCING>  PushConstantsInfos;
-						
+					{												
 						for(auto ent : act.second->components)	//int i=0; i<2; i++) g_SceneMicromir
 						{
 							// XXX заменить на более точные проверки
@@ -608,84 +696,41 @@ void Graphics::drawFrame()
 								//~ continue;	// сразу отбросим объект, не попадающий в камеру
 							//~ }
 							
-							
-							//~ if( glm::length( ent.second->position - g_Camera->getActorPosition() ) > 30.0f )
-							//~ {
-								//~ entityLevelIndex++;
-								//~ continue;	// сразу отбросим объект, не попадающий в камеру
-							//~ }
-							
-							//~ printVarComment("recordCommandBuffer ", ent.first)
 							if( CHECK_PTR(ent.second->entityMeshPtr) )	//&& glm::length( ent.second->position - g_Camera->getActorPosition() ) < 30.0f)
-							{
-								//~ printVariable(ent.second->entityMeshPtr->getResourceName())
-								
-								ent.second->configureModelMatrix( modelMatrix );	
-								constants.model = ent.second->entityMatrix;	//modelMatrix;
-								for(int i=0; i<48; i++)
+							{			
+								// если объект - прозрачный, то внесем его в необработанный список transparents, где возможны дубликаты (Уникализация будет позже).
+								// и пропустим на данном этапе
+								if( ent.second->entityType & FH_ENTITY_TYPE_RENDER_TRANSPARENT )
 								{
-									constants.materialIndexes[i] = ent.second->materialRetargets[i];
+									// printVarComment("Transparent object: ", ent.second->entityName)
+									transparents.push_back(ent.second);
+									continue;
 								}
-								constants.type = ent.second->entityType;
-								constants.uboOffset = 0;//entityLevelIndex*10;
-								constants.reserve2 = 0.0f;
-								constants.reserve3 = 0.0f;
 								
-								#ifdef INSTANCED_RENDERING
-									
-									if( uniqs.count(ent.second->entityMeshPtr->getResourceName()) == 0)	// если таких мешей еще не было
-									{
-										std::array<FhGpassPushConstantsInfo, MAX_ENTITIES_IN_ACTION> constants2;
-										constants2[0] = constants;
-										
-										uniqs[ent.second->entityMeshPtr->getResourceName()] = std::tuple<std::shared_ptr<Mesh>, int, std::array<FhGpassPushConstantsInfo, MAX_ENTITIES_IN_ACTION>>(ent.second->entityMeshPtr, 1, constants2); // кладем указатель и счетчик
-									}
-									else
-									{
-										if( get<1>( uniqs[ent.second->entityMeshPtr->getResourceName()] ) < MAX_ENTITIES_IN_ACTION )
-										{
-											int newIndex = get<1>( uniqs[ent.second->entityMeshPtr->getResourceName()] ) + 1;	// increment counter
-											get<1>( uniqs[ent.second->entityMeshPtr->getResourceName()] ) = newIndex; 	// save new index
-											get<2>( uniqs[ent.second->entityMeshPtr->getResourceName()] )[newIndex-1] = constants; // new pushconstants
-										}
-										else
-										{
-											printMessage("Current entity could`t be drawed because it`s index is bigger than limit MAX_ENTITIES_IN_ACTION")
-										}
-									}
-								#endif 
+								// если объект слишком велик - то априори будет занимать много места на экране, значит его растеризация дорога
+								if( ent.second->entityName == "Skybox" ) // проверка размера объекта
+								{
+									// printVarComment("Giant object: ", ent.second->entityName)
+									giantes.push_back(ent.second);
+									continue;
+								}
 								
-								#ifdef FORWARD_RENDERING
-								//~ vkCmdBindVertexBuffers(_frames[currentFrame].commandBuffer, 0, 1, &ent.second->entityMeshPtr->getMeshVertexBuffer(), offsets);	
-													//~ printMessage("recordCommandBuffer Flag 0")
-										
-													//~ vkCmdBindDescriptorSets(_frames[currentFrame].commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout_G, 0, 1, &ent.second->GpassDescriptorSet, 0, nullptr);	// привязали дексриптор, где хранятся ссылки на наши матрицы PVM и текстуры
-													
-													//~ printMessage("recordCommandBuffer Flag 1")
-													
-													//~ if(i==0) g_SceneMicromir->configureModelMatrix(modelMatrix, glm::vec3(2,0,0), glm::quat(1,0,0,0) );
-													//~ if(i==1) g_SceneMicromir->configureModelMatrix(modelMatrix, glm::vec3(0,0,0), glm::quat(1,0,0,0) );
-												
-												
-													//constants.data[0] = 
-													
-													//~ if( CHECK_PTR(ent.second->entityMaterialPtr) )
-													//{
-														//constants.data[1] = 1.0f;	//ent.second->entityMaterialPtr->getMatInfo()[2][0];// UV scale
-													//}
-													
-													//~ if( ent.second->entityType == 1 ) // TRANSPARENT
-													//~ {
-														
-													//~ }
-													//~ printMessage("recordCommandBuffer Flag 2")
-													//~ printMat4("entity ", constants.model ) 
-									
-								//~ vkCmdPushConstants(_frames[currentFrame].commandBuffer, pipelineLayout_G, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(FhGpassPushConstantsInfo), &constants);	//upload the matrix to the GPU via push constants
-								//~ vkCmdDraw(_frames[currentFrame].commandBuffer, static_cast<uint32_t>(ent.second->entityMeshPtr->getVerticesCount()), 1, 0, 0);	//vkCmdDraw(commandBuffer, vertexCount, instanceCount, firstVertexOffset, firstInstanceOffset);
+								if( ent.second->entityMeshPtr->getResourceName() == "datas//meshes/SM_RockShard_a.model"
+								  || ent.second->entityMeshPtr->getResourceName() == "datas//meshes/Landscape.model" )
+								{
+									//printVariable( ent.second->entityMeshPtr->getResourceName() )
+									//system("pause");
+									giantes.push_back(ent.second);
+									continue;
+								}
 								
-													//~ printVarComment("recordCommandBuffer end ", ent.first)
-													//i++;
+								
+								processObject(	ent.second, unique_opaques,	constants);
+								
+								#ifdef FORWARD_RENDERING // deprecated
+									// vkCmdBindVertexBuffers(_frames[currentFrame].commandBuffer, 0, 1, &ent.second->entityMeshPtr->getMeshVertexBuffer(), offsets);	
+									// vkCmdPushConstants(_frames[currentFrame].commandBuffer, pipelineLayout_G, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(FhGpassPushConstantsInfo), &constants);	//upload the matrix to the GPU via push constants
+									// vkCmdDraw(_frames[currentFrame].commandBuffer, static_cast<uint32_t>(ent.second->entityMeshPtr->getVerticesCount()), 1, 0, 0);	//vkCmdDraw(commandBuffer, vertexCount, instanceCount, firstVertexOffset, firstInstanceOffset);
 								#endif
 													
 								entityLevelIndex++;
@@ -693,64 +738,73 @@ void Graphics::drawFrame()
 							
 						}
 						
+					}	
+					// 1.2 - отрендерим пачками все объекты с их инстансами
+					for(auto un : unique_opaques)
+					{
+						
+						// printVarComment("Unique mesh name: ", un.first )
+						
+						int uniqueEntitieInstancesCount = get<1>(unique_opaques[un.first]);
+						// printVarComment("\t\tInstances: ", uniqueEntitieInstancesCount )
+						
+						drawInstances(offset, constants, uniqueEntitieInstancesCount, un.second, offsets);
+						//~ if( CHECK_PTR( get<0>(un.second) ) ) // проверка умного указателя на меш
+						//~ {
+							//~ constants.uboOffset = offset;
+							
+							//~ glm::vec3 POV = CHECK_PTR(g_Camera) ? g_Camera->getActorPosition() : glm::vec3(-1.0f, 0.0f, 0.1f);
+							//~ glm::vec3 DOV = POV + (CHECK_PTR(g_Camera) ? g_Camera->getActorForwardVector() : glm::vec3(1.0f, 0.0f, 0.0f));//*Camera::rotation;	//glm::vec3(0.0f, 0.0f, 0.0f);
+							//~ glm::vec3 UP = glm::vec3(0.0f, 0.0f, 1.0f);
+							
+							//~ glm::mat4 view = glm::lookAt(POV, DOV, UP);
+							
+							//~ glm::mat4 proj;
+							//~ if(CHECK_PTR(g_Camera)) proj = glm::perspective(glm::radians(g_Camera->fCameraFOV), (float) swapChainExtent.width / (float) swapChainExtent.height, g_Camera->fCameraViewNear, g_Camera->fCameraViewDepth);
+							//~ proj[1][1] *= -1; // GLM was originally designed for OpenGL, where the Y coordinate of the clip coordinates is inverted. 
+							
+							//~ constants.model = proj * view;
+														
+							//~ memcpy( instancedPushInfoBufferMapped + offset*sizeof(FhGpassPushConstantsInfo), get<2>(un.second).data(), uniqueEntitieInstancesCount * sizeof(FhGpassPushConstantsInfo)); // memcpy)dest, src, count
+
+							//~ vkCmdBindVertexBuffers(_frames[currentFrame].commandBuffer, 0, 1, &get<0>(un.second)->getMeshVertexBuffer(), offsets);	
+
+							//~ vkCmdPushConstants(_frames[currentFrame].commandBuffer, pipelineLayout_G, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(FhGpassPushConstantsInfo), &constants);	//upload the matrix to the GPU via push constants
+									
+							//~ vkCmdDraw(_frames[currentFrame].commandBuffer, static_cast<uint32_t>(get<0>(un.second)->getVerticesCount()), uniqueEntitieInstancesCount, 0, 0);	//vkCmdDraw(commandBuffer, vertexCount, instanceCount, firstVertexOffset, firstInstanceOffset);
+						//~ }
+						offset += uniqueEntitieInstancesCount;
+					}	// done with opaques
+						
+						
+						
+					// 2.1 - отфильтруем список всех больших объектов
+					for(auto ggnt : giantes)
+					{
+						processObject(	ggnt, unique_giantes,	constants);
 					}
-					
-					
-					#ifdef INSTANCED_RENDERING
-						int uniqueEntities = uniqs.size();
-						//~ printVarComment("\t\tUnique entities count: ", uniqueEntities )
-
-						int offset = 0;
-						int unq = 0;
-						//int previosEntityInstances = 0;
-						for(auto un : uniqs)
-						{
-							//~ printVarComment("Unique mesh name: ", un.first )
-							
-							int uniqueEntitieInstancesCount = get<1>(uniqs[un.first]);
-							//~ printVarComment("\t\tInstances: ", uniqueEntitieInstancesCount )
-							
-							if( CHECK_PTR( get<0>(un.second) ) ) // проверка умного указателя на меш
-							{
-								vkCmdBindVertexBuffers(_frames[currentFrame].commandBuffer, 0, 1, &get<0>(un.second)->getMeshVertexBuffer(), offsets);	
-
-								constants.uboOffset = offset;
-								
-								glm::vec3 POV = CHECK_PTR(g_Camera) ? g_Camera->getActorPosition() : glm::vec3(-1.0f, 0.0f, 0.1f);
-								glm::vec3 DOV = POV + (CHECK_PTR(g_Camera) ? g_Camera->getActorForwardVector() : glm::vec3(1.0f, 0.0f, 0.0f));//*Camera::rotation;	//glm::vec3(0.0f, 0.0f, 0.0f);
-								glm::vec3 UP = glm::vec3(0.0f, 0.0f, 1.0f);
-								
-								glm::mat4 view = glm::lookAt(POV, DOV, UP);
-								
-								glm::mat4 proj;
-								if(CHECK_PTR(g_Camera)) proj = glm::perspective(glm::radians(g_Camera->fCameraFOV), (float) swapChainExtent.width / (float) swapChainExtent.height, g_Camera->fCameraViewNear, g_Camera->fCameraViewDepth);
-								proj[1][1] *= -1; // GLM was originally designed for OpenGL, where the Y coordinate of the clip coordinates is inverted. 
-								
-								constants.model = proj * view;
-								
-								vkCmdPushConstants(_frames[currentFrame].commandBuffer, pipelineLayout_G, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(FhGpassPushConstantsInfo), &constants);	//upload the matrix to the GPU via push constants
-								
-								//int offset = serial*uniqueEntitieInstancesCount;
-								// XXX из за асинхрона вулкана каждому vkCmdDraw() нужен свой буфер instancedPushInfoBuffer?
-								// или лучше создать один буфер на [MAX_ENTITIES_IN_ACTION] структур FhGpassPushConstantsInfo и настроить индексацию? 
-								
-								//if( unq == (uniqueEntities-1) )
-								{
-									if( !updated )
-									{
-										//~ printVariable(unq)
-										memcpy( instancedPushInfoBufferMapped + offset*sizeof(FhGpassPushConstantsInfo), get<2>(un.second).data(), uniqueEntitieInstancesCount * sizeof(FhGpassPushConstantsInfo)); // memcpy)dest, src, count
-										//~ if( unq == (uniqueEntities-1) ) updated = true;
-										//system("pause");
-									}
-								}
-								
-								vkCmdDraw(_frames[currentFrame].commandBuffer, static_cast<uint32_t>(get<0>(un.second)->getVerticesCount()), uniqueEntitieInstancesCount, 0, 0);	//vkCmdDraw(commandBuffer, vertexCount, instanceCount, firstVertexOffset, firstInstanceOffset);
-								unq++;
-							}
-							offset += uniqueEntitieInstancesCount;
-						}
-					#endif
+					// 2.2 - отрендерим пачками все объекты с их инстансами
+					for(auto un : unique_giantes)
+					{						
+						int uniqueEntitieInstancesCount = get<1>(unique_giantes[un.first]);
+						drawInstances(offset, constants, uniqueEntitieInstancesCount, un.second, offsets);
+						offset += uniqueEntitieInstancesCount;
+					}	// done with opaques
+						
+						
+						
+					// 3.1 - отфильтруем список всех прозрачных объектов
+					for(auto trs : transparents)
+					{
+						processObject(	trs, unique_transparents,	constants);
+					}
+					// 3.2 - отрендерим пачки прозрачных объектов с инстансами в самую последнюю очередь	
+					for(auto un : unique_transparents)
+					{	
+						int uniqueEntitieInstancesCount = get<1>(unique_transparents[un.first]);
+						drawInstances(offset, constants, uniqueEntitieInstancesCount, un.second, offsets);
+						offset += uniqueEntitieInstancesCount;
+					}
 				}
 				
 				

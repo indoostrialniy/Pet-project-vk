@@ -8,7 +8,8 @@ layout(location = 4) in mat3 txrxMatrix;
 layout(location = 7) in float sysTime;
 layout(location = 8) in vec3 tangent;
 layout(location = 9) in flat uint Type;
-layout(location = 10) in flat struct VSOut
+layout(location = 10) in vec3 POV;
+layout(location = 11) in flat struct VSOut
 {
 	uint v[48];
 } fs_in;
@@ -61,6 +62,16 @@ layout(location = 2) out vec4 outPosition;
 layout(location = 3) out vec4 outPBR;
 layout(location = 4) out vec4 outEmission;
 
+
+float getAlpha()
+{
+	uint globalMaterialIndex = fs_in.v[fragMaterialIndex] - 1;
+	FhMaterialInfo info = materialInfos.materialInfo[globalMaterialIndex]; // current material description
+	
+	return info.alphaDefault;
+}
+
+
 vec4 getColor()
 {
 	uint globalMaterialIndex = fs_in.v[fragMaterialIndex] - 1;
@@ -74,7 +85,7 @@ vec4 getColor()
 	}
 	else
 	{
-		return vec4(info.colorDefault.rgb, 1);
+		return vec4(info.colorDefault.rgb, getAlpha());
 	}
 }
 
@@ -87,17 +98,25 @@ vec3 getNormalFrag()
 	uint globalMaterialIndex = fs_in.v[fragMaterialIndex] - 1;
 	FhMaterialInfo info = materialInfos.materialInfo[globalMaterialIndex]; // current material description
 	int normalMapAddress = int(info.normalAddress)-1;
+	float normalScale = info.normalScale;
 
 	if(normalMapAddress >= 0)
 	{
-		normal = texture(material0_textures[ 16 * globalMaterialIndex  + normalMapAddress ], fragTexCoord ).rgb ;
-		normal = ( normal-vec3(0.5) ) * 2;
-		vec3 N = txrxMatrix * normalize(fragNormal);        // повернутая матрицей модели нормаль ТРЕУГОЛЬНИКА
-        vec3 T  = txrxMatrix * normalize(tangent);         //+vec3(0.001, 0.0001, 0.001)    // повернутый матрицей модели вектор tangent
-        vec3 B  = txrxMatrix * normalize(cross(N,T) );           // повернутый матрицей модели вычисленный вектор bitangent
-		mat3 TBN = mat3(T,B,N);                                               // матрица TBN
-        normal = normalize(TBN * normal);                                       // мировые координаты!!!
+		//normal = texture(material0_textures[ 16 * globalMaterialIndex  + normalMapAddress ], fragTexCoord * normalScale ).rgb ;
+		//normal = ( normal-vec3(0.5) ) * 2;
+		//vec3 N = txrxMatrix * normalize(fragNormal);        // повернутая матрицей модели нормаль ТРЕУГОЛЬНИКА
+        //vec3 T  = txrxMatrix * normalize(tangent);         //+vec3(0.001, 0.0001, 0.001)    // повернутый матрицей модели вектор tangent
+        //vec3 B  = txrxMatrix * normalize(cross(N,T) );           // повернутый матрицей модели вычисленный вектор bitangent
+		//mat3 TBN = mat3(T,B,N);                                               // матрица TBN
+        //normal = normalize(TBN * normal);                                       // мировые координаты!!!
 
+		// txrxMatrix — готовая transpose(inverse(mat3(model))) с CPU, не inverse на месте
+		vec3 N = normalize(txrxMatrix * fragNormal);
+		vec3 T = normalize(txrxMatrix * (tangent.xyz - fragNormal * dot(tangent.xyz, fragNormal)));
+		vec3 B = cross(N, T);// * tangent.w;
+
+		mat3 TBN = mat3(T, B, N);
+		normal = normalize(TBN * ((texture(material0_textures[16 * globalMaterialIndex  + normalMapAddress], fragTexCoord * normalScale).rgb) * 2.0 - 1.0));
 	}
 	else
 	{
@@ -214,12 +233,35 @@ void main()
 		
 		//FhMaterialInfo str = materialInfos.materialInfo[m];
 	}
-	uint TRIPLANAR = 0;
-	TRIPLANAR = (Type >> 4)  & 0xFFu; // нужен 4-й бит
+	
+	//if( length(POV-worldPosition) < 10)
+	{
+		uint TRIPLANAR = 0;
+		TRIPLANAR = (Type >> 4)  & 0xFFu; // нужен 4-й бит
 
-	outColor = TRIPLANAR == 1 ? getColorTriplanar() : getColor();
-	outNormal = vec4(getNormalFrag(),1);
-	outPosition = vec4(worldPosition,1);
-	outPBR = vec4(getMetallic(), getRoughness(), 0, 1);
-	outEmission = vec4(getEmission(), 1);
+		float alpha = getAlpha();
+
+		outColor = TRIPLANAR == 1 ? vec4(getColorTriplanar().xyz, alpha) : vec4(getColor().xyz, alpha);
+		outNormal = vec4(getNormalFrag(), 1); 
+		//outNormal = vec4( txrxMatrix*fragNormal, 1);
+		outPosition = vec4(worldPosition, 1);
+		outPBR = vec4(getMetallic(), getRoughness(), 0, 1);
+		outEmission = vec4(getEmission(), 1);
+	}
+	/*
+	else
+	{
+		outColor = vec4(getColor().xyz, 1);
+		outNormal = vec4(fragNormal, 1);
+		outPosition = vec4(worldPosition, 1);
+		outPBR = vec4(0, 1, 0, 1);
+		outEmission = vec4(0, 0, 0, 1);
+	}
+	*/
+	
+	//outColor = vec4(0, 1, 0, 1);
+	//outNormal = vec4(fragNormal, 1);
+	//outPosition = vec4(worldPosition, 1);
+	//outPBR = vec4(0, 1, 0, 1);
+	//outEmission = vec4(0, 0, 0, 1);
 }

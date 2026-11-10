@@ -1,10 +1,10 @@
 
-## Pet-Project-vk version 0.2.3
+## Pet-Project-vk version 0.2.4
 ### Goals
 **This project serves as an in‑depth exploration of low‑level graphics programming: I’m porting my [custom engine](https://github.com/indoostrialniy/Pet-project) to Vulkan and recreating a UE5‑level scene that I worked on for some time to strengthen my skills and portfolio. Currently in progress.**
 
-### Current footages v0.2.3
-![current](https://github.com/indoostrialniy/Pet-project-vk/blob/main/footages/023.png)
+### Current footages v0.2.4
+![current](https://github.com/indoostrialniy/Pet-project-vk/blob/main/footages/024.png)
 
 ### Target quality level
 ![target](https://github.com/indoostrialniy/Pet-project-vk/blob/main/footages/Oasis.png)

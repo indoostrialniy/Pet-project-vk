@@ -94,6 +94,9 @@ public:
     
     void createShadowpassOmni();
     void destroyShadowpassOmni();
+    
+    void createShadowpassSun(); // same as spot but other view matrix - ortho
+    void destroyShadowpassSun();
 	
 };
 

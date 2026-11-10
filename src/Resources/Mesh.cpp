@@ -291,6 +291,36 @@ bool Mesh::meshLoadBinary(std::string name)
 
 		delete[] vertices;					// no more need in host-side vertices block. Don`t forget to free the memory
 		
+		
+		// определение размеров AABB-коробки
+		
+		float maxX, minX, maxY, minY, maxZ, minZ = 0.0f;
+		
+		for(auto v : meshVertexDataVector2)
+		{
+			if(v.pos.x > maxX) maxX = v.pos.x;
+			
+			if(v.pos.y > maxY) maxY = v.pos.y;
+
+			if(v.pos.z > maxZ) maxZ = v.pos.z;
+			
+			if(v.pos.x < minX) minX = v.pos.x;
+			
+			if(v.pos.y < minY) minY = v.pos.y;
+
+			if(v.pos.z < minZ) minZ = v.pos.z;
+
+		}
+		//~ printMessage("AABB sizes:")
+		//~ printVariable(maxX)
+		//~ printVariable(minX)
+		//~ printVariable(maxY)
+		//~ printVariable(minY)
+		//~ printVariable(maxZ)
+		//~ printVariable(minZ)
+		//~ std::cout << "MaxX " << maxX << ", minX " << minX << ". MaxY " << maxY << ", minY " << minY <<
+		
+		
 		// 4.2 configure GPU-side buffers
 		//~ #define XYZ_ATTRIB 0
 		//~ #define NORMAL_ATTRIB 1

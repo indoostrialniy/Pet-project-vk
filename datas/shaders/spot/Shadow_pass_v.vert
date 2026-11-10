@@ -18,6 +18,8 @@ layout(location = 0) out vec4 FragPos;
 void main() 
 {
 	gl_Position = PushConstants.PV * PushConstants.model * vec4(inPosition, 1.0);
-	
+	gl_Position.z = pow(gl_Position.z, 0.99);
+	//gl_Position.z += 0.000005;
+
 	FragPos = PushConstants.model * vec4(inPosition, 1.0);
 }

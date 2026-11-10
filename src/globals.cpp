@@ -19,8 +19,11 @@ std::shared_ptr<Camera> 		g_Camera;
 //~ Graphics 						g_GraphicsCore;
 
 
-uint32_t 						WIDTH = 1366;
-uint32_t 						HEIGHT = 768;
+//~ uint32_t 						WIDTH = 1366;
+//~ uint32_t 						HEIGHT = 768;
+
+uint32_t 						WIDTH = 1920;
+uint32_t 						HEIGHT = 1080;
 
 //~ std::string 					MODEL_PATH = "datas\\meshes\\";
 //~ std::string 					SHADER_PATH = "datas\\shaders\\";

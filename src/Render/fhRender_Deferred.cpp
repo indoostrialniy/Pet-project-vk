@@ -803,19 +803,23 @@ void Graphics::createGpass()
 		// конфигурация привязанного фреймбуфера:
 		VkPipelineColorBlendAttachmentState colorBlendAttachment{};
 			colorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
-			colorBlendAttachment.blendEnable = VK_TRUE;//VK_FALSE; // не совмещать (новый цвет заменяет старый из буфера)
-
+			//~ colorBlendAttachment.blendEnable = VK_FALSE; // не совмещать (новый цвет заменяет старый из буфера)
+			
+			colorBlendAttachment.blendEnable = VK_TRUE;
 			// RGB: newColor * srcAlpha + oldColor * (1 - srcAlpha)
 			colorBlendAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
 			colorBlendAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
 			colorBlendAttachment.colorBlendOp = VK_BLEND_OP_ADD;
-
 			// Alpha: обычно просто копируем альфа из фрагмента (или тоже складываем)
 			colorBlendAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
 			colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
 			colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;
 
-		std::array<VkPipelineColorBlendAttachmentState, gPassAttachmentsCount-1> colorBlendAttachments = {colorBlendAttachment,colorBlendAttachment,colorBlendAttachment,colorBlendAttachment,colorBlendAttachment};
+		std::array<VkPipelineColorBlendAttachmentState, gPassAttachmentsCount-1> colorBlendAttachments = {	colorBlendAttachment,
+																											colorBlendAttachment,
+																											colorBlendAttachment,
+																											colorBlendAttachment,
+																											colorBlendAttachment};
 
 
 		// глобальные настройки совмещения цветов (между буферами?):
@@ -1680,7 +1684,7 @@ void Graphics::createLpass()
 									//printMessage("Omni OK!")
 								}	
 							}
-							if(spot->type == FH_DYNAMIC_LIGHTSOURCE_SPOT)
+							if(spot->type == FH_DYNAMIC_LIGHTSOURCE_SPOT || spot->type == FH_DYNAMIC_LIGHTSOURCE_SUN)
 							{
 								if( HANDLE_VALID(spot->dynamicLightShadowImageView[0]) && HANDLE_VALID(spot->dynamicLightShadowImageSampler[0]) )
 								{
@@ -2118,7 +2122,7 @@ void Graphics::updateLpassDynamicLightSourceInfoBuffer()
 		playerTorchInfo.color = glm::vec3(1.0,0.98,0.34);
 		playerTorchInfo.type = FH_DYNAMIC_LIGHTSOURCE_SPOT;
 		playerTorchInfo.sector = 30.0f;
-		playerTorchInfo.radius = 10.0f;
+		playerTorchInfo.radius = 30.0f;
 		playerTorchInfo.power = 5.0f;
 		playerTorchInfo.blendWidth = 25.0f;
 		playerTorchInfo.exists = CHECK_PTR(g_Camera) ? g_Camera->torchActive : false;
@@ -2135,7 +2139,7 @@ void Graphics::updateLpassDynamicLightSourceInfoBuffer()
 				
 		if( !lights.empty() )
 		{
-			int index = 1;	// 0-й индекс назначен фонарику игрока
+			//int index = 1;	// 0-й индекс назначен фонарику игрока
 			//printMessage("\n\nAll dynamic lights:")
 			for(auto l : lights)
 			{

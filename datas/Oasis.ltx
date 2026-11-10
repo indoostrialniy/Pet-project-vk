@@ -1,11 +1,11 @@
-;Collection [Oasis], version of 2026-11-5 16:59
+;Collection [Oasis], version of 2026-11-10 16:13
 
 CAMERA PARAMETERS
 ;Camera position - x y z
-p 3.222891 -50.672115 5.826350
+p 3.286740 -43.825214 3.356469
 
 ;Camera rotation quaternion in format W X Y Z
-v 0.678877 0.709358 -0.136965 -0.131062
+v 0.621436 0.748784 -0.177395 -0.147214
 END CAMERA PARAMETERS
 
 [0] MESH
@@ -28,30 +28,46 @@ material M_Skybox_01
 END
 
 [0] MESH
+sysname Pond
+position 14.54 18.1448 5.7482
+direction 1.0 0.0 0.0 0.0
+scale 2.5077 0.7628 1.0
+type 16 triplanar
+model SM_Water
+material M_River_01
+type 1 transparent
+END
+
+[0] MESH
+sysname River
+position 10.4739 -23.5019 -0.7447
+direction 0.9746 0.0 0.0 -0.224
+scale 1.0 1.0 1.0
+model SM_Water
+material M_River_01
+type 1 transparent
+END
+
+[0] MESH
 sysname SM_Oasis_Building
 position 0.0 0.0 0.0
 direction 1.0 0.0 0.0 0.0
 scale 1.0 1.0 1.0
 model SM_Oasis_Building
-material Fbx_Default_Material.001
+material M_Building
 type 2 emission
 material MI_Rubber
-type 1 transparent
 type 2 emission
 material MI_Plastic_a
-type 1 transparent
 type 2 emission
 material M_GlassDirty
 type 1 transparent
 type 2 emission
 material MI_Metall
-type 1 transparent
 type 2 emission
 material MI_DarkMetal_a
-type 1 transparent
 type 2 emission
 material MI_DarkMetal.001
-type 1 transparent
 type 2 emission
 END
 
@@ -124,13 +140,10 @@ model SM_Bench_b
 material MI_Table_Chair_Set_a
 type 2 emission
 material MI_WhiteMetalA
-type 1 transparent
 type 2 emission
 material MI_BlackMetalB
-type 1 transparent
 type 2 emission
 material MM_BaseColorDecal
-type 1 transparent
 type 2 emission
 END
 
@@ -143,13 +156,10 @@ model SM_Bench_b
 material MI_Table_Chair_Set_a
 type 2 emission
 material MI_WhiteMetalA
-type 1 transparent
 type 2 emission
 material MI_BlackMetalB
-type 1 transparent
 type 2 emission
 material MM_BaseColorDecal
-type 1 transparent
 type 2 emission
 END
 
@@ -160,18 +170,14 @@ direction 0.999 0.0 0.0 0.044
 scale 0.01 0.01 0.01
 model SM_Box_a
 material MI_Painted_Metal_Orange
-type 1 transparent
 type 2 emission
 material M_Steel_2
 type 2 emission
 material M_Trims
-type 1 transparent
 type 2 emission
 material M_Floaters_3
-type 1 transparent
 type 2 emission
 material M_Signs_4
-type 1 transparent
 type 2 emission
 END
 
@@ -182,18 +188,14 @@ direction 0.6366 0.0 0.0 -0.7712
 scale 0.0077 0.0077 0.0077
 model SM_Box_a
 material MI_Painted_Metal_Orange
-type 1 transparent
 type 2 emission
 material M_Steel_2
 type 2 emission
 material M_Trims
-type 1 transparent
 type 2 emission
 material M_Floaters_3
-type 1 transparent
 type 2 emission
 material M_Signs_4
-type 1 transparent
 type 2 emission
 END
 
@@ -204,18 +206,14 @@ direction 0.8539 0.0 0.0 -0.5205
 scale 0.0077 0.0077 0.0077
 model SM_Box_a
 material MI_Painted_Metal_Orange
-type 1 transparent
 type 2 emission
 material M_Steel_2
 type 2 emission
 material M_Trims
-type 1 transparent
 type 2 emission
 material M_Floaters_3
-type 1 transparent
 type 2 emission
 material M_Signs_4
-type 1 transparent
 type 2 emission
 END
 
@@ -226,15 +224,12 @@ direction 0.9978 -0.0122 0.0008 -0.0658
 scale 0.01 0.01 0.01
 model SM_Box_b
 material MI_MetalPanelWhiteFill
-type 1 transparent
 type 2 emission
 material M_Steel
 type 2 emission
 material M_Floaters
-type 1 transparent
 type 2 emission
 material M_Signs
-type 1 transparent
 type 2 emission
 END
 
@@ -245,15 +240,12 @@ direction 0.7547 -0.0092 -0.008 0.6559
 scale 0.01 0.01 0.01
 model SM_Box_b
 material MI_MetalPanelWhiteFill
-type 1 transparent
 type 2 emission
 material M_Steel
 type 2 emission
 material M_Floaters
-type 1 transparent
 type 2 emission
 material M_Signs
-type 1 transparent
 type 2 emission
 END
 
@@ -264,15 +256,12 @@ direction 0.689 -0.0084 0.0088 -0.7247
 scale 0.01 0.01 0.01
 model SM_Box_b
 material MI_MetalPanelWhiteFill
-type 1 transparent
 type 2 emission
 material M_Steel
 type 2 emission
 material M_Floaters
-type 1 transparent
 type 2 emission
 material M_Signs
-type 1 transparent
 type 2 emission
 END
 
@@ -283,7 +272,6 @@ direction 0.673 0.0 0.0 0.7396
 scale 0.01 0.01 0.01
 model SM_CannedFood_a
 material MI_CannedFood
-type 1 transparent
 type 2 emission
 END
 
@@ -294,7 +282,6 @@ direction 0.8726 0.0 0.0 0.4884
 scale 0.01 0.01 0.01
 model SM_CannedFood_a
 material MI_CannedFood
-type 1 transparent
 type 2 emission
 END
 
@@ -305,7 +292,6 @@ direction 1.0 0.0 0.0 0.0
 scale 0.01 0.01 0.01
 model SM_CannedFood_a
 material MI_CannedFood
-type 1 transparent
 type 2 emission
 END
 
@@ -316,7 +302,6 @@ direction 0.9873 0.0 0.0 -0.1586
 scale 0.01 0.01 0.01
 model SM_CannedFood_a
 material MI_CannedFood
-type 1 transparent
 type 2 emission
 END
 
@@ -327,7 +312,6 @@ direction 0.5961 0.0 0.0 -0.8029
 scale 0.01 0.01 0.01
 model SM_CannedFood_a
 material MI_CannedFood
-type 1 transparent
 type 2 emission
 END
 
@@ -338,7 +322,6 @@ direction 0.8636 0.0 0.0 0.5041
 scale 0.01 0.01 0.01
 model SM_CannedFood_a
 material MI_CannedFood
-type 1 transparent
 type 2 emission
 END
 
@@ -349,7 +332,6 @@ direction 0.7342 0.0 0.0 -0.6789
 scale 0.01 0.01 0.01
 model SM_CannedFood_a
 material MI_CannedFood
-type 1 transparent
 type 2 emission
 END
 
@@ -360,7 +342,6 @@ direction 1.0 0.0 0.0 0.0
 scale 0.01 0.01 0.01
 model SM_CannedFood_a
 material MI_CannedFood
-type 1 transparent
 type 2 emission
 END
 
@@ -371,7 +352,6 @@ direction 0.8696 0.0 0.0 -0.4938
 scale 0.01 0.01 0.01
 model SM_CannedFood_a
 material MI_CannedFood
-type 1 transparent
 type 2 emission
 END
 
@@ -382,7 +362,6 @@ direction 0.6063 0.0 0.0 0.7952
 scale 0.01 0.01 0.01
 model SM_CannedFood_b
 material MI_CannedFood
-type 1 transparent
 type 2 emission
 END
 
@@ -393,7 +372,6 @@ direction 0.9693 0.0 0.0 -0.2459
 scale 0.01 0.01 0.01
 model SM_CannedFood_b
 material MI_CannedFood
-type 1 transparent
 type 2 emission
 END
 
@@ -404,7 +382,6 @@ direction 1.0 0.0 0.0 0.0
 scale 0.01 0.01 0.01
 model SM_CannedFood_b
 material MI_CannedFood
-type 1 transparent
 type 2 emission
 END
 
@@ -415,7 +392,6 @@ direction 0.6476 0.2752 0.654 -0.2779
 scale 0.01 0.01 0.01
 model SM_CannedFood_b
 material MI_CannedFood
-type 1 transparent
 type 2 emission
 END
 
@@ -426,7 +402,6 @@ direction 1.0 0.0 0.0 0.0
 scale 0.01 0.01 0.01
 model SM_CannedFood_b
 material MI_CannedFood
-type 1 transparent
 type 2 emission
 END
 
@@ -437,7 +412,6 @@ direction 0.5186 0.0 0.0 -0.855
 scale 0.01 0.01 0.01
 model SM_CannedFood_b
 material MI_CannedFood
-type 1 transparent
 type 2 emission
 END
 
@@ -448,7 +422,6 @@ direction 0.9483 0.0 0.0 -0.3175
 scale 0.01 0.01 0.01
 model SM_CannedFood_c
 material MI_CannedFood
-type 1 transparent
 type 2 emission
 END
 
@@ -459,7 +432,6 @@ direction 1.0 0.0 0.0 0.0
 scale 0.01 0.01 0.01
 model SM_CannedFood_c
 material MI_CannedFood
-type 1 transparent
 type 2 emission
 END
 
@@ -470,7 +442,6 @@ direction 1.0 0.0 0.0 0.0
 scale 0.01 0.01 0.01
 model SM_CannedFood_c
 material MI_CannedFood
-type 1 transparent
 type 2 emission
 END
 
@@ -481,7 +452,6 @@ direction 0.6893 0.0 0.0 -0.7245
 scale 0.01 0.01 0.01
 model SM_CannedFood_c
 material MI_CannedFood
-type 1 transparent
 type 2 emission
 END
 
@@ -492,7 +462,6 @@ direction 0.9975 0.0 0.0 -0.07
 scale 0.01 0.01 0.01
 model SM_CannedFood_c
 material MI_CannedFood
-type 1 transparent
 type 2 emission
 END
 
@@ -503,7 +472,6 @@ direction 0.0955 0.0 0.0 -0.9954
 scale 0.01 0.01 0.01
 model SM_CannedFood_d
 material MI_CannedFood
-type 1 transparent
 type 2 emission
 END
 
@@ -514,7 +482,6 @@ direction 0.8741 0.0 0.0 -0.4858
 scale 0.01 0.01 0.01
 model SM_CannedFood_d
 material MI_CannedFood
-type 1 transparent
 type 2 emission
 END
 
@@ -525,7 +492,6 @@ direction 0.714 0.0 0.0 -0.7001
 scale 0.01 0.01 0.01
 model SM_CannedFood_d
 material MI_CannedFood
-type 1 transparent
 type 2 emission
 END
 
@@ -536,7 +502,6 @@ direction 1.0 0.0 0.0 0.0
 scale 0.0047 0.0047 0.0047
 model SM_CartonGarbage
 material MI_CartonBox
-type 1 transparent
 type 2 emission
 END
 
@@ -547,7 +512,6 @@ direction 1.0 0.0 0.0 0.0
 scale 0.01 0.01 0.01
 model SM_CerealBox
 material MI_CerealBox
-type 1 transparent
 type 2 emission
 END
 
@@ -558,7 +522,6 @@ direction 0.7071 0.0 0.7071 -0.0
 scale 0.01 0.01 0.01
 model SM_CerealBox
 material MI_CerealBox
-type 1 transparent
 type 2 emission
 END
 
@@ -569,7 +532,6 @@ direction 0.2546 0.0 0.0 -0.9671
 scale 0.01 0.01 0.01
 model SM_CerealBox
 material MI_CerealBox
-type 1 transparent
 type 2 emission
 END
 
@@ -650,7 +612,6 @@ direction 1.0 0.0 0.0 -0.0026
 scale 0.01 0.01 0.01
 model SM_Chest
 material MI_Chest
-type 1 transparent
 type 2 emission
 END
 
@@ -661,7 +622,6 @@ direction 1.0 0.0 0.0 -0.0026
 scale 0.01 0.01 0.01
 model SM_Chest
 material MI_Chest
-type 1 transparent
 type 2 emission
 END
 
@@ -672,7 +632,6 @@ direction 0.9997 0.0 0.0 -0.0228
 scale 0.01 0.01 0.01
 model SM_Chest
 material MI_Chest
-type 1 transparent
 type 2 emission
 END
 
@@ -683,7 +642,6 @@ direction 0.6569 0.0 0.0 0.754
 scale 0.01 0.01 0.01
 model SM_CoffeeCup
 material MI_DarkMetal
-type 1 transparent
 type 2 emission
 END
 
@@ -694,7 +652,6 @@ direction 0.9823 0.0 0.0 -0.1871
 scale 0.01 0.01 0.01
 model SM_CoffeeCup
 material MI_DarkMetal
-type 1 transparent
 type 2 emission
 END
 
@@ -705,7 +662,6 @@ direction 0.2186 0.0 0.0 0.9758
 scale 0.01 0.01 0.01
 model SM_CoffeeCup
 material MI_DarkMetal
-type 1 transparent
 type 2 emission
 END
 
@@ -716,7 +672,6 @@ direction 1.0 0.0 0.0 0.0
 scale 0.01 0.01 0.01
 model SM_CoffeeCup
 material MI_DarkMetal
-type 1 transparent
 type 2 emission
 END
 
@@ -737,7 +692,6 @@ direction 0.3871 0.416 -0.5808 -0.5829
 scale 0.01 0.01 0.01
 model SM_Cup
 material MI_Plastic
-type 1 transparent
 type 2 emission
 END
 
@@ -748,7 +702,6 @@ direction 1.0 0.0 0.0 0.0
 scale 0.01 0.01 0.01
 model SM_Cup
 material MI_Plastic
-type 1 transparent
 type 2 emission
 END
 
@@ -759,10 +712,8 @@ direction 0.3326 0.0 0.0 -0.9431
 scale 0.01 0.01 0.01
 model SM_Flashlight
 material MI_FlashLight
-type 1 transparent
 type 2 emission
 material MI_FlashLight_Glass
-type 1 transparent
 type 2 emission
 END
 
@@ -793,7 +744,6 @@ direction 1.0 0.0 0.0 0.0
 scale 0.01 0.01 0.01
 model SM_GasCylinder
 material MI_Storage
-type 1 transparent
 type 2 emission
 END
 
@@ -804,7 +754,6 @@ direction 1.0 0.0 0.0 0.0
 scale 0.01 0.01 0.01
 model SM_GasCylinder
 material MI_Storage
-type 1 transparent
 type 2 emission
 END
 
@@ -845,7 +794,6 @@ direction 1.0 0.0 0.0 0.0
 scale 0.0091 0.0091 0.0091
 model SM_Hose
 material MI_Hose
-type 1 transparent
 type 2 emission
 END
 
@@ -856,7 +804,6 @@ direction 0.5736 0.0 0.0 0.8192
 scale 0.0091 0.0091 0.0091
 model SM_Hose
 material MI_Hose
-type 1 transparent
 type 2 emission
 END
 
@@ -867,7 +814,6 @@ direction 0.3879 -0.0351 0.0148 -0.9209
 scale 0.0154 0.0154 0.0154
 model SM_Hose
 material MI_Hose
-type 1 transparent
 type 2 emission
 END
 
@@ -878,7 +824,6 @@ direction 0.9664 0.0 0.0 0.257
 scale 0.0069 0.0069 0.0069
 model SM_IceBox
 material MI_IceBox
-type 1 transparent
 type 2 emission
 END
 
@@ -889,10 +834,8 @@ direction 0.6465 0.6147 -0.3658 0.2651
 scale 0.01 0.01 0.01
 model SM_LightSmall
 material M_Trims
-type 1 transparent
 type 2 emission
 material M_Ceiling_Rubber
-type 1 transparent
 type 2 emission
 material M_Steel_2
 type 2 emission
@@ -905,10 +848,8 @@ direction 1.0 0.0 0.0 0.0
 scale 0.01 0.01 0.01
 model SM_LightSmall
 material M_Trims
-type 1 transparent
 type 2 emission
 material M_Ceiling_Rubber
-type 1 transparent
 type 2 emission
 material M_Steel_2
 type 2 emission
@@ -921,10 +862,8 @@ direction 1.0 0.0 0.0 0.0
 scale 0.01 0.01 0.01
 model SM_LightSmall
 material M_Trims
-type 1 transparent
 type 2 emission
 material M_Ceiling_Rubber
-type 1 transparent
 type 2 emission
 material M_Steel_2
 type 2 emission
@@ -937,10 +876,8 @@ direction 1.0 0.0 0.0 0.0
 scale 0.01 0.01 0.01
 model SM_LightSmall
 material M_Trims
-type 1 transparent
 type 2 emission
 material M_Ceiling_Rubber
-type 1 transparent
 type 2 emission
 material M_Steel_2
 type 2 emission
@@ -953,10 +890,8 @@ direction 0.685 -0.6808 -0.1819 0.1849
 scale 0.01 0.01 0.01
 model SM_LightSmall
 material M_Trims
-type 1 transparent
 type 2 emission
 material M_Ceiling_Rubber
-type 1 transparent
 type 2 emission
 material M_Steel_2
 type 2 emission
@@ -989,7 +924,6 @@ direction 1.0 0.0 0.0 0.0
 scale 0.01 0.01 0.01
 model SM_PaperPile_c
 material MI_PaperPile
-type 1 transparent
 type 2 emission
 END
 
@@ -1010,7 +944,6 @@ direction 1.0 0.0 0.0 0.0
 scale 0.01 0.01 0.01
 model SM_PencilCup
 material MI_PencilCup
-type 1 transparent
 type 2 emission
 END
 
@@ -1021,7 +954,6 @@ direction 0.0664 0.0 0.0 0.9978
 scale 0.01 0.01 0.01
 model SM_PortableStove
 material MI_PortableStove
-type 1 transparent
 type 2 emission
 END
 
@@ -1032,7 +964,6 @@ direction 0.9999 0.0 0.0 -0.0106
 scale 0.0083 0.0075 0.0088
 model SM_Rack_a
 material MI_Rack
-type 1 transparent
 type 2 emission
 END
 
@@ -1043,7 +974,6 @@ direction 0.9999 0.0 0.0 -0.0106
 scale 0.0083 0.0075 0.01
 model SM_Rack_b
 material MI_Rack
-type 1 transparent
 type 2 emission
 END
 
@@ -1054,7 +984,6 @@ direction 0.9999 0.0 0.0 -0.0106
 scale 0.0083 0.0075 0.01
 model SM_Rack_b
 material MI_Rack
-type 1 transparent
 type 2 emission
 END
 
@@ -1065,7 +994,6 @@ direction 0.9999 0.0 0.0 -0.0106
 scale 0.0083 0.0075 0.01
 model SM_Rack_b
 material MI_Rack
-type 1 transparent
 type 2 emission
 END
 
@@ -1076,7 +1004,6 @@ direction 0.9999 0.0 0.0 -0.0106
 scale 0.0083 0.0075 0.01
 model SM_Rack_b
 material MI_Rack
-type 1 transparent
 type 2 emission
 END
 
@@ -1087,7 +1014,6 @@ direction 0.9702 -0.05 -0.2364 -0.0183
 scale 0.0082 0.0075 0.01
 model SM_Rack_b
 material MI_Rack
-type 1 transparent
 type 2 emission
 END
 
@@ -1098,7 +1024,6 @@ direction 0.1766 0.0 0.0 -0.9843
 scale 0.01 0.01 0.01
 model SM_Radio
 material MI_Radio
-type 1 transparent
 type 2 emission
 END
 
@@ -1109,7 +1034,6 @@ direction 0.9224 0.0 0.0 -0.3862
 scale 0.015 0.015 0.015
 model SM_Radio
 material MI_Radio
-type 1 transparent
 type 2 emission
 END
 
@@ -1120,7 +1044,6 @@ direction 0.731 0.0 0.0 0.6824
 scale 0.0168 0.0168 0.0168
 model SM_RolledBlanket
 material MI_RolledBlanket
-type 1 transparent
 type 2 emission
 END
 
@@ -1131,7 +1054,6 @@ direction 0.5636 0.2833 -0.2141 0.7458
 scale 0.0168 0.0168 0.0168
 model SM_RolledBlanket
 material MI_RolledBlanket
-type 1 transparent
 type 2 emission
 END
 
@@ -1142,7 +1064,6 @@ direction 0.7071 0.0 0.0 0.7071
 scale 0.01 0.01 0.01
 model SM_Shelf_a
 material MI_Plastic_b
-type 1 transparent
 type 2 emission
 END
 
@@ -1153,7 +1074,6 @@ direction 0.7071 0.0 0.0 -0.7071
 scale 0.01 0.01 0.01
 model SM_Shelf_b
 material MI_Plastic_b
-type 1 transparent
 type 2 emission
 END
 
@@ -1164,7 +1084,6 @@ direction 0.7438 -0.3079 0.2269 -0.5481
 scale 0.01 0.01 0.01
 model SM_SleepingBag
 material MI_SleepingBag
-type 1 transparent
 type 2 emission
 END
 
@@ -1175,7 +1094,6 @@ direction 1.0 0.0 0.0 0.0
 scale 0.01 0.01 0.01
 model SM_SleepingBag
 material MI_SleepingBag
-type 1 transparent
 type 2 emission
 END
 
@@ -1186,7 +1104,6 @@ direction 0.01 0.0 0.0 -0.9999
 scale 0.01 0.01 0.01
 model SM_SolarPanelStand
 material MI_SolarPanel
-type 1 transparent
 type 2 emission
 END
 
@@ -1197,7 +1114,6 @@ direction 0.2391 -0.0 0.0 0.971
 scale 0.02 0.02 0.0133
 model SM_StreetPole
 material MI_StreetPoleYellow
-type 1 transparent
 type 2 emission
 END
 
@@ -1208,7 +1124,6 @@ direction 0.0 0.0134 0.0 0.9999
 scale 0.02 0.02 0.0126
 model SM_StreetPole
 material MI_StreetPoleYellow
-type 1 transparent
 type 2 emission
 END
 
@@ -1219,7 +1134,6 @@ direction 0.2391 -0.0 0.0 0.971
 scale 0.02 0.02 0.0126
 model SM_StreetPole
 material MI_StreetPoleYellow
-type 1 transparent
 type 2 emission
 END
 
@@ -1240,7 +1154,6 @@ direction 0.6946 0.0036 0.0023 0.7194
 scale 0.01 0.01 0.01
 model SM_TarpBlack
 material MI_Tarp
-type 1 transparent
 type 2 emission
 END
 
@@ -1251,7 +1164,6 @@ direction 1.0 0.0 0.0 0.0
 scale 0.01 0.01 0.01
 model SM_Thermos
 material MI_KitchenProps
-type 1 transparent
 type 2 emission
 END
 
@@ -1262,7 +1174,6 @@ direction 1.0 0.0 0.0 0.0
 scale 0.01 0.01 0.01
 model SM_ToiletPaper
 material MI_ToiletPaper
-type 1 transparent
 type 2 emission
 END
 
@@ -1273,7 +1184,6 @@ direction 0.8316 0.0 0.0 -0.5553
 scale 0.01 0.01 0.01
 model SM_ToiletPaper
 material MI_ToiletPaper
-type 1 transparent
 type 2 emission
 END
 
@@ -1284,7 +1194,6 @@ direction 1.0 0.0 0.0 0.0
 scale 0.01 0.01 0.01
 model SM_ToiletPaper
 material MI_ToiletPaper
-type 1 transparent
 type 2 emission
 END
 
@@ -1295,7 +1204,6 @@ direction 0.7071 0.0 0.0 0.7071
 scale 0.0135 0.0135 0.0135
 model SM_Vent
 material MI_Metal
-type 1 transparent
 type 2 emission
 END
 
@@ -1306,7 +1214,6 @@ direction 0.7071 0.0 0.0 -0.7071
 scale 0.0135 0.0135 0.0135
 model SM_Vent
 material MI_Metal
-type 1 transparent
 type 2 emission
 END
 
@@ -1317,7 +1224,6 @@ direction 0.7071 0.0 0.0 0.7071
 scale 0.0135 0.0135 0.0135
 model SM_Vent
 material MI_Metal
-type 1 transparent
 type 2 emission
 END
 
@@ -1328,7 +1234,6 @@ direction 0.6631 0.0039 0.0988 -0.742
 scale 0.0135 0.0135 0.0135
 model SM_Vent
 material MI_Metal
-type 1 transparent
 type 2 emission
 END
 
@@ -1389,7 +1294,6 @@ direction 1.0 0.0 0.0 0.0
 scale 0.01 0.01 0.01
 model SM_WaterCamper
 material MI_WaterCamper
-type 1 transparent
 type 2 emission
 END
 
@@ -1420,30 +1324,22 @@ direction 0.9873 0.0 0.0 0.1587
 scale 0.01 0.01 0.01
 model SM_PropCrate
 material MI_MetalPanelDGrayTrimD
-type 1 transparent
 type 2 emission
 material MI_MetalPanelDGrayFill
-type 1 transparent
 type 2 emission
 material MI_MetalPanelGrayTrimD
-type 1 transparent
 type 2 emission
 material MI_MetalPanelYellowFill
-type 1 transparent
 type 2 emission
 material MI_MetalWornFillA
-type 1 transparent
 type 2 emission
 material MI_MetalPanelGrayFill
-type 1 transparent
 type 2 emission
 material MI_MetalPanelWhiteFill
-type 1 transparent
 type 2 emission
 material Fbx_Default_Material
 type 2 emission
 material MI_MetalPanelWhiteTrimD
-type 1 transparent
 type 2 emission
 END
 
@@ -1464,18 +1360,14 @@ direction 0.988 0.0316 0.0522 -0.1421
 scale 0.02 0.02 0.02
 model SM_Barrel_c
 material MI_MetalPanelWhiteFill_1
-type 1 transparent
 type 2 emission
 material M_Trims
-type 1 transparent
 type 2 emission
 material M_Floaters
-type 1 transparent
 type 2 emission
 material M_Steel
 type 2 emission
 material M_Signs
-type 1 transparent
 type 2 emission
 END
 
@@ -1486,7 +1378,6 @@ direction 0.9394 0.0 0.0 0.3428
 scale 0.01 0.01 0.01
 model SM_WaterTank
 material MI_WaterTank
-type 1 transparent
 type 2 emission
 END
 
@@ -1497,7 +1388,6 @@ direction 0.9996 -0.0004 -0.0212 -0.0174
 scale 0.01 0.01 0.01
 model SM_Barrel_b
 material MI_Barrel_a
-type 1 transparent
 type 2 emission
 END
 
@@ -1508,7 +1398,6 @@ direction 1.0 0.0 0.0 0.0
 scale 0.01 0.01 0.01
 model SM_WaterTank
 material MI_WaterTank
-type 1 transparent
 type 2 emission
 END
 
@@ -1549,18 +1438,14 @@ direction 0.7347 0.0159 0.0342 -0.6774
 scale 0.01 0.01 0.01
 model SM_Barrel_c
 material MI_MetalPanelWhiteFill_1
-type 1 transparent
 type 2 emission
 material M_Trims
-type 1 transparent
 type 2 emission
 material M_Floaters
-type 1 transparent
 type 2 emission
 material M_Steel
 type 2 emission
 material M_Signs
-type 1 transparent
 type 2 emission
 END
 
@@ -1581,7 +1466,6 @@ direction 0.9998 0.0 0.0 -0.0174
 scale 0.01 0.01 0.01
 model SM_Barrel_d
 material MI_Barrel_PlasticA
-type 1 transparent
 type 2 emission
 END
 
@@ -1612,7 +1496,6 @@ direction 1.0 0.0 0.0 0.0
 scale 0.01 0.01 0.01
 model SM_Barrel_d
 material MI_Barrel_PlasticA
-type 1 transparent
 type 2 emission
 END
 
@@ -1653,7 +1536,6 @@ direction 0.9997 -0.0003 -0.0194 -0.0174
 scale 0.01 0.01 0.01
 model SM_Barrel_a
 material MI_Barrel_b
-type 1 transparent
 type 2 emission
 END
 
@@ -1664,18 +1546,14 @@ direction 0.8962 0.0369 0.0354 -0.4408
 scale 0.01 0.01 0.01
 model SM_Barrel_c
 material MI_MetalPanelWhiteFill_1
-type 1 transparent
 type 2 emission
 material M_Trims
-type 1 transparent
 type 2 emission
 material M_Floaters
-type 1 transparent
 type 2 emission
 material M_Steel
 type 2 emission
 material M_Signs
-type 1 transparent
 type 2 emission
 END
 
@@ -1716,18 +1594,14 @@ direction 0.7493 -0.0238 0.0606 -0.6591
 scale 0.01 0.01 0.01
 model SM_Barrel_c
 material MI_MetalPanelWhiteFill_1
-type 1 transparent
 type 2 emission
 material M_Trims
-type 1 transparent
 type 2 emission
 material M_Floaters
-type 1 transparent
 type 2 emission
 material M_Steel
 type 2 emission
 material M_Signs
-type 1 transparent
 type 2 emission
 END
 
@@ -1758,18 +1632,14 @@ direction 0.5606 -0.013 0.0378 -0.8272
 scale 0.02 0.02 0.02
 model SM_Barrel_c
 material MI_MetalPanelWhiteFill_1
-type 1 transparent
 type 2 emission
 material M_Trims
-type 1 transparent
 type 2 emission
 material M_Floaters
-type 1 transparent
 type 2 emission
 material M_Steel
 type 2 emission
 material M_Signs
-type 1 transparent
 type 2 emission
 END
 
@@ -1780,7 +1650,6 @@ direction 0.468 -0.3352 0.5394 -0.6145
 scale 0.01 0.01 0.01
 model SM_Barrel_a
 material MI_Barrel_b
-type 1 transparent
 type 2 emission
 END
 
@@ -1791,10 +1660,8 @@ direction 0.7071 0.0 0.0 0.7071
 scale 0.0195 0.0254 0.001
 model SM_Ceiling_L
 material MI_Ceiling_White
-type 1 transparent
 type 2 emission
 material M_Ceiling_Rubber
-type 1 transparent
 type 2 emission
 END
 
@@ -1805,10 +1672,8 @@ direction 0.7071 0.0 0.0 0.7071
 scale 0.0195 0.0254 0.001
 model SM_Ceiling_L
 material MI_Ceiling_White
-type 1 transparent
 type 2 emission
 material M_Ceiling_Rubber
-type 1 transparent
 type 2 emission
 END
 
@@ -1819,10 +1684,8 @@ direction 0.7071 0.0 0.0 0.7071
 scale 0.0195 0.0254 0.001
 model SM_Ceiling_L
 material MI_Ceiling_White
-type 1 transparent
 type 2 emission
 material M_Ceiling_Rubber
-type 1 transparent
 type 2 emission
 END
 
@@ -1833,10 +1696,8 @@ direction 1.0 0.0 0.0 0.0
 scale 0.012 0.008 0.001
 model SM_Ceiling_S
 material MI_Ceiling_White
-type 1 transparent
 type 2 emission
 material M_Ceiling_Rubber
-type 1 transparent
 type 2 emission
 END
 
@@ -1847,10 +1708,8 @@ direction 1.0 0.0 0.0 0.0
 scale 0.012 0.008 0.001
 model SM_Ceiling_S
 material MI_Ceiling_White
-type 1 transparent
 type 2 emission
 material M_Ceiling_Rubber
-type 1 transparent
 type 2 emission
 END
 
@@ -1885,7 +1744,6 @@ direction 1.0 0.0 0.0 0.0
 scale 0.012 0.012 0.013
 model SM_Door
 material MI_DarkMetal
-type 1 transparent
 type 2 emission
 material Fbx_Default_Material
 type 2 emission
@@ -1908,7 +1766,6 @@ direction 1.0 0.0 0.0 0.0
 scale 0.0115 0.0115 0.0125
 model SM_Door
 material MI_DarkMetal
-type 1 transparent
 type 2 emission
 material Fbx_Default_Material
 type 2 emission
@@ -2040,7 +1897,7 @@ position 22.1989 -35.4869 2.4578
 direction 1.0 0.0 0.0 0.0
 scale 0.01 0.01 0.01
 model SM_PlatformFloorLong
-material MI_Floor
+material MI_Floor_Grate
 type 2 emission
 END
 
@@ -2050,7 +1907,7 @@ position 29.3422 -24.4869 7.3864
 direction 0.7071 0.0 0.0 0.7071
 scale 0.01 0.01 0.01
 model SM_PlatformFloorLong
-material MI_Floor
+material MI_Floor_Grate
 type 2 emission
 END
 
@@ -2060,7 +1917,7 @@ position 19.5989 -35.4869 1.3578
 direction 0.7071 0.0 0.0 0.7071
 scale 0.005 0.005 0.01
 model SM_PlatformFloorLong
-material MI_Floor
+material MI_Floor_Grate
 type 2 emission
 END
 
@@ -2070,7 +1927,7 @@ position 27.1989 -35.4869 2.4578
 direction 0.7071 0.0 0.0 0.7071
 scale 0.005 0.005 0.01
 model SM_PlatformFloorLong
-material MI_Floor
+material MI_Floor_Grate
 type 2 emission
 END
 
@@ -2080,7 +1937,7 @@ position 27.1987 -35.5 2.4578
 direction 1.0 0.0 0.0 0.0
 scale 0.01 0.01 0.01
 model SM_PlatformFloorSquare
-material MI_Floor
+material MI_Floor_Grate
 type 2 emission
 END
 
@@ -2090,7 +1947,7 @@ position 16.089 -34.4944 0.2173
 direction 0.7071 0.0 0.0 0.7071
 scale 0.01 0.01 0.012
 model SM_StairsY
-material MI_Stairs_Fence
+material MI_Floor_Grate
 type 2 emission
 END
 
@@ -2100,7 +1957,7 @@ position 19.689 -34.4527 1.4173
 direction 0.7071 0.0 0.0 0.7071
 scale 0.01 0.01 0.011
 model SM_StairsY
-material MI_Stairs_Fence
+material MI_Floor_Grate
 type 2 emission
 END
 
@@ -2110,7 +1967,7 @@ position 28.7901 -26.2638 5.861
 direction 0.3213 0.0159 0.1003 -0.9415
 scale 0.01 0.01 0.01
 model SM_StairsYSeparated_A
-material MI_Stairs_Fence
+material MI_Floor_Grate
 type 2 emission
 END
 
@@ -2120,7 +1977,7 @@ position 29.0253 -26.2815 5.111
 direction 0.3548 0.1271 0.1158 -0.919
 scale 0.01 0.01 0.01
 model SM_StairsYSeparated_A
-material MI_Stairs_Fence
+material MI_Floor_Grate
 type 2 emission
 END
 
@@ -2130,7 +1987,7 @@ position 28.8831 -26.2911 5.4971
 direction 0.3316 0.084 0.0985 -0.9345
 scale 0.01 0.01 0.01
 model SM_StairsYSeparated_A
-material MI_Stairs_Fence
+material MI_Floor_Grate
 type 2 emission
 END
 
@@ -2140,7 +1997,7 @@ position 29.3419 -26.3138 4.197
 direction 0.348 0.1811 0.1399 -0.9091
 scale 0.01 0.01 0.01
 model SM_StairsYSeparated_A
-material MI_Stairs_Fence
+material MI_Floor_Grate
 type 2 emission
 END
 
@@ -2150,7 +2007,7 @@ position 27.6806 -30.1104 1.0206
 direction 0.209 0.0133 -0.6812 -0.7015
 scale 0.01 0.01 0.01
 model SM_StairsYSeparated_A
-material MI_Stairs_Fence
+material MI_Floor_Grate
 type 2 emission
 END
 
@@ -2160,7 +2017,7 @@ position 29.1449 -26.2711 4.6785
 direction 0.3653 0.1674 0.1299 -0.9065
 scale 0.01 0.01 0.01
 model SM_StairsYSeparated_A
-material MI_Stairs_Fence
+material MI_Floor_Grate
 type 2 emission
 END
 
@@ -2170,7 +2027,7 @@ position 27.2051 -29.7562 0.6902
 direction 0.3873 0.0936 -0.6576 -0.6393
 scale 0.01 0.01 0.01
 model SM_StairsYSeparated_A
-material MI_Stairs_Fence
+material MI_Floor_Grate
 type 2 emission
 END
 
@@ -2200,7 +2057,7 @@ position 28.2752 -31.5667 2.6391
 direction 0.0803 0.0788 -0.6083 -0.7857
 scale 0.01 0.01 0.01
 model SM_StairsYSeparated_D
-material MI_Stairs_Fence
+material MI_Floor_Grate
 type 2 emission
 END
 
@@ -2210,7 +2067,7 @@ position 28.442 -26.0972 6.1266
 direction 0.0 -0.0 -0.0708 0.9975
 scale 0.01 0.01 0.01
 model SM_StairsYSeparated_D
-material MI_Stairs_Fence
+material MI_Floor_Grate
 type 2 emission
 END
 
@@ -2220,7 +2077,7 @@ position 28.3 -33.4 2.4
 direction 0.0057 0.038 -0.1272 -0.9911
 scale 0.01 0.01 0.01
 model SM_StairsYSeparated_D
-material MI_Stairs_Fence
+material MI_Floor_Grate
 type 2 emission
 END
 
@@ -2231,7 +2088,6 @@ direction 0.0 -0.0 0.0 1.0
 scale 0.02 0.02 0.0129
 model SM_StreetPole
 material MI_StreetPoleYellow
-type 1 transparent
 type 2 emission
 END
 
@@ -2242,7 +2098,6 @@ direction 0.0 -0.0 0.0 1.0
 scale 0.02 0.02 0.011
 model SM_StreetPole
 material MI_StreetPoleYellow
-type 1 transparent
 type 2 emission
 END
 
@@ -2253,7 +2108,6 @@ direction 0.0019 0.0132 0.1405 0.99
 scale 0.02 0.02 0.0165
 model SM_StreetPole
 material MI_StreetPoleYellow
-type 1 transparent
 type 2 emission
 END
 
@@ -2264,7 +2118,6 @@ direction 0.766 0.0 0.0 0.6428
 scale 0.02 0.02 0.0114
 model SM_StreetPole
 material MI_StreetPoleYellow
-type 1 transparent
 type 2 emission
 END
 
@@ -2275,7 +2128,6 @@ direction 0.0 -0.0 0.0 1.0
 scale 0.02 0.02 0.0122
 model SM_StreetPole
 material MI_StreetPoleYellow
-type 1 transparent
 type 2 emission
 END
 
@@ -2286,7 +2138,6 @@ direction 0.0 -0.0 0.0 1.0
 scale 0.02 0.02 0.0117
 model SM_StreetPole
 material MI_StreetPoleYellow
-type 1 transparent
 type 2 emission
 END
 
@@ -2297,7 +2148,6 @@ direction 0.766 0.0 0.0 0.6428
 scale 0.02 0.02 0.0098
 model SM_StreetPole
 material MI_StreetPoleYellow
-type 1 transparent
 type 2 emission
 END
 
@@ -2308,7 +2158,6 @@ direction 0.0 -0.0 0.0 1.0
 scale 0.02 0.02 0.0117
 model SM_StreetPole
 material MI_StreetPoleYellow
-type 1 transparent
 type 2 emission
 END
 
@@ -2319,7 +2168,6 @@ direction 0.0 -0.0 0.0 1.0
 scale 0.02 0.02 0.012
 model SM_StreetPole
 material MI_StreetPoleYellow
-type 1 transparent
 type 2 emission
 END
 
@@ -2330,13 +2178,10 @@ direction 1.0 0.0 0.0 0.0
 scale 0.015 0.0135 0.015
 model SM_WallWhite_M
 material MI_Trim_Gray
-type 1 transparent
 type 2 emission
 material MI_Ceiling_Black
-type 1 transparent
 type 2 emission
 material MI_Trim_White
-type 1 transparent
 type 2 emission
 END
 
@@ -2347,13 +2192,10 @@ direction 1.0 0.0 0.0 0.0
 scale 0.015 0.0135 0.015
 model SM_WallWhite_M
 material MI_Trim_Gray
-type 1 transparent
 type 2 emission
 material MI_Ceiling_Black
-type 1 transparent
 type 2 emission
 material MI_Trim_White
-type 1 transparent
 type 2 emission
 END
 
@@ -2364,13 +2206,10 @@ direction 0.7071 0.0 0.0 0.7071
 scale 0.015 0.011 0.015
 model SM_WallWhite_M
 material MI_Trim_Gray
-type 1 transparent
 type 2 emission
 material MI_Ceiling_Black
-type 1 transparent
 type 2 emission
 material MI_Trim_White
-type 1 transparent
 type 2 emission
 END
 
@@ -2381,13 +2220,10 @@ direction 0.7071 0.0 0.0 0.7071
 scale 0.015 0.011 0.015
 model SM_WallWhite_M
 material MI_Trim_Gray
-type 1 transparent
 type 2 emission
 material MI_Ceiling_Black
-type 1 transparent
 type 2 emission
 material MI_Trim_White
-type 1 transparent
 type 2 emission
 END
 
@@ -2398,13 +2234,10 @@ direction 1.0 0.0 0.0 0.0
 scale 0.015 0.0135 0.015
 model SM_WallWhite_M
 material MI_Trim_Gray
-type 1 transparent
 type 2 emission
 material MI_Ceiling_Black
-type 1 transparent
 type 2 emission
 material MI_Trim_White
-type 1 transparent
 type 2 emission
 END
 
@@ -2415,13 +2248,10 @@ direction 1.0 0.0 0.0 0.0
 scale 0.015 0.0135 0.015
 model SM_WallWhite_M
 material MI_Trim_Gray
-type 1 transparent
 type 2 emission
 material MI_Ceiling_Black
-type 1 transparent
 type 2 emission
 material MI_Trim_White
-type 1 transparent
 type 2 emission
 END
 
@@ -2432,13 +2262,10 @@ direction 1.0 0.0 0.0 0.0
 scale 0.015 0.01 0.015
 model SM_WallWhite_S
 material MI_Trim_Gray
-type 1 transparent
 type 2 emission
 material MI_Ceiling_Black
-type 1 transparent
 type 2 emission
 material MI_Trim_White
-type 1 transparent
 type 2 emission
 END
 
@@ -2449,13 +2276,10 @@ direction 1.0 0.0 0.0 0.0
 scale 0.015 0.01 0.015
 model SM_WallWhite_S
 material MI_Trim_Gray
-type 1 transparent
 type 2 emission
 material MI_Ceiling_Black
-type 1 transparent
 type 2 emission
 material MI_Trim_White
-type 1 transparent
 type 2 emission
 END
 
@@ -2466,13 +2290,10 @@ direction 1.0 0.0 0.0 0.0
 scale 0.015 0.01 0.015
 model SM_WallWhite_S
 material MI_Trim_Gray
-type 1 transparent
 type 2 emission
 material MI_Ceiling_Black
-type 1 transparent
 type 2 emission
 material MI_Trim_White
-type 1 transparent
 type 2 emission
 END
 
@@ -2483,13 +2304,10 @@ direction 0.7071 0.0 0.0 0.7071
 scale 0.015 0.01 0.015
 model SM_WallWhite_S
 material MI_Trim_Gray
-type 1 transparent
 type 2 emission
 material MI_Ceiling_Black
-type 1 transparent
 type 2 emission
 material MI_Trim_White
-type 1 transparent
 type 2 emission
 END
 
@@ -2500,13 +2318,10 @@ direction 0.7071 0.0 0.0 0.7071
 scale 0.015 0.01 0.015
 model SM_WallWhite_S
 material MI_Trim_Gray
-type 1 transparent
 type 2 emission
 material MI_Ceiling_Black
-type 1 transparent
 type 2 emission
 material MI_Trim_White
-type 1 transparent
 type 2 emission
 END
 
@@ -2517,13 +2332,10 @@ direction 0.7071 0.0 0.0 0.7071
 scale 0.015 0.01 0.015
 model SM_WallWhite_S
 material MI_Trim_Gray
-type 1 transparent
 type 2 emission
 material MI_Ceiling_Black
-type 1 transparent
 type 2 emission
 material MI_Trim_White
-type 1 transparent
 type 2 emission
 END
 
@@ -2534,13 +2346,10 @@ direction 1.0 0.0 0.0 0.0
 scale 0.015 0.01 0.015
 model SM_WallWhite_S
 material MI_Trim_Gray
-type 1 transparent
 type 2 emission
 material MI_Ceiling_Black
-type 1 transparent
 type 2 emission
 material MI_Trim_White
-type 1 transparent
 type 2 emission
 END
 
@@ -2551,13 +2360,10 @@ direction 1.0 0.0 0.0 0.0
 scale 0.015 0.01 0.015
 model SM_WallWhite_S
 material MI_Trim_Gray
-type 1 transparent
 type 2 emission
 material MI_Ceiling_Black
-type 1 transparent
 type 2 emission
 material MI_Trim_White
-type 1 transparent
 type 2 emission
 END
 
@@ -2746,18 +2552,14 @@ direction 0.5103 0.0 0.0 -0.86
 scale 0.01 0.01 0.01
 model SM_Barrel_c
 material MI_MetalPanelWhiteFill_1
-type 1 transparent
 type 2 emission
 material M_Trims
-type 1 transparent
 type 2 emission
 material M_Floaters
-type 1 transparent
 type 2 emission
 material M_Steel_3
 type 2 emission
 material M_Signs_4
-type 1 transparent
 type 2 emission
 END
 
@@ -2768,18 +2570,14 @@ direction 0.9877 0.0 0.0 -0.1561
 scale 0.01 0.01 0.01
 model SM_Barrel_c
 material MI_MetalPanelWhiteFill_1
-type 1 transparent
 type 2 emission
 material M_Trims
-type 1 transparent
 type 2 emission
 material M_Floaters
-type 1 transparent
 type 2 emission
 material M_Steel_3
 type 2 emission
 material M_Signs_4
-type 1 transparent
 type 2 emission
 END
 
@@ -2790,7 +2588,6 @@ direction 0.2937 -0.5231 -0.4758 0.6432
 scale 0.01 0.01 0.01
 model SM_Barrel_d
 material MI_Barrel_PlasticA
-type 1 transparent
 type 2 emission
 END
 
@@ -2801,7 +2598,6 @@ direction 1.0 0.0 0.0 0.0
 scale 0.01 0.01 0.01
 model SM_Barrel_d
 material MI_Barrel_PlasticA
-type 1 transparent
 type 2 emission
 END
 
@@ -2812,7 +2608,6 @@ direction 1.0 0.0 0.0 0.0
 scale 1.9651 1.9651 1.5046
 model SM_CaveDripPillar_a
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -2823,7 +2618,6 @@ direction 0.6554 0.0 0.0 -0.7553
 scale 1.3461 1.3461 1.2113
 model SM_CaveDripPillar_a
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -2834,7 +2628,6 @@ direction 0.2647 0.0 0.0 0.9643
 scale 1.4163 1.4163 1.3776
 model SM_CaveDripPillar_a
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -2845,7 +2638,6 @@ direction 0.9843 -0.0546 0.0335 0.1642
 scale 2.0639 2.0639 1.1831
 model SM_CaveDripPillar_a
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -2856,7 +2648,6 @@ direction 0.672 0.0 0.0 -0.7406
 scale 2.9612 2.2459 1.3613
 model SM_CaveDripPillar_b
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -2867,7 +2658,6 @@ direction 0.9524 0.0 0.0 -0.305
 scale 2.6585 1.8295 1.1544
 model SM_CaveDripPillar_b
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -2878,7 +2668,6 @@ direction 0.9908 0.0 0.0 0.135
 scale 3.268 2.4786 1.6344
 model SM_CaveDripPillar_b
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -3429,7 +3218,6 @@ direction 0.0482 -0.7315 0.1302 0.6675
 scale 1.1739 2.063 1.1739
 model SM_Cliff_c
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -3440,7 +3228,6 @@ direction 0.9969 -0.01 0.0753 -0.0185
 scale 0.6347 1.2056 1.5661
 model SM_Cliff_c
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -3451,7 +3238,6 @@ direction 0.4937 0.5398 -0.5356 -0.4218
 scale 1.6905 3.0225 1.1739
 model SM_Cliff_c
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -3481,7 +3267,7 @@ position 44.8194 -8.5836 4.7233
 direction 0.9732 0.1193 -0.195 -0.0239
 scale 1.0 1.0 1.0
 model SM_CliffRock_b
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -3491,7 +3277,7 @@ position 37.8557 -25.8125 -3.5701
 direction 1.0 0.0 0.0 0.0
 scale 0.2943 0.4614 1.0
 model SM_CliffRock_b
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -3501,7 +3287,7 @@ position 30.335 -14.5919 -4.5188
 direction 0.9694 -0.0001 0.005 0.2454
 scale 0.2819 0.5995 1.0
 model SM_CliffRock_b
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -3552,7 +3338,6 @@ direction 0.1274 0.2146 -0.0283 -0.9679
 scale 1.0 1.0 1.0
 model SM_RockBoulder_b
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -3563,7 +3348,6 @@ direction 0.1274 0.2146 -0.0283 -0.9679
 scale 1.0 1.0 1.0
 model SM_RockBoulder_b
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -3743,7 +3527,7 @@ position -18.3889 -14.9833 8.8565
 direction 0.6615 0.0992 -0.0097 -0.7433
 scale 1.0 1.0 1.0
 model SM_RockBoulder_f
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -3753,7 +3537,7 @@ position -8.7007 1.2572 6.9593
 direction 0.9947 0.0 -0.1026 0.0
 scale 1.0 1.0 1.0
 model SM_RockBoulder_f
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -3763,7 +3547,7 @@ position 33.9991 -19.4293 -0.0291
 direction 1.0 0.0 0.0 0.0
 scale 1.0 1.0 1.0
 model SM_RockBoulder_f
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -3773,7 +3557,7 @@ position 26.6841 37.9491 9.4244
 direction 0.9035 0.1016 -0.1625 -0.3833
 scale 2.0624 1.5786 2.1548
 model SM_RockBoulder_f
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -3783,7 +3567,7 @@ position -11.2896 -12.6532 5.9549
 direction 0.7308 0.1091 0.0673 0.6704
 scale 1.0 1.0 1.0
 model SM_RockBoulder_f
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -3793,7 +3577,7 @@ position 18.0983 36.5279 10.0033
 direction 0.595 -0.352 0.5479 -0.4711
 scale 1.091 1.4098 1.5372
 model SM_RockBoulder_f
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -3803,7 +3587,7 @@ position -7.0929 4.9239 7.1188
 direction 0.6332 0.1056 -0.2528 -0.7239
 scale 1.6262 1.5067 1.5751
 model SM_RockBoulder_f
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -3813,7 +3597,7 @@ position 18.9698 43.016 9.3589
 direction 0.9647 -0.1816 0.0732 0.176
 scale 1.0 1.0 1.0
 model SM_RockBoulder_f
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -3823,7 +3607,7 @@ position 25.9381 31.1964 2.0484
 direction 0.826 0.552 -0.0707 0.0895
 scale 3.1075 2.3785 3.2467
 model SM_RockBoulder_f
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -3833,7 +3617,7 @@ position 30.5266 27.8721 2.0484
 direction 0.8283 0.5295 -0.1713 -0.0643
 scale 3.1075 2.3785 3.2467
 model SM_RockBoulder_f
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4054,7 +3838,6 @@ direction 0.2189 -0.1597 -0.7771 -0.5681
 scale 1.9868 1.9868 1.9868
 model SM_RockBoulder_i
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -4065,7 +3848,6 @@ direction 0.9876 0.0388 -0.1499 -0.0258
 scale 2.6564 3.4562 2.0453
 model SM_RockBoulder_i
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -4255,7 +4037,7 @@ position 20.3592 -47.7427 -4.1071
 direction 0.4999 0.0031 -0.0588 -0.8641
 scale 1.0 1.0 0.7791
 model SM_RockFiller_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4265,7 +4047,7 @@ position 8.6 -65.6 7.6
 direction 0.633 0.133 -0.1116 -0.7544
 scale 1.0 1.0 1.0
 model SM_RockFiller_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4275,7 +4057,7 @@ position 45.5371 -23.9738 -0.2
 direction 0.9419 0.0312 -0.0814 -0.3243
 scale 1.0 1.0 1.0
 model SM_RockFiller_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4285,7 +4067,7 @@ position -32.5271 -0.5341 37.9124
 direction 0.1305 0.6837 -0.7061 -0.1301
 scale 1.0 1.0 1.0
 model SM_RockFiller_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4295,7 +4077,7 @@ position 29.7604 46.9138 21.1309
 direction 0.7887 0.4064 -0.4465 -0.116
 scale 1.3458 0.6792 1.5877
 model SM_RockFiller_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4305,7 +4087,7 @@ position 31.4513 41.484 20.6318
 direction 0.8542 0.3825 -0.2719 -0.2236
 scale 1.1059 1.1059 1.4468
 model SM_RockFiller_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4315,7 +4097,7 @@ position 29.1672 48.5184 10.9366
 direction 0.9924 0.0692 -0.1008 0.0156
 scale 1.0 1.0 1.0785
 model SM_RockFiller_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4325,7 +4107,7 @@ position 41.6865 -33.778 -0.1686
 direction 0.8516 0.0285 -0.0052 -0.5234
 scale 1.0 1.0 1.2091
 model SM_RockFiller_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4335,7 +4117,7 @@ position 40.3676 -39.1586 5.493
 direction 0.762 0.0553 -0.0821 -0.6399
 scale 1.0 1.0 1.2091
 model SM_RockFiller_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4345,7 +4127,7 @@ position -2.065 -55.8959 -7.5817
 direction 0.4214 0.0039 -0.0423 -0.9059
 scale 1.5368 1.2624 0.7791
 model SM_RockFiller_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4355,7 +4137,7 @@ position 50.1706 6.4877 -2.0967
 direction 0.0835 0.0165 0.1339 0.9873
 scale 2.0 1.4329 2.0
 model SM_RockFiller_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4365,7 +4147,7 @@ position 64.5632 18.5257 -1.7146
 direction 0.2275 0.0646 -0.139 -0.9616
 scale 2.4804 1.4329 1.8314
 model SM_RockFiller_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4375,7 +4157,7 @@ position 68.4194 31.6688 -1.7146
 direction 0.4286 0.093 -0.1219 -0.8904
 scale 2.4804 1.4329 1.8314
 model SM_RockFiller_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4385,7 +4167,7 @@ position 33.4236 39.0057 11.7646
 direction 0.3669 0.1414 0.0129 -0.9194
 scale 1.0 1.0 1.1857
 model SM_RockFiller_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4536,7 +4318,6 @@ direction 0.6428 0.0 0.0 -0.766
 scale 1.0 1.0 1.0
 model SM_RockFiller_d
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -4547,7 +4328,6 @@ direction 0.1058 0.0026 -0.968 -0.2275
 scale 1.0 1.0 1.0
 model SM_RockFiller_d
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -4558,7 +4338,6 @@ direction 0.3191 -0.112 0.0503 0.9397
 scale 1.0 1.5652 1.445
 model SM_RockFiller_d
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -4569,7 +4348,6 @@ direction 0.8777 -0.083 -0.0025 0.472
 scale 1.231 0.8517 1.5841
 model SM_RockFiller_d
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -4580,7 +4358,6 @@ direction 0.4774 -0.1016 0.069 0.8701
 scale 1.0 1.5652 1.445
 model SM_RockFiller_d
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -4620,7 +4397,7 @@ position 29.4475 31.3924 0.5811
 direction 0.0311 0.8983 -0.4379 -0.0183
 scale 0.8545 0.6798 1.6541
 model SM_RockFiller_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4630,7 +4407,7 @@ position 44.7426 35.4289 3.8916
 direction 0.1298 -0.979 -0.1526 -0.0381
 scale 2.2817 1.5961 1.7214
 model SM_RockFiller_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4640,7 +4417,7 @@ position -2.4377 -5.0597 2.4501
 direction 0.8627 0.0096 0.0838 -0.4986
 scale 1.8231 1.7355 1.5117
 model SM_RockMedium_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4650,7 +4427,7 @@ position -43.5359 10.0834 7.7523
 direction 0.4188 0.09 0.0318 0.9031
 scale 1.4762 1.4762 1.8241
 model SM_RockMedium_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4660,7 +4437,7 @@ position -22.7804 -22.8828 10.1338
 direction 0.6386 -0.2397 0.257 0.6846
 scale 1.4762 1.4762 1.4762
 model SM_RockMedium_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4670,7 +4447,7 @@ position 14.2792 33.8064 6.6755
 direction 0.1535 0.0925 -0.0808 -0.9805
 scale 1.6735 1.1356 1.2852
 model SM_RockMedium_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4730,7 +4507,7 @@ position 33.6581 -3.1704 7.1352
 direction 0.8851 0.1579 -0.4019 0.1736
 scale 1.7994 2.0889 1.7994
 model SM_RockMedium_c
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4740,7 +4517,7 @@ position 0.1216 -10.9192 0.8819
 direction 0.8285 0.2016 0.1748 0.4923
 scale 1.5097 2.084 2.3809
 model SM_RockMedium_c
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4750,7 +4527,7 @@ position -1.1114 -7.1877 3.5982
 direction 0.1062 0.2208 -0.0113 0.9695
 scale 1.664 1.9674 1.9513
 model SM_RockMedium_c
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4760,7 +4537,7 @@ position 1.8212 -10.803 -0.4231
 direction 0.8514 0.0266 0.1598 0.499
 scale 1.5332 1.9264 2.326
 model SM_RockMedium_c
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4770,7 +4547,7 @@ position 1.6 3.8008 4.4406
 direction 0.1643 0.1436 0.0808 0.9725
 scale 1.8647 2.1688 1.0
 model SM_RockMedium_c
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4780,7 +4557,7 @@ position 20.4012 2.3324 3.5051
 direction 0.3334 0.0095 0.0034 0.9427
 scale 1.4294 1.5607 1.0
 model SM_RockMedium_c
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4790,7 +4567,7 @@ position 27.2577 4.6814 2.5319
 direction 0.5728 -0.0062 -0.0216 -0.8194
 scale 2.0522 2.2408 1.4357
 model SM_RockMedium_c
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4800,7 +4577,7 @@ position 14.6712 -45.8222 0.1776
 direction 0.3516 0.0 0.0 0.9361
 scale 1.0 1.0 1.0
 model SM_RockMedium_d
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4810,7 +4587,7 @@ position 20.9094 42.6964 7.5475
 direction 0.7225 0.0329 -0.0198 -0.6904
 scale 2.0736 2.1323 1.1016
 model SM_RockMedium_d
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4820,7 +4597,7 @@ position 5.1553 -16.6272 -2.0384
 direction 0.9524 0.0306 0.2474 -0.1753
 scale 1.4748 1.3611 0.9209
 model SM_RockMedium_d
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4830,7 +4607,7 @@ position 23.0528 -38.8734 0.4836
 direction 0.5536 0.0 0.0 0.8328
 scale 1.0 1.0 1.0
 model SM_RockMedium_d
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4840,7 +4617,7 @@ position 33.3733 -34.6877 0.0319
 direction 0.4936 0.0 0.0 0.8697
 scale 1.4647 1.4647 1.0
 model SM_RockMedium_d
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4850,7 +4627,7 @@ position 35.3507 -38.9788 1.697
 direction 0.203 0.0033 0.0841 0.9756
 scale 1.7816 1.7816 1.7816
 model SM_RockMedium_d
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4860,7 +4637,7 @@ position 19.4535 -48.621 3.4188
 direction 0.3516 0.0 0.0 0.9361
 scale 1.0 1.0 1.0
 model SM_RockMedium_d
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4870,7 +4647,7 @@ position -36.7304 -3.3991 8.5511
 direction 0.9866 0.0259 0.0116 0.1604
 scale 0.8672 0.9479 1.3189
 model SM_RockMedium_d
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4880,7 +4657,7 @@ position -41.3142 3.9792 7.9258
 direction 0.9873 -0.0101 -0.0179 -0.1574
 scale 2.3316 2.3313 1.385
 model SM_RockMedium_d
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4890,7 +4667,7 @@ position 31.3119 -43.9072 4.2545
 direction 0.3094 -0.4143 0.3095 0.798
 scale 2.4489 2.4489 2.4489
 model SM_RockMedium_d
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4900,7 +4677,7 @@ position -30.6316 -11.1674 6.3698
 direction 0.2831 -0.0338 -0.0196 -0.9583
 scale 2.563 2.2388 0.9259
 model SM_RockMedium_d
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4910,7 +4687,7 @@ position -40.2737 5.4524 6.9631
 direction 0.7243 -0.0062 0.0036 0.6895
 scale 2.6553 2.7129 0.5778
 model SM_RockMedium_d
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4920,7 +4697,7 @@ position -23.4138 -1.5954 5.097
 direction 0.9733 0.0269 0.013 0.2277
 scale 2.9422 2.4115 1.4446
 model SM_RockMedium_d
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4930,7 +4707,7 @@ position -10.7464 -9.3424 4.4995
 direction 0.9335 -0.0073 -0.0395 -0.3564
 scale 1.4496 1.8887 0.8563
 model SM_RockMedium_d
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4940,7 +4717,7 @@ position 18.4764 44.1137 8.5277
 direction 0.977 0.0501 -0.0455 -0.2022
 scale 1.4694 1.511 0.9948
 model SM_RockMedium_d
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4950,7 +4727,7 @@ position -37.3412 -9.064 8.9557
 direction 0.9612 0.1034 0.2009 -0.158
 scale 0.8672 1.306 1.7394
 model SM_RockMedium_d
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4960,7 +4737,7 @@ position -4.7739 -50.8102 -2.7151
 direction 0.6544 0.0505 -0.0737 0.7508
 scale 1.0 1.0 1.3814
 model SM_RockMedium_d
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4970,7 +4747,7 @@ position -21.6554 -52.6555 -4.1962
 direction 0.9874 -0.0006 0.0182 -0.1572
 scale 1.0 1.0 2.3546
 model SM_RockMedium_d
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4980,7 +4757,7 @@ position -9.3713 -54.4627 -3.6837
 direction 0.4683 0.0502 -0.0111 0.8821
 scale 1.0 1.0 1.7861
 model SM_RockMedium_d
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -4990,7 +4767,7 @@ position 10.0847 -39.0198 -3.49
 direction 0.2449 0.0126 0.009 0.9694
 scale 1.0 1.5131 1.6613
 model SM_RockMedium_d
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5000,7 +4777,7 @@ position 14.4901 -32.313 -3.9792
 direction 0.9791 -0.0085 0.013 -0.2026
 scale 1.0 1.0758 1.6613
 model SM_RockMedium_d
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5010,7 +4787,7 @@ position -16.0053 -55.9107 -5.0846
 direction 0.5151 -0.0153 0.0026 -0.857
 scale 1.7848 1.4266 1.2588
 model SM_RockMedium_d
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5020,7 +4797,7 @@ position -26.8652 -4.581 6.3691
 direction 0.4449 -0.0051 -0.0089 -0.8955
 scale 2.6553 2.602 0.9313
 model SM_RockMedium_d
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5030,7 +4807,7 @@ position -12.3803 -62.6855 -5.456
 direction 0.9298 -0.0871 0.0905 -0.3461
 scale 1.0 1.787 2.2583
 model SM_RockMedium_d
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5040,7 +4817,7 @@ position -4.4942 32.0081 7.3425
 direction 0.732 0.0254 0.0149 -0.6807
 scale 2.7319 2.2477 1.186
 model SM_RockMedium_d
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5050,7 +4827,7 @@ position 16.5946 -15.0154 -5.1497
 direction 0.0496 0.0346 0.0054 0.9982
 scale 1.0 2.4115 2.3531
 model SM_RockMedium_d
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5060,7 +4837,7 @@ position 15.395 -22.2634 -5.3266
 direction 0.1011 0.0311 -0.0239 0.9941
 scale 1.0 2.4115 2.3531
 model SM_RockMedium_d
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5111,7 +4888,6 @@ direction 0.4265 0.0366 -0.0291 0.9033
 scale 1.2842 1.4122 1.081
 model SM_RockMedium_f
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -5122,7 +4898,6 @@ direction 0.4961 -0.0243 -0.0293 -0.8674
 scale 0.752 0.752 0.4604
 model SM_RockMedium_f
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -5133,7 +4908,6 @@ direction 0.8018 0.016 -0.0769 0.5924
 scale 0.4431 0.4431 0.3047
 model SM_RockMedium_f
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -5144,7 +4918,6 @@ direction 0.5553 0.0409 -0.067 0.8279
 scale 0.4431 0.6591 0.3047
 model SM_RockMedium_f
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -5154,7 +4927,7 @@ position -4.0959 28.0783 5.889
 direction 0.5093 -0.0449 -0.0296 0.8589
 scale 2.0049 1.9878 1.6057
 model SM_RockMedium_d
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5164,7 +4937,7 @@ position -8.4663 23.5627 5.0174
 direction 0.0011 -0.8302 -0.553 0.0705
 scale 2.3316 1.3049 1.1652
 model SM_RockMedium_d
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5174,7 +4947,7 @@ position -1.0467 -15.2911 2.8038
 direction 0.5825 -0.6408 -0.3035 -0.3975
 scale 1.1555 0.6676 0.5467
 model SM_RockMedium_d
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5184,7 +4957,7 @@ position -2.6078 -18.9442 1.8765
 direction 0.6035 0.7661 0.0044 -0.2212
 scale 1.3867 0.8843 1.0943
 model SM_RockMedium_d
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5194,7 +4967,7 @@ position -8.367 -15.9528 7.1647
 direction 0.2543 -0.066 -0.7376 0.622
 scale 1.0907 0.8843 1.1692
 model SM_RockMedium_d
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5204,7 +4977,7 @@ position -0.4539 -16.024 3.6534
 direction 0.0065 -0.2006 -0.7158 -0.6689
 scale 0.6021 0.6676 0.2907
 model SM_RockMedium_d
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5214,7 +4987,7 @@ position -3.4299 -19.9175 4.4477
 direction 0.2946 -0.0195 -0.7703 0.5653
 scale 1.3867 0.8843 1.528
 model SM_RockMedium_d
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5224,7 +4997,7 @@ position -5.9219 -16.9868 4.9074
 direction 0.4823 0.1619 -0.7242 0.4655
 scale 1.0907 0.8843 0.9921
 model SM_RockMedium_d
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5284,7 +5057,7 @@ position -2.7336 -6.9857 1.8445
 direction 0.3254 -0.0909 0.0314 -0.9407
 scale 1.7025 1.1571 1.1285
 model SM_RockPlate_b
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5294,7 +5067,7 @@ position 14.7374 -2.9831 -4.2911
 direction 0.2839 -0.0814 0.0511 -0.954
 scale 2.301 0.9448 1.4683
 model SM_RockPlate_b
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5304,7 +5077,7 @@ position 27.593 44.182 5.9004
 direction 0.9807 0.0794 -0.0525 0.1709
 scale 1.0 1.0 1.0
 model SM_RockPlate_c
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5314,7 +5087,7 @@ position 26.9913 -2.6986 0.6376
 direction 0.7182 0.0 0.0 -0.6958
 scale 1.0 1.0 1.1801
 model SM_RockPlate_c
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5324,7 +5097,7 @@ position 38.5162 25.3688 24.9057
 direction 0.3013 0.7423 -0.1781 -0.5714
 scale 1.447 1.1053 1.5305
 model SM_RockPlate_c
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5334,7 +5107,7 @@ position 48.792 21.6419 20.2505
 direction 0.0764 0.07 -0.9946 0.0065
 scale 2.1816 1.1053 1.8407
 model SM_RockPlate_c
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5344,7 +5117,7 @@ position 35.4648 18.9749 0.0432
 direction 0.9998 0.0105 0.0061 -0.0182
 scale 0.6889 1.0899 1.2147
 model SM_RockPlate_c
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5354,7 +5127,7 @@ position 33.8622 3.7712 1.1732
 direction 0.9549 0.0281 -0.0566 -0.2901
 scale 1.0 1.0 1.2147
 model SM_RockPlate_c
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5364,7 +5137,7 @@ position 42.4779 11.3354 2.8285
 direction 0.6643 -0.1879 0.0461 -0.722
 scale 1.0157 0.9084 1.4578
 model SM_RockPlate_c
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5374,7 +5147,7 @@ position 36.1724 8.6861 2.8285
 direction 0.9298 -0.1186 -0.1529 0.313
 scale 1.0157 0.9084 1.4578
 model SM_RockPlate_c
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5384,7 +5157,7 @@ position 12.2199 -1.402 -0.1014
 direction 0.7313 0.0125 0.021 0.6816
 scale 0.6889 1.0 1.0522
 model SM_RockPlate_c
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5434,7 +5207,7 @@ position 11.3218 -0.3935 0.5651
 direction 0.1417 -0.692 0.7036 0.0781
 scale 0.9072 1.1122 1.0
 model SM_RockPlate_c
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5444,7 +5217,7 @@ position -0.0321 -60.2243 6.7
 direction 0.6803 -0.4905 -0.5328 0.1125
 scale 1.0 1.0 1.0
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5454,7 +5227,7 @@ position 18.6503 -19.5281 -2.8966
 direction 0.5619 0.0605 -0.0447 0.8238
 scale 1.0 1.0 0.8719
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5464,7 +5237,7 @@ position -13.7393 -53.6576 14.1941
 direction 0.6659 -0.4417 -0.3652 0.4776
 scale 1.0 1.0 1.5555
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5474,7 +5247,7 @@ position -4.5954 -62.0296 5.0442
 direction 0.2288 0.3169 -0.3075 0.8675
 scale 0.7891 0.7891 0.7891
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5484,7 +5257,7 @@ position -9.2757 -56.0835 11.5494
 direction -0.0813 -0.2645 -0.8541 -0.4403
 scale 1.4256 1.6417 0.9094
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5494,7 +5267,7 @@ position 9.1368 -55.8606 1.9483
 direction 0.2243 0.1673 -0.6729 -0.6847
 scale 1.353 1.353 1.353
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5504,7 +5277,7 @@ position -15.5328 -39.3066 -2.8386
 direction 0.0106 0.0543 -0.0528 0.9971
 scale 0.9491 1.0 1.0
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5514,7 +5287,7 @@ position 17.6109 -31.3908 -3.8143
 direction 0.5595 -0.0672 0.0052 -0.8261
 scale 1.0 1.0 1.0
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5524,7 +5297,7 @@ position -7.7461 -25.0834 10.2668
 direction 0.7445 -0.1167 0.6266 0.1989
 scale 1.1468 1.1468 1.1468
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5534,7 +5307,7 @@ position -32.3465 20.8602 8.0304
 direction 0.5544 -0.0404 0.0416 -0.8302
 scale 1.0 1.0 1.0
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5544,7 +5317,7 @@ position 13.4962 44.7701 21.9177
 direction 0.9766 -0.1096 -0.1459 0.1138
 scale 1.0 1.0 1.1823
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5554,7 +5327,7 @@ position -26.6973 -22.3531 8.4116
 direction 0.9184 0.068 0.0361 0.3882
 scale 1.0 1.1951 1.497
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5564,7 +5337,7 @@ position 17.5236 30.8037 28.5741
 direction 0.4493 0.0004 -0.0831 -0.8895
 scale 1.0091 1.5456 1.1921
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5574,7 +5347,7 @@ position -38.3223 -23.7502 1.7532
 direction 0.7263 0.0618 0.0625 -0.6817
 scale 1.0 1.0 1.0
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5584,7 +5357,7 @@ position -14.7083 -22.9876 12.4472
 direction 0.6085 -0.2936 0.4836 0.5565
 scale 1.0 1.1951 1.497
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5594,7 +5367,7 @@ position -23.6429 -24.3639 15.8979
 direction 0.5764 -0.3525 0.5363 0.5059
 scale 1.0 1.1951 1.497
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5604,7 +5377,7 @@ position 11.9033 37.2893 9.9605
 direction 0.3717 -0.0091 -0.0393 -0.9275
 scale 0.743 1.0 0.5513
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5614,7 +5387,7 @@ position -29.0335 -1.1517 43.6609
 direction 0.184 -0.3078 0.5264 0.7709
 scale 1.8355 2.1936 2.7479
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5624,7 +5397,7 @@ position 12.3307 42.2709 45.8268
 direction 0.0676 -0.0037 -0.7409 0.6682
 scale 2.7289 2.0043 3.1015
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5634,7 +5407,7 @@ position -26.787 -23.1999 15.8073
 direction 0.7135 -0.3826 -0.5802 -0.0886
 scale 1.0 1.1951 1.497
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5644,7 +5417,7 @@ position -2.5372 -9.254 5.9072
 direction 0.7621 0.5776 0.1806 0.2303
 scale 0.7303 0.594 1.0
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5654,7 +5427,7 @@ position -42.8996 1.1052 11.6535
 direction 0.901 -0.0889 0.1073 -0.4108
 scale 0.5721 0.5721 0.5721
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5664,7 +5437,7 @@ position -23.8416 -36.9796 -3.4923
 direction 0.2659 -0.0723 0.0245 -0.961
 scale 0.9491 1.0 0.7507
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5674,7 +5447,7 @@ position -33.472 -50.1048 -0.537
 direction 0.8989 0.032 -0.0275 0.4362
 scale 0.6033 0.7462 0.6704
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5684,7 +5457,7 @@ position -11.847 -42.7961 -2.9758
 direction 0.5487 -0.0394 0.0646 -0.8326
 scale 0.6898 1.0 0.9774
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5694,7 +5467,7 @@ position 9.4317 41.2989 29.0381
 direction 0.8978 0.0337 0.0979 -0.4281
 scale 1.2264 2.0589 1.8154
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5704,7 +5477,7 @@ position -3.5185 37.9236 40.8346
 direction 0.4938 0.2342 -0.2114 0.8103
 scale 0.8775 1.835 1.8154
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5714,7 +5487,7 @@ position 3.1858 32.2142 6.6446
 direction 0.4946 0.0695 -0.1019 -0.8604
 scale 1.2197 1.0 1.0559
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5724,7 +5497,7 @@ position 9.7106 34.2041 9.9764
 direction 0.2148 0.0839 -0.5563 -0.7984
 scale 0.803 0.7318 0.5725
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5734,7 +5507,7 @@ position -2.4085 -19.7488 2.8952
 direction 0.6902 0.7068 -0.1525 0.0288
 scale 0.6271 0.9056 0.8988
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5744,7 +5517,7 @@ position -2.1048 -10.0942 5.3306
 direction 0.8216 0.1212 0.0156 0.5568
 scale 0.7303 0.6672 1.0
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5754,7 +5527,7 @@ position 24.2043 29.8989 30.326
 direction 0.7164 0.0277 -0.0783 -0.6927
 scale 0.7585 2.1619 0.7415
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5764,7 +5537,7 @@ position 20.6814 36.3746 36.5086
 direction 0.6985 0.0387 0.2579 -0.6664
 scale 0.8156 1.7239 1.8154
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5774,7 +5547,7 @@ position 24.52 30.2171 26.3111
 direction 0.9806 0.0044 -0.0919 -0.1733
 scale 1.0 1.0 1.1823
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5784,7 +5557,7 @@ position 0.9923 18.7654 2.3326
 direction -0.0005 0.988 0.1504 0.0365
 scale 1.0688 1.9422 0.6581
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5794,7 +5567,7 @@ position 8.2125 36.1616 6.8046
 direction 0.9554 -0.1428 -0.1316 0.2225
 scale 1.0 1.0 1.0
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -5804,7 +5577,7 @@ position 1.6939 28.5366 3.6079
 direction 0.0556 -0.9522 0.2837 0.0989
 scale 0.8363 1.5196 0.9098
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -6015,7 +5788,6 @@ direction 0.6273 -0.5751 -0.4601 0.2531
 scale 1.1613 1.1613 1.6588
 model SM_RockShard_c
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -6026,7 +5798,6 @@ direction 0.2418 0.2418 -0.6645 -0.6645
 scale 1.0 1.0 1.0
 model SM_RockShard_c
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -6037,7 +5808,6 @@ direction 0.4507 -0.4201 -0.7097 0.3416
 scale 0.8821 0.8821 0.8821
 model SM_RockShard_c
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -6048,7 +5818,6 @@ direction 0.9151 -0.1018 0.2334 -0.3127
 scale 1.11 1.5496 1.0
 model SM_RockShard_c
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -6059,7 +5828,6 @@ direction 0.9769 0.1822 -0.0087 0.1113
 scale 1.4846 1.4846 1.4469
 model SM_RockShard_c
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -6070,7 +5838,6 @@ direction 0.2542 -0.2168 0.9414 -0.0463
 scale 1.445 1.445 1.445
 model SM_RockShard_c
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -6081,7 +5848,6 @@ direction 0.6198 -0.1843 0.7311 -0.2175
 scale 1.0 1.0 1.0
 model SM_RockShard_c
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -6092,7 +5858,6 @@ direction 0.8938 -0.1369 -0.1519 0.3992
 scale 2.2681 2.2681 2.9117
 model SM_RockShard_c
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -6103,7 +5868,6 @@ direction 0.8962 0.0 -0.4438 0.0
 scale 1.0 1.0 1.0
 model SM_RockShard_c
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -6114,7 +5878,6 @@ direction 0.9651 0.0621 -0.2541 0.013
 scale 2.046 2.0087 1.4072
 model SM_RockShard_c
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -6125,7 +5888,6 @@ direction -0.0692 0.4874 -0.8448 0.2099
 scale 1.2726 1.2726 1.2167
 model SM_RockShard_c
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -6136,7 +5898,6 @@ direction 0.3047 -0.5601 -0.4636 -0.6153
 scale 1.125 1.5778 1.1725
 model SM_RockShard_c
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -6147,7 +5908,6 @@ direction 0.6063 -0.0676 -0.7566 -0.2353
 scale 1.1504 1.3711 1.2026
 model SM_RockShard_c
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -6158,7 +5918,6 @@ direction 0.3775 -0.581 0.6633 0.2828
 scale 1.0889 1.3056 1.3056
 model SM_RockShard_c
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -6169,7 +5928,6 @@ direction 0.9233 0.2089 0.3192 0.0438
 scale 2.3248 2.3855 2.2658
 model SM_RockShard_c
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -6180,7 +5938,6 @@ direction 0.9761 0.0435 -0.1315 0.1673
 scale 2.3248 2.9511 1.3225
 model SM_RockShard_c
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -6191,7 +5948,6 @@ direction 0.4507 -0.4201 -0.7097 0.3416
 scale 0.8821 0.8821 0.8821
 model SM_RockShard_c
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -6202,7 +5958,6 @@ direction 0.9761 -0.2068 0.0652 0.0138
 scale 1.11 1.5496 1.0
 model SM_RockShard_c
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -6213,7 +5968,6 @@ direction 0.1733 -0.9235 0.2119 0.2687
 scale 1.2727 1.2727 1.2167
 model SM_RockShard_c
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -6224,7 +5978,6 @@ direction 0.3269 0.1385 -0.4996 -0.7901
 scale 1.2727 1.2727 1.2167
 model SM_RockShard_c
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -6235,7 +5988,6 @@ direction 0.5258 -0.4513 0.5568 0.4581
 scale 1.0889 1.3056 1.3056
 model SM_RockShard_c
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -6246,7 +5998,6 @@ direction 0.7756 0.0677 0.1304 0.6139
 scale 3.9733 0.1927 9.2483
 model SM_RockShard_c
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -6486,7 +6237,7 @@ position -3.4571 2.63 5.3427
 direction 0.0227 0.5863 -0.8087 0.041
 scale 0.75 1.0 1.2562
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -6496,7 +6247,7 @@ position 14.8791 -29.5037 -2.6663
 direction 0.4478 0.3665 -0.5675 -0.5858
 scale 0.5774 0.4711 0.468
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -6506,7 +6257,7 @@ position -2.9756 0.1643 5.2738
 direction -0.0579 0.3896 0.8871 -0.2407
 scale 0.7373 1.0966 1.4742
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -6516,7 +6267,7 @@ position -0.1255 27.1468 7.2701
 direction 0.4432 0.0199 -0.0727 0.8932
 scale 0.4579 1.5196 0.3982
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -6526,7 +6277,7 @@ position -2.6386 13.9277 4.0171
 direction 0.1511 0.0332 0.0217 -0.9877
 scale 1.0325 1.5196 0.3982
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -6536,7 +6287,7 @@ position 4.7851 5.3889 3.3149
 direction 0.2521 0.0011 0.0092 -0.9677
 scale 0.8363 1.5196 0.6953
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -6546,7 +6297,7 @@ position 12.5129 3.2331 2.4432
 direction 0.9857 -0.0038 0.0443 -0.1627
 scale 1.0325 1.5196 0.7411
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -6556,7 +6307,7 @@ position 21.4675 4.1211 1.6538
 direction 0.999 0.0031 0.0443 -0.0096
 scale 1.0325 1.5196 0.7411
 model SM_RockShard_a
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -6567,7 +6318,6 @@ direction 0.3348 0.4909 -0.0494 -0.8028
 scale 1.5936 1.5936 1.5532
 model SM_RockShard_c
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -6587,7 +6337,7 @@ position 44.6459 -9.9223 -1.1412
 direction 0.9018 -0.0451 0.0415 -0.4278
 scale 0.5375 0.5375 0.5375
 model SM_RockWall_a
-material grass_path_2
+material MI_Rock_Jungle_Large
 type 2 emission
 END
 
@@ -6597,7 +6347,7 @@ position 59.9139 -26.3971 16.1539
 direction 0.9283 0.0625 -0.2066 -0.3026
 scale 1.0 1.0 1.0
 model SM_RockWall_a
-material grass_path_2
+material MI_Rock_Jungle_Large
 type 2 emission
 END
 
@@ -6607,7 +6357,7 @@ position -39.5614 28.7027 24.807
 direction 0.8818 0.2707 0.134 0.3623
 scale 1.0545 0.5766 1.3701
 model SM_RockWall_a
-material grass_path_2
+material MI_Rock_Jungle_Large
 type 2 emission
 END
 
@@ -6617,7 +6367,7 @@ position 54.1676 16.7291 23.2636
 direction 0.9962 0.0 -0.0872 0.0
 scale 1.0 1.0 1.2089
 model SM_RockWall_b
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -6627,7 +6377,7 @@ position -6.389 -50.3389 41.198
 direction 0.2482 0.9215 -0.2729 0.1216
 scale 1.0 0.9397 1.0
 model SM_RockWall_b
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -6637,7 +6387,7 @@ position 20.7171 -55.8967 6.2108
 direction 0.8417 -0.0332 -0.12 -0.5254
 scale 0.3854 1.1175 0.8136
 model SM_RockWall_b
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -6647,7 +6397,7 @@ position 31.5847 -34.959 53.1554
 direction 0.157 0.7527 0.6282 -0.1189
 scale 1.0 1.0 1.0
 model SM_RockWall_b
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -6657,7 +6407,7 @@ position -11.0845 -63.6154 18.0932
 direction 0.6132 -0.41 -0.3392 -0.5838
 scale 0.5189 1.1175 1.1158
 model SM_RockWall_b
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -6667,7 +6417,7 @@ position 17.9535 -63.0447 14.3476
 direction 0.7128 -0.1682 -0.3859 -0.561
 scale 0.5189 1.1175 1.1158
 model SM_RockWall_b
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -6677,7 +6427,7 @@ position 39.104 -44.5714 14.3453
 direction 0.8419 -0.1225 -0.2381 -0.4686
 scale 0.3854 0.7633 1.0874
 model SM_RockWall_b
-material grass_path_2
+material MI_Rock_Jungle_Debris
 type 2 emission
 END
 
@@ -6688,7 +6438,6 @@ direction 0.0209 -0.9709 -0.2385 -0.0091
 scale 1.7219 1.8473 1.7084
 model SM_RockWall_c
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -6699,7 +6448,6 @@ direction -0.0104 -0.7614 0.6476 -0.0283
 scale 1.1408 1.0 1.6155
 model SM_RockWall_c
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -6710,7 +6458,6 @@ direction 0.1202 -0.757 -0.6358 0.0914
 scale 1.6071 1.5375 1.5375
 model SM_RockWall_c
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -6721,7 +6468,6 @@ direction 0.1396 -0.4429 -0.8495 0.2504
 scale 1.68 1.3798 1.6106
 model SM_RockWall_c
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -6732,7 +6478,6 @@ direction 0.1576 -0.5231 -0.794 0.2665
 scale 1.7219 2.1965 1.7084
 model SM_RockWall_c
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -6743,7 +6488,6 @@ direction 0.0808 0.8647 -0.2542 -0.4255
 scale 1.2914 1.1558 1.4889
 model SM_RockWall_d
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -6754,7 +6498,6 @@ direction 0.9899 0.0498 -0.0216 0.1308
 scale 1.0 0.4897 1.3704
 model SM_RockWall_d
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -6765,7 +6508,6 @@ direction 0.8647 -0.0024 -0.0042 -0.5023
 scale 0.342 0.3358 0.2389
 model SM_SoilFlat_a
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
@@ -6776,7 +6518,6 @@ direction 0.7894 -0.0104 0.0797 0.6086
 scale 0.342 0.3638 0.3191
 model SM_SoilFlat_a
 material MI_Rock_Jungle_Large
-type 1 transparent
 type 2 emission
 END
 
