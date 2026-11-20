@@ -24,6 +24,7 @@ Entity::Entity( FhEntityInitializationInfo& entityParams, glm::vec3& actorLoc, g
 	rotation = entityParams.initRot;
 	scale	 = entityParams.initScale;
 	
+	entityID = entityParams.initID;
 	
 	entityType = entityParams.initType;
 	

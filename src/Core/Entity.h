@@ -48,6 +48,8 @@ public:
 
 	glm::mat4	entityMatrix = glm::mat4(1.0f);
 	
+	uint32_t	entityID = 0;
+	
 	// owner actor parameters - copy of them from MicroWorld class. Initialized during constructor
 	glm::vec3& 	MicroWorldPosition;
 	glm::quat& 	MicroWorldRotation;

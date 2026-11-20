@@ -1,11 +1,11 @@
-;2026-11-10 09:58:12.945534
+;2026-11-12 09:44:25.998490
 material blue_metal_plate
 
 
 map
 BaseColor blue_metal_plate_diff.png
 size 4096 4096
-scale 9.299999237060547
+scale 1.0
 interpolation Linear 
 extension REPEAT 
 END
@@ -19,7 +19,7 @@ END
 map
 Roughness blue_metal_plate_rough.png
 size 4096 4096
-scale 9.299999237060547
+scale 1.0
 interpolation Linear 
 extension REPEAT 
 END
@@ -30,15 +30,24 @@ Alpha 1.0
 END
 
 
+map
+Normal blue_metal_plate_nor_gl.png
+size 4096 4096
+scale 1.0
+interpolation Linear 
+extension REPEAT 
+END
+
+
 value
 Emission 0.0 0.0 0.0
 END
 
 
 map
-Displacement T_Default_1k.png
-size 1024 1024
-scale 1.0 (No mapping linked: image node vector input is empty, set default scale)
+Displacement blue_metal_plate_disp.png
+size 4096 4096
+scale 1.0
 interpolation Linear 
 extension REPEAT 
 END

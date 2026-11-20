@@ -11,6 +11,9 @@
 #define TINYOBJLOADER_IMPLEMENTATION	// для тел функций
 #include <tiny_obj_loader.h>
 
+#define VMA_IMPLEMENTATION
+#include "vk_mem_alloc.h"
+
 
 
 //~ #define SOL_ALL_SAFETIES_ON 1

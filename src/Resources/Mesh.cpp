@@ -299,15 +299,12 @@ bool Mesh::meshLoadBinary(std::string name)
 		for(auto v : meshVertexDataVector2)
 		{
 			if(v.pos.x > maxX) maxX = v.pos.x;
-			
-			if(v.pos.y > maxY) maxY = v.pos.y;
-
-			if(v.pos.z > maxZ) maxZ = v.pos.z;
-			
 			if(v.pos.x < minX) minX = v.pos.x;
 			
+			if(v.pos.y > maxY) maxY = v.pos.y;
 			if(v.pos.y < minY) minY = v.pos.y;
 
+			if(v.pos.z > maxZ) maxZ = v.pos.z;
 			if(v.pos.z < minZ) minZ = v.pos.z;
 
 		}
@@ -318,6 +315,9 @@ bool Mesh::meshLoadBinary(std::string name)
 		//~ printVariable(minY)
 		//~ printVariable(maxZ)
 		//~ printVariable(minZ)
+		sizesX = glm::vec2(minX, maxX);
+		sizesY = glm::vec2(minY, maxY);
+		sizesZ = glm::vec2(minZ, maxZ);
 		//~ std::cout << "MaxX " << maxX << ", minX " << minX << ". MaxY " << maxY << ", minY " << minY <<
 		
 		

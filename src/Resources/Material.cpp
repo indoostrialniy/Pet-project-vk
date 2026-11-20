@@ -102,7 +102,7 @@ bool  Material::loadMaterial(std::string& name)
 			{
 				//~ getline(materialStream, StrVar);
 				std::string n;
-				enum TYPE {BASE_COLOR, NORMAL, ROUGHNESS, METALLIC, DISPLACEMENT, EMISSION, LIGHTMAP, SPECULAR};
+				enum TYPE {BASE_COLOR, NORMAL, ROUGHNESS, METALLIC, DISPLACEMENT, EMISSION, LIGHTMAP, SPECULAR, FLOWMAP};
 				
 				int type = -1;
 				int index = 0;
@@ -121,9 +121,12 @@ bool  Material::loadMaterial(std::string& name)
 					if( getValue(StrVar, 0) == "Emission")		{ type = EMISSION; }									
 					if( getValue(StrVar, 0) == "Lightmap")		{ type = LIGHTMAP; }
 					if( getValue(StrVar, 0) == "Specular")		{ type = SPECULAR; }
+					if( getValue(StrVar, 0) == "Flowmap")		{ type = FLOWMAP; }
+
 									
 					if( getValue(StrVar, 0) == "BaseColor" || getValue(StrVar, 0) == "Normal" || getValue(StrVar, 0) == "Roughness" || getValue(StrVar, 0) == "Metallic" 
-						|| getValue(StrVar, 0) == "Displacement" || getValue(StrVar, 0) == "Emission" || getValue(StrVar, 0) == "Lightmap" || getValue(StrVar, 0) == "Specular" )
+						|| getValue(StrVar, 0) == "Displacement" || getValue(StrVar, 0) == "Emission" || getValue(StrVar, 0) == "Lightmap" || 
+						getValue(StrVar, 0) == "Specular" || getValue(StrVar, 0) == "Flowmap" )
 					{			
 						index = material_index;
 						mapName = getValue(StrVar, 1);
@@ -240,7 +243,19 @@ bool  Material::loadMaterial(std::string& name)
 					
 					material_index++;
 				}
-								
+				
+				if(type == FLOWMAP)
+				{
+					materialData.flowmapAddress = index;	
+					materialData.flowmapScale = scale; 
+					n = FH_TEXTURE_PATH + mapName;	
+					
+					//printVarComment("Spec", n)
+				
+					vpMaterialTextures.push_back( g_GraphicsCore.VkTextures.getAsset( n ) ) ;
+					
+					material_index++;
+				}				
 				
 			}
 			

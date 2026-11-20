@@ -33,6 +33,8 @@ public:
 	
 	uint32_t 	initType 		= FH_ENTITY_TYPE_RENDER_OPAQUE;
 	
+	uint32_t	initID			= 0;
+	
 	std::vector <std::string> 	initMeshMaterialsVector;				// вектор текстовых имен назначенных материалов
 };
 
@@ -98,7 +100,7 @@ struct FhGpassPushConstantsInfo // per-entity personal data for G-pass
 				glm::mat4 model;				// 64 bytes.	Матрица 00 01 02 03 - 60 61 62 63
 	alignas(16) uint32_t type;					// 68 bytes.	Число 64 65 66 67
 				uint32_t uboOffset;				// 72 bytes.	Число 68 69 70 71
-				float reserve2;					// 76 bytes.	Число 72 73 74 75
+				uint32_t ID;					// 76 bytes.	Число 72 73 74 75
 				float reserve3;					// 80 bytes.	Число 76 77 78 79
 	alignas(16) uint8_t materialIndexes[48];	//				Число 80 81 82 83 - 127
 	// We`ll pack here 48 short integers and in GLSL (read by 4 bytes straight) decomposite it using bitwise operatons
@@ -244,6 +246,8 @@ struct FhMaterialInfo // таких структур в буфер сущнос�
 	uint32_t emissionAddress = 0;
 	uint32_t displacementAddress = 0;
 	
+	uint32_t flowmapAddress = 0;
+	
 	float colorScale = 1.0f;
 	float normalScale = 1.0f;
 	float roughnessScale = 1.0f;
@@ -254,6 +258,8 @@ struct FhMaterialInfo // таких структур в буфер сущнос�
 	float emissionScale = 1.0f;
 	float displacementScale = 1.0f;
 	
+	float flowmapScale = 1.0f;
+
 	float alphaDefault = 1.0f;
 	float roughnessDefault = 0.0f;
 	float metallicDefault = 0.0f;

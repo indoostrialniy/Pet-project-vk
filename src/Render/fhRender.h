@@ -10,6 +10,8 @@
 
 #include "Window_API_GLFW.h" // GLFW-class window, input
 
+#include "vk_mem_alloc.h"
+
 #include <array>
 
 class Mesh;
@@ -52,13 +54,24 @@ public:
     
     VkPhysicalDevice 			physicalDevice 	{ VK_NULL_HANDLE };		// не требует уничтожения, так как это лишь указатель. Уничтожается вместе с instance
     VkPhysicalDeviceProperties 	mGpuProperties 	= {};
-    VkPhysicalDeviceFeatures	mGpuFeatures 	= {};
+    VkPhysicalDeviceFeatures	mGpuFeatures 	= {						// фичи заполнять в порядке их описи в структуре VkPhysicalDeviceFeatures
+													.independentBlend = VK_TRUE,
+													.geometryShader = VK_TRUE,
+													.multiViewport  = VK_TRUE,
+													.shaderSampledImageArrayDynamicIndexing  = VK_TRUE
+													};
+		
+	VkPhysicalDeviceDescriptorIndexingFeaturesEXT indexingFeatures = { 
+																		.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT,
+																		.shaderSampledImageArrayNonUniformIndexing  = VK_TRUE
+																		};
     
     VkDevice 					logicalDevice 	{ VK_NULL_HANDLE };		// логическое устройство - основная переменная. 
     VkQueue 					graphicsQueue 	{ VK_NULL_HANDLE };							// дескриптор зарезервированной графической очереди. Уничтожается автоматически вместе с логическим устройством
     VkQueue 					presentQueue 	{ VK_NULL_HANDLE };							// дескриптор зарезервированной презентационной очереди
 		
     
+    VmaAllocator allocator;
     
     
     // 2 - Visual output: Для возможности выводить результат работы на экран, надо дополнительно настроить:
@@ -86,7 +99,7 @@ public:
     VkPipeline 					pipeline_G  			{ VK_NULL_HANDLE };			// может ссылаться на descriptorSetLayout. Это "рецепт" генерации кадра: какие этапы + каким рендерпасом + какие могут быть точки подключения
     VkDescriptorSet				descriptorSet_G			{ VK_NULL_HANDLE };
     
-    static constexpr int gPassAttachmentsCount = 6;									// G_PASS_ATTACHMENTS количество выходных прикреплений к G-пассу
+    static constexpr int gPassAttachmentsCount = 7;									// G_PASS_ATTACHMENTS количество выходных прикреплений к G-пассу
     
     std::array<VkImage, 		gPassAttachmentsCount> gPassImage;
     std::array<VkDeviceMemory , gPassAttachmentsCount> gPassImageMemory;
@@ -166,6 +179,8 @@ public:
     std::array<VkDeviceMemory , lPassAttachmentsCount> lPassImageMemory;
     std::array<VkImageView, 	lPassAttachmentsCount> lPassImageView;
     std::array<VkSampler, 		lPassAttachmentsCount> lPassImageSampler;
+    
+    std::array<VmaAllocation, 	lPassAttachmentsCount>	lPassVmaAllocation;
     
     void createLpass();
     void destroyLpass();
@@ -397,6 +412,8 @@ Depth buffer нужен не для презентации, а для теста
 	QueueFamilyIndices findQueueFamilies(VkPhysicalDevice physDevice);		// функция индексирует требуемые семейств очередей
     
 	bool checkDeviceExtensionSupport(VkPhysicalDevice device);				// функция проверяет, поддерживает ли VkPhysicalDevice нужные расширения
+    
+    bool checkDeviceFeaturesSupport(VkPhysicalDevice device);
     
     SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device); 	// функция запрашивает информацию о цепочке показа, вспомогательная для создания Swapchain:
     

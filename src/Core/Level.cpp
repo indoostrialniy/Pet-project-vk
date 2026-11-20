@@ -149,6 +149,8 @@ bool Level::loadLevel()
 
 					//if (StrVar[0] == '[') 	{								rookie.initType 	= getValue(StrVar, 1); }
 					if (Slovo == "type") 	{								rookie.initType 	|= stoi(getValue(StrVar, 1)); } // reading flags
+	
+					if (Slovo == "id") { 									rookie.initID 	= stoi(getValue(StrVar, 1)); }
 
 					if (Slovo == "sysname") { 								rookie.initSysname 	= getValue(StrVar, 1); }
 					if (Slovo == "position") { for (int i = 0; i < 3; i++) 	rookie.initPos[i] 	= stof(getValue(StrVar, i + 1)); }

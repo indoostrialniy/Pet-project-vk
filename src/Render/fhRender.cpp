@@ -22,6 +22,7 @@
 	
 //~ }
 
+//~ #define RENDER_DEBUG
 
 #define INSTANCED_RENDERING
 
@@ -43,12 +44,25 @@ void Graphics::initVulkan()
 	pickPhysicalDevice();			// No need to manually destroy!
 	createLogicalDevice();
 			
+	VmaAllocatorCreateInfo allocInfo{};
+		allocInfo.instance       = instance;
+		allocInfo.physicalDevice = physicalDevice;
+		allocInfo.device         = logicalDevice;
+		allocInfo.vulkanApiVersion = VK_API_VERSION_1_3; // по версии, которую берём		
+					
+	//~ DEBUG_INFO
+	//~ system("pause");
+					
+	vmaCreateAllocator(&allocInfo, &allocator);
+	
 			
 	// fhRender_2.cpp	
 	createSwapChain();				// create Swapchain
 	getSwapchainImages();			// get VkImage handles
 	createSwapchainImageViews();	// wrap this handles in VkImageView. This will be Color attachment for Framebuffer
 	// Создание VkImageView позволяет начать воспринимать изображения VkImage из Swapchain как текстуры, но их еще нельзя использовать как RenderTarget.
+	
+	
 	
 	
 	// fhRender_4.cpp
@@ -337,6 +351,8 @@ void Graphics::cleanup()
 	//~ destroyTextureImageView( textureImageView );
 	//~ destroyTextureImage( textureImage, textureImageMemory);
 	
+	vmaDestroyAllocator(allocator);
+	
 	destroyCommandPool();
 	
 	destroyLogicalDevice(); // неявно самостоятельно удаляет и дескрипторы VkQueue graphicsQueue, presentQueue
@@ -436,41 +452,47 @@ void Graphics::processObject(	std::shared_ptr<Entity>& entity,
 					std::unordered_map<std::string, std::tuple<std::shared_ptr<Mesh>, int, std::array<FhGpassPushConstantsInfo, MAX_ENTITIES_IN_ACTION>>>& uniques,
 					FhGpassPushConstantsInfo& constants)
 {
-	glm::mat4 temp = glm::mat4(0.0f);
-	
-	entity->configureModelMatrix( temp );	
-	
-	constants.model = entity->entityMatrix;	//modelMatrix;
-	
-	for(int i=0; i<48; i++)
+	if(CHECK_PTR(entity))
 	{
-		constants.materialIndexes[i] = entity->materialRetargets[i];
-	}
-	constants.type = entity->entityType;
-	constants.uboOffset = 0;//entityLevelIndex*10;
-	constants.reserve2 = 0.0f;
-	constants.reserve3 = 0.0f;
-	
-	//#ifdef INSTANCED_RENDERING
+		glm::mat4 temp = glm::mat4(0.0f);
 		
-	if( uniques.count(entity->entityMeshPtr->getResourceName()) == 0)	// если таких мешей еще не было
-	{
-		std::array<FhGpassPushConstantsInfo, MAX_ENTITIES_IN_ACTION> constants2;
-		constants2[0] = constants;
+		entity->configureModelMatrix( temp );	
 		
-		uniques[entity->entityMeshPtr->getResourceName()] = std::tuple<std::shared_ptr<Mesh>, int, std::array<FhGpassPushConstantsInfo, MAX_ENTITIES_IN_ACTION>>(entity->entityMeshPtr, 1, constants2); // кладем указатель и счетчик
-	}
-	else
-	{
-		if( get<1>( uniques[entity->entityMeshPtr->getResourceName()] ) < MAX_ENTITIES_IN_ACTION )
+		constants.model = entity->entityMatrix;	//modelMatrix;
+		
+		for(int i=0; i<MAX_MATERIALS_PER_ENTITY; i++) // <48
 		{
-			int newIndex = get<1>( uniques[entity->entityMeshPtr->getResourceName()] ) + 1;	// increment counter
-			get<1>( uniques[entity->entityMeshPtr->getResourceName()] ) = newIndex; 	// save new index
-			get<2>( uniques[entity->entityMeshPtr->getResourceName()] )[newIndex-1] = constants; // new pushconstants
+			constants.materialIndexes[i] = entity->materialRetargets[i];
 		}
-		else
+		constants.type = entity->entityType;
+		constants.uboOffset = 0;//entityLevelIndex*10;
+		constants.ID = entity->entityID;
+		constants.reserve3 = 0.0f;
+		
+		//#ifdef INSTANCED_RENDERING
+		
+		if(CHECK_PTR(entity->entityMeshPtr))
 		{
-			printMessage("Current entity could`t be drawed because it`s index is bigger than limit MAX_ENTITIES_IN_ACTION")
+			if( uniques.count(entity->entityMeshPtr->getResourceName()) == 0)	// если таких мешей еще не было
+			{
+				std::array<FhGpassPushConstantsInfo, MAX_ENTITIES_IN_ACTION> constants2;
+				constants2[0] = constants;
+				
+				uniques[entity->entityMeshPtr->getResourceName()] = std::tuple<std::shared_ptr<Mesh>, int, std::array<FhGpassPushConstantsInfo, MAX_ENTITIES_IN_ACTION>>(entity->entityMeshPtr, 1, constants2); // кладем указатель и счетчик
+			}
+			else
+			{
+				if( get<1>( uniques[entity->entityMeshPtr->getResourceName()] ) < MAX_ENTITIES_IN_ACTION )
+				{
+					int newIndex = get<1>( uniques[entity->entityMeshPtr->getResourceName()] ) + 1;	// increment counter
+					get<1>( uniques[entity->entityMeshPtr->getResourceName()] ) = newIndex; 	// save new index
+					get<2>( uniques[entity->entityMeshPtr->getResourceName()] )[newIndex-1] = constants; // new pushconstants
+				}
+				else
+				{
+					printMessage("Current entity could`t be drawed because it`s index is bigger than limit MAX_ENTITIES_IN_ACTION")
+				}
+			}
 		}
 	}
 }
@@ -479,6 +501,13 @@ void Graphics::drawInstances(int& offset, FhGpassPushConstantsInfo& constants, i
 							std::tuple<std::shared_ptr<Mesh>, int,	std::array<FhGpassPushConstantsInfo, MAX_ENTITIES_IN_ACTION>> instance, 
 							std::array<VkDeviceSize, 1>& offsets)
 {
+	//~ if( !HANDLE_VALID(logicalDevice) ||
+		//~ !HANDLE_VALID(swapChain) ||
+		//~ !HANDLE_VALID(_frames[currentFrame].inFlightFence) ||
+		//~ !HANDLE_VALID(_frames[currentFrame].imageAvailableSemaphore) ||
+		//~ !HANDLE_VALID(_frames[currentFrame].commandBuffer)
+		//~ ) return;
+	
 	if( CHECK_PTR( get<0>(instance) ) ) // проверка умного указателя на меш
 	{
 		constants.uboOffset = offset;
@@ -512,13 +541,15 @@ void Graphics::drawFrame()
 	
 	if( CHECK_PTR(g_Camera) ) {g_Camera->updateCamera();}
 	
+	
+	
 	updateGpassGeneralInfoBuffer();
 	
 	updateLpassDynamicLightSourceInfoBuffer();
 	
 	// UPDATE ENTITIES!
-	if(CHECK_PTR(g_Lab))
-	{
+	//~ if(CHECK_PTR(g_Lab))
+	//~ {
 		//~ if( CHECK_PTR(g_Lab->getActor("SR3")) )
 		//~ {
 			//~ float rotSpeed = 180.0f * Stopwatch::timeSinceLastFrame; // 180 degrees per second
@@ -528,22 +559,29 @@ void Graphics::drawFrame()
 		//printMessage("drawFrame: update all entities") 
 		// вместо целевых updateUniformBuffer(currentFrame, "SR3"); // обязательно до начала обработки кадра!
 		// и updateUniformBuffer(currentFrame, "room");
-		for(auto act : g_Lab->actors)
-		{
-			//std::cout << "Actor: " << act.first << "\n";
-			for(auto ent : act.second->components)
-			{
-				//std::cout << "\tEntity: " << ent.first << "\n";
-				//ent.second->updateEntityUniformBuffer(currentFrame);	// XXX update PVM for every Entity
-				//ent.second->updateEntityMaterialInfoBuffer(currentFrame);
-			}
-		}
+		//~ for(auto act : g_Lab->actors)
+		//~ {
+			//~ //std::cout << "Actor: " << act.first << "\n";
+			//~ for(auto ent : act.second->components)
+			//~ {
+				//~ //std::cout << "\tEntity: " << ent.first << "\n";
+				//~ //ent.second->updateEntityUniformBuffer(currentFrame);	// XXX update PVM for every Entity
+				//~ //ent.second->updateEntityMaterialInfoBuffer(currentFrame);
+			//~ }
+		//~ }
 		
-	}
+	//~ }
 	
-	
-	vkWaitForFences(logicalDevice, 1, &_frames[currentFrame].inFlightFence, VK_TRUE, UINT64_MAX); // подождали разрешения - 1 fence
+	if( !HANDLE_VALID(logicalDevice) ||
+		!HANDLE_VALID(swapChain) ||
+		!HANDLE_VALID(_frames[currentFrame].inFlightFence) ||
+		!HANDLE_VALID(_frames[currentFrame].imageAvailableSemaphore) ||
+		!HANDLE_VALID(_frames[currentFrame].commandBuffer)
+		) return;
 
+
+	vkWaitForFences(logicalDevice, 1, &_frames[currentFrame].inFlightFence, VK_TRUE, UINT64_MAX); // подождали разрешения - 1 fence
+	
 	// 1 - обработка команд рендеринга
 	// 1.1 - запросили индекс кадра из цепочки, который доступен для взятия в работу
 	uint32_t imageIndex;
@@ -559,7 +597,8 @@ void Graphics::drawFrame()
 	}
 	else if (acquire != VK_SUCCESS && acquire != VK_SUBOPTIMAL_KHR) 
 	{
-		throw std::runtime_error("failed to acquire swap chain image!");
+		DEBUG_INFO
+		throw std::runtime_error("Error: failed to acquire swapchain image!");
 	}
 	
 	vkResetFences(logicalDevice, 1, &_frames[currentFrame].inFlightFence); // device, count, pFences[]
@@ -589,10 +628,18 @@ void Graphics::drawFrame()
 		// will implicitly reset it. It’s not possible to append commands to a buffer at a
 		// later time.
 		
-		//~ printVarComment("Frame: ", currentFrame)
+		
+		#ifdef RENDER_DEBUG
+			printVarComment("Frame: ", currentFrame)
+		#endif
 		
 		// G-pass
 		{
+			if( !HANDLE_VALID(renderPass_G) ||
+				!HANDLE_VALID(frameBuffer_G) ||
+				!HANDLE_VALID(pipeline_G) ||
+				!HANDLE_VALID(pipelineLayout_G) ) return;
+			
 			// 2 - рендерпас
 			VkRenderPassBeginInfo renderPassInfo{};
 				renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -606,7 +653,9 @@ void Graphics::drawFrame()
 				clearValues[G_PASS_NORMAL_ATTACHMENT].color = {{0.46, 0.96, 0.039, 1.0}};	// цвет фона - салатовый, непрозрачность 1 (100%)
 				clearValues[G_PASS_POSITION_ATTACHMENT].color = {{0.46, 0.039, 0.96, 1.0}};	// цвет фона - "нормальный", непрозрачность 1 (100%)
 				clearValues[G_PASS_METAL_ROUGHNESS_PBR_ATTACHMENT].color = {{0.46, 0.039, 0.96, 1.0}};	// цвет фона - "нормальный", непрозрачность 1 (100%)
-				clearValues[G_PASS_EMISSION_ATTACHMENT].color = {{0.0, 0.0, 0.0, 1.0}};	// цвет фона для излучения - абсолютно черный, непрозрачность 1 (100%)
+				clearValues[G_PASS_EMISSION_ATTACHMENT].color = {{0.0, 0.0, 0.0, 1.0}};		// цвет фона для излучения - абсолютно черный, непрозрачность 1 (100%)
+				clearValues[G_PASS_ID_ATTACHMENT].color = {{0, 1.0}};						// фон - черный, непрозрачность 1 (100%)
+
 				clearValues[G_PASS_DEPTH_ATTACHMENT].depthStencil = {1.0f, 0};
 				
 				
@@ -715,15 +764,46 @@ void Graphics::drawFrame()
 									continue;
 								}
 								
-								if( ent.second->entityMeshPtr->getResourceName() == "datas//meshes/SM_RockShard_a.model"
-								  || ent.second->entityMeshPtr->getResourceName() == "datas//meshes/Landscape.model" )
-								{
-									//printVariable( ent.second->entityMeshPtr->getResourceName() )
-									//system("pause");
-									giantes.push_back(ent.second);
-									continue;
-								}
+								//~ if( ent.second->entityMeshPtr->getResourceName() == "datas//meshes/SM_RockShard_a.model"
+								  //~ || ent.second->entityMeshPtr->getResourceName() == "datas//meshes/Landscape.model" )
+								//~ {
+									//~ //printVariable( ent.second->entityMeshPtr->getResourceName() )
+									//~ //system("pause");
+									//~ giantes.push_back(ent.second);
+									//~ continue;
+								//~ }
 								
+								//~ if( ent.second->entityName == "SM_CaveDripPillar_a_1")
+								//~ {
+									//~ printVariable( ent.second->entityName )
+									//~ printVec3(ent.second->scale)
+									//~ printVec2(ent.second->entityMeshPtr->sizesX)
+									//~ printVec2(ent.second->entityMeshPtr->sizesY)
+									//~ printVec2(ent.second->entityMeshPtr->sizesZ)
+									
+									//~ printMessage("Result gabarites")
+									glm::vec2 resX = ent.second->entityMeshPtr->sizesX * ent.second->scale[0];
+									glm::vec2 resY = ent.second->entityMeshPtr->sizesY * ent.second->scale[1];
+									glm::vec2 resZ = ent.second->entityMeshPtr->sizesZ * ent.second->scale[2];
+									
+									//~ printVec2(resX)
+									//~ printVec2(resY)
+									//~ printVec2(resZ)
+									
+									float volume = (resX[1]-resX[0]) * (resY[1]-resY[0]) * (resZ[1]-resZ[0]);
+									
+									if(volume > 4000)
+									{
+										//~ printVariable(ent.second->entityName)
+										//~ printVariable(volume)
+										//~ system("pause");
+										giantes.push_back(ent.second);
+										continue;
+									}
+									//~ printVariable(volume)
+									//~ system("pause");
+									//continue;
+								//~ }
 								
 								processObject(	ent.second, unique_opaques,	constants);
 								
@@ -742,39 +822,13 @@ void Graphics::drawFrame()
 					// 1.2 - отрендерим пачками все объекты с их инстансами
 					for(auto un : unique_opaques)
 					{
-						
-						// printVarComment("Unique mesh name: ", un.first )
-						
+							// printVarComment("Unique mesh name: ", un.first )
 						int uniqueEntitieInstancesCount = get<1>(unique_opaques[un.first]);
-						// printVarComment("\t\tInstances: ", uniqueEntitieInstancesCount )
-						
+							// printVarComment("\t\tInstances: ", uniqueEntitieInstancesCount )
 						drawInstances(offset, constants, uniqueEntitieInstancesCount, un.second, offsets);
-						//~ if( CHECK_PTR( get<0>(un.second) ) ) // проверка умного указателя на меш
-						//~ {
-							//~ constants.uboOffset = offset;
-							
-							//~ glm::vec3 POV = CHECK_PTR(g_Camera) ? g_Camera->getActorPosition() : glm::vec3(-1.0f, 0.0f, 0.1f);
-							//~ glm::vec3 DOV = POV + (CHECK_PTR(g_Camera) ? g_Camera->getActorForwardVector() : glm::vec3(1.0f, 0.0f, 0.0f));//*Camera::rotation;	//glm::vec3(0.0f, 0.0f, 0.0f);
-							//~ glm::vec3 UP = glm::vec3(0.0f, 0.0f, 1.0f);
-							
-							//~ glm::mat4 view = glm::lookAt(POV, DOV, UP);
-							
-							//~ glm::mat4 proj;
-							//~ if(CHECK_PTR(g_Camera)) proj = glm::perspective(glm::radians(g_Camera->fCameraFOV), (float) swapChainExtent.width / (float) swapChainExtent.height, g_Camera->fCameraViewNear, g_Camera->fCameraViewDepth);
-							//~ proj[1][1] *= -1; // GLM was originally designed for OpenGL, where the Y coordinate of the clip coordinates is inverted. 
-							
-							//~ constants.model = proj * view;
-														
-							//~ memcpy( instancedPushInfoBufferMapped + offset*sizeof(FhGpassPushConstantsInfo), get<2>(un.second).data(), uniqueEntitieInstancesCount * sizeof(FhGpassPushConstantsInfo)); // memcpy)dest, src, count
-
-							//~ vkCmdBindVertexBuffers(_frames[currentFrame].commandBuffer, 0, 1, &get<0>(un.second)->getMeshVertexBuffer(), offsets);	
-
-							//~ vkCmdPushConstants(_frames[currentFrame].commandBuffer, pipelineLayout_G, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(FhGpassPushConstantsInfo), &constants);	//upload the matrix to the GPU via push constants
-									
-							//~ vkCmdDraw(_frames[currentFrame].commandBuffer, static_cast<uint32_t>(get<0>(un.second)->getVerticesCount()), uniqueEntitieInstancesCount, 0, 0);	//vkCmdDraw(commandBuffer, vertexCount, instanceCount, firstVertexOffset, firstInstanceOffset);
-						//~ }
+						
 						offset += uniqueEntitieInstancesCount;
-					}	// done with opaques
+					}		// done with opaques
 						
 						
 						
@@ -807,8 +861,6 @@ void Graphics::drawFrame()
 					}
 				}
 				
-				
-
 			// 3.4 - Finalize the render pass and command buffer
 			vkCmdEndRenderPass(_frames[currentFrame].commandBuffer);
 			//~ printMessage("G_pass OK")
@@ -880,6 +932,15 @@ void Graphics::drawFrame()
 		// L-pass
 		//#ifdef L_PASS
 		{
+			if( !HANDLE_VALID(renderPass_L) ||
+				!HANDLE_VALID(frameBuffer_L) ||
+				!HANDLE_VALID(pipeline_L) ||
+				!HANDLE_VALID(pipelineLayout_L) ||
+				!HANDLE_VALID(descriptorSet_L)	||
+				!HANDLE_VALID(fullscreenQuadVertexBuffer) 
+				
+				) return;
+			
 			// 2 - рендерпас
 			VkRenderPassBeginInfo renderPassInfo{};
 				renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -1020,8 +1081,9 @@ void Graphics::drawFrame()
 		}
 	}
 	
-	
-
+	#ifdef RENDER_DEBUG
+		printMessage("Submitting")
+	#endif
 	
 	// 1.3 - семафоров может быть множество, поэтому представляем их как массивы
 	VkSemaphore waitSemaphores[] = {_frames[currentFrame].imageAvailableSemaphore};
@@ -1070,8 +1132,13 @@ void Graphics::drawFrame()
 		presentInfo.pImageIndices = &imageIndex;
 
 	// 2.3 - передача на отображение. Display the image we just rendered on the screen. presentInfo has semaphores, which make sure the image isn't presented until `cmd` is finished executing
-	vkQueuePresentKHR(presentQueue, &presentInfo); 
-	
+	VkResult queueSubmit = vkQueuePresentKHR(presentQueue, &presentInfo); 
+	if ( resSubmit != VK_SUCCESS) 
+	{
+		checkResult(resSubmit);
+		DEBUG_INFO
+		throw std::runtime_error("failed to present draw command buffer!");
+	}
 	currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
 }
 

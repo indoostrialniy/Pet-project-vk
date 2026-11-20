@@ -12,12 +12,78 @@
 #include "Laboratory.h"
 #include "DynamicLightSource.h"
 
+
+
 //~ #include <set>
 //~ #include <algorithm>
 
 
+ 
+
+VkImage createGBufferImage(VmaAllocator allocator, uint32_t width, uint32_t height, VkFormat format, VkImageUsageFlags  usage, VmaAllocation *outAlloc)
+{
+    VkImageCreateInfo imgInfo{};
+		imgInfo.sType         = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+		imgInfo.imageType     = VK_IMAGE_TYPE_2D;
+		imgInfo.extent        = { width, height, 1 };
+		imgInfo.mipLevels     = 1;
+		imgInfo.arrayLayers   = 1;
+		imgInfo.format        = format;
+		imgInfo.tiling        = VK_IMAGE_TILING_OPTIMAL;
+		imgInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED; // layout зададим transition'ом
+		imgInfo.usage         = usage;                     // COLOR_ATTACHMENT | SAMPLED
+		imgInfo.samples       = VK_SAMPLE_COUNT_1_BIT;
+		imgInfo.sharingMode   = VK_SHARING_MODE_EXCLUSIVE;
+
+    VmaAllocationCreateInfo vmaInfo{};
+		vmaInfo.usage         = VMA_MEMORY_USAGE_AUTO;          // VMA сам выберет память
+		vmaInfo.flags         = VMA_ALLOCATION_CREATE_DEDICATED_MEMORY_BIT; // под большие картинки
+
+    VkImage image;
+    vmaCreateImage(allocator, &imgInfo, &vmaInfo, &image, outAlloc, nullptr);
+    return image;
+}
+
+VkImageView createGBufferView(VkDevice device, VkImage image, VkFormat format)
+{
+    VkImageViewCreateInfo viewInfo{};
+		viewInfo.sType    = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+		viewInfo.image    = image;
+		viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+		viewInfo.format   = format;
+		viewInfo.subresourceRange.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
+		viewInfo.subresourceRange.baseMipLevel   = 0;
+		viewInfo.subresourceRange.levelCount     = 1;
+		viewInfo.subresourceRange.baseArrayLayer = 0;
+		viewInfo.subresourceRange.layerCount     = 1;
+
+    VkImageView view;
+    vkCreateImageView(device, &viewInfo, nullptr, &view);
+    return view;
+}
+
+VkSampler createGBufferSampler(VkDevice device)
+{
+    VkSamplerCreateInfo samplerInfo{};
+		samplerInfo.sType        = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+		samplerInfo.magFilter    = VK_FILTER_NEAREST;   // для G-буфера - без интерполяции
+		samplerInfo.minFilter    = VK_FILTER_NEAREST;
+		samplerInfo.mipmapMode   = VK_SAMPLER_MIPMAP_MODE_NEAREST;
+		samplerInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+		samplerInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+		samplerInfo.addressModeW = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+		samplerInfo.minLod       = 0.0f;
+		samplerInfo.maxLod       = 1.0f;
+
+    VkSampler sampler;
+    vkCreateSampler(device, &samplerInfo, nullptr, &sampler);
+    return sampler;
+}
+
+
 void Graphics::createGpass()
 {
+	
 	// 1 - Renderpass attachments
 	if( HANDLE_NULL(renderPass_G) )
 	{
@@ -49,6 +115,7 @@ void Graphics::createGpass()
 		attachments[G_PASS_POSITION_ATTACHMENT].format 				= VK_FORMAT_R32G32B32A32_SFLOAT;
 		attachments[G_PASS_METAL_ROUGHNESS_PBR_ATTACHMENT].format 	= VK_FORMAT_R16G16B16A16_SFLOAT; // HDR
 		attachments[G_PASS_EMISSION_ATTACHMENT].format 				= VK_FORMAT_R16G16B16A16_SFLOAT; // HDR
+		attachments[G_PASS_ID_ATTACHMENT].format 					= VK_FORMAT_R32_UINT; 			// unsigned integers
 
 		// depth group
 		attachments[G_PASS_DEPTH_ATTACHMENT].format = findDepthFormat();		// D32_SFLOAT
@@ -79,6 +146,9 @@ void Graphics::createGpass()
 		
 			colorAttachmentsRefs[G_PASS_EMISSION_ATTACHMENT].attachment = G_PASS_EMISSION_ATTACHMENT; 			// По этому индексу (colorAttachmentRef.attachment = 2) фрагментный шейдер директивой layout(location = 2) out vec4 outColor напрямую обращается к текстурному прикреплению (буферу).
 			colorAttachmentsRefs[G_PASS_EMISSION_ATTACHMENT].layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL; 	// We intend to use the attachment to function as a color buffer. Vulkan автоматически перенесет текстурное прикрепление в указанное расположение, когда субпасс стартует.
+		
+			colorAttachmentsRefs[G_PASS_ID_ATTACHMENT].attachment = G_PASS_ID_ATTACHMENT; 			// По этому индексу (colorAttachmentRef.attachment = 2) фрагментный шейдер директивой layout(location = 2) out vec4 outColor напрямую обращается к текстурному прикреплению (буферу).
+			colorAttachmentsRefs[G_PASS_ID_ATTACHMENT].layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL; 	// We intend to use the attachment to function as a color buffer. Vulkan автоматически перенесет текстурное прикрепление в указанное расположение, когда субпасс стартует.
 		
 		std::array<VkAttachmentReference, 1> depthAttachmentsRefs {};
 			depthAttachmentsRefs[0].attachment = G_PASS_DEPTH_ATTACHMENT;
@@ -165,6 +235,16 @@ void Graphics::createGpass()
 					gPassImage[G_PASS_EMISSION_ATTACHMENT], gPassImageMemory[G_PASS_EMISSION_ATTACHMENT]);
 		gPassImageView[G_PASS_EMISSION_ATTACHMENT] = createImageView(gPassImage[G_PASS_EMISSION_ATTACHMENT], VK_FORMAT_R16G16B16A16_SFLOAT, VK_IMAGE_ASPECT_COLOR_BIT);
 		createTextureSampler( gPassImageSampler[G_PASS_EMISSION_ATTACHMENT] );
+		
+		// ID
+		createImage(swapChainExtent.width, swapChainExtent.height, VK_FORMAT_R32_UINT, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 
+					gPassImage[G_PASS_ID_ATTACHMENT], gPassImageMemory[G_PASS_ID_ATTACHMENT]);
+		gPassImageView[G_PASS_ID_ATTACHMENT] = createImageView(gPassImage[G_PASS_ID_ATTACHMENT], VK_FORMAT_R32_UINT, VK_IMAGE_ASPECT_COLOR_BIT);
+		//createTextureSampler( gPassImageSampler[G_PASS_ID_ATTACHMENT] );
+		gPassImageSampler[G_PASS_ID_ATTACHMENT] = createGBufferSampler(logicalDevice);
+
+		
+		
 		
 		// depth
 		VkFormat depthFormat = findDepthFormat();
@@ -815,11 +895,18 @@ void Graphics::createGpass()
 			colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
 			colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;
 
+		VkPipelineColorBlendAttachmentState idBlendAttachment{};
+			idBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_A_BIT;
+			idBlendAttachment.blendEnable = VK_FALSE; // не совмещать (новый цвет заменяет старый из буфера)
+			
+
 		std::array<VkPipelineColorBlendAttachmentState, gPassAttachmentsCount-1> colorBlendAttachments = {	colorBlendAttachment,
 																											colorBlendAttachment,
 																											colorBlendAttachment,
 																											colorBlendAttachment,
-																											colorBlendAttachment};
+																											colorBlendAttachment,
+																											idBlendAttachment
+																											};
 
 
 		// глобальные настройки совмещения цветов (между буферами?):
@@ -1073,7 +1160,7 @@ void Graphics::updateGpassGeneralInfoBuffer()
 	if(CHECK_PTR(g_Camera)) ubo.proj = glm::perspective(glm::radians(g_Camera->fCameraFOV), (float) swapChainExtent.width / (float) swapChainExtent.height, g_Camera->fCameraViewNear, g_Camera->fCameraViewDepth);
 	ubo.proj[1][1] *= -1; // GLM was originally designed for OpenGL, where the Y coordinate of the clip coordinates is inverted. 
 	
-	ubo.Time = time;
+	ubo.Time = time;// - int(time); // оставим только дробную часть
 	
 	ubo.cameraPos = CHECK_PTR(g_Camera) ? g_Camera->getActorPosition() : glm::vec3(14.087f, -14.19f, 7.33f);
 	
@@ -1394,16 +1481,38 @@ void Graphics::createLpass()
 	// 2 - Images for this attachments
 	{
 		// color
-		createImage(swapChainExtent.width, swapChainExtent.height, VK_FORMAT_R16G16B16A16_SFLOAT, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 
-					lPassImage[L_PASS_COLOR_ATTACHMENT], lPassImageMemory[L_PASS_COLOR_ATTACHMENT]);
-		lPassImageView[L_PASS_COLOR_ATTACHMENT] = createImageView(lPassImage[L_PASS_COLOR_ATTACHMENT], VK_FORMAT_R16G16B16A16_SFLOAT, VK_IMAGE_ASPECT_COLOR_BIT);
-		createTextureSampler( lPassImageSampler[L_PASS_COLOR_ATTACHMENT] );
+		//VkImage     image;
+		//VmaAllocation alloc;lPassVmaAllocation[L_PASS_COLOR_ATTACHMENT]
+		lPassImage[L_PASS_COLOR_ATTACHMENT] = createGBufferImage(allocator, swapChainExtent.width, swapChainExtent.height, VK_FORMAT_R16G16B16A16_SFLOAT,
+						   VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
+						   &lPassVmaAllocation[L_PASS_COLOR_ATTACHMENT]);
+
+		lPassImageView[L_PASS_COLOR_ATTACHMENT]    = createGBufferView(logicalDevice, lPassImage[L_PASS_COLOR_ATTACHMENT], VK_FORMAT_R16G16B16A16_SFLOAT);
+		lPassImageSampler[L_PASS_COLOR_ATTACHMENT] = createGBufferSampler(logicalDevice);
 		
-		// normal
-		createImage(swapChainExtent.width, swapChainExtent.height, VK_FORMAT_R16G16B16A16_SFLOAT, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 
-					lPassImage[L_PASS_BLOOM_ATTACHMENT], lPassImageMemory[L_PASS_BLOOM_ATTACHMENT]);
-		lPassImageView[L_PASS_BLOOM_ATTACHMENT] = createImageView(lPassImage[L_PASS_BLOOM_ATTACHMENT], VK_FORMAT_R16G16B16A16_SFLOAT, VK_IMAGE_ASPECT_COLOR_BIT);
-		createTextureSampler( lPassImageSampler[L_PASS_BLOOM_ATTACHMENT] );
+		// bloom
+		//VkImage     image;
+		//VmaAllocation alloc;
+		lPassImage[L_PASS_BLOOM_ATTACHMENT] = createGBufferImage(allocator, swapChainExtent.width, swapChainExtent.height, VK_FORMAT_R16G16B16A16_SFLOAT,
+						   VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
+						   &lPassVmaAllocation[L_PASS_BLOOM_ATTACHMENT]);
+
+		lPassImageView[L_PASS_BLOOM_ATTACHMENT]    = createGBufferView(logicalDevice, lPassImage[L_PASS_BLOOM_ATTACHMENT], VK_FORMAT_R16G16B16A16_SFLOAT);
+		lPassImageSampler[L_PASS_BLOOM_ATTACHMENT] = createGBufferSampler(logicalDevice);
+		
+		
+		//~ // ------------
+		//~ // color
+		//~ createImage(swapChainExtent.width, swapChainExtent.height, VK_FORMAT_R16G16B16A16_SFLOAT, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 
+					//~ lPassImage[L_PASS_COLOR_ATTACHMENT], lPassImageMemory[L_PASS_COLOR_ATTACHMENT]);
+		//~ lPassImageView[L_PASS_COLOR_ATTACHMENT] = createImageView(lPassImage[L_PASS_COLOR_ATTACHMENT], VK_FORMAT_R16G16B16A16_SFLOAT, VK_IMAGE_ASPECT_COLOR_BIT);
+		//~ createTextureSampler( lPassImageSampler[L_PASS_COLOR_ATTACHMENT] );
+		
+		//~ // bloom
+		//~ createImage(swapChainExtent.width, swapChainExtent.height, VK_FORMAT_R16G16B16A16_SFLOAT, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 
+					//~ lPassImage[L_PASS_BLOOM_ATTACHMENT], lPassImageMemory[L_PASS_BLOOM_ATTACHMENT]);
+		//~ lPassImageView[L_PASS_BLOOM_ATTACHMENT] = createImageView(lPassImage[L_PASS_BLOOM_ATTACHMENT], VK_FORMAT_R16G16B16A16_SFLOAT, VK_IMAGE_ASPECT_COLOR_BIT);
+		//~ createTextureSampler( lPassImageSampler[L_PASS_BLOOM_ATTACHMENT] );
 		
 	}
 	
@@ -1438,13 +1547,19 @@ void Graphics::createLpass()
 						 to fragment shader we connect texture sampler - this will be "binding 1"
 		*/
 		
-		std::array<VkDescriptorSetLayoutBinding, 5> bindings = {};
+		std::array<VkDescriptorSetLayoutBinding, 6> bindings = {};
 			// binding 0->gPassAttachmentsCount - g-pass samplers[3-5]
-				bindings[0].binding = 0;												// layout(binding = 1) uniform sampler2D material0_textures[16]; из фрагментного шейдера
+				bindings[0].binding = 0;												// layout(binding = 1) uniform sampler2D maps[5]; из фрагментного шейдера
 				bindings[0].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;	// тип - изображение
-				bindings[0].descriptorCount = gPassAttachmentsCount-1;					// все из G-паса, кроме глубины
+				bindings[0].descriptorCount = gPassAttachmentsCount-2;					// все из G-паса, кроме глубины
 				bindings[0].stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;					// обращение к текстурам ожидается из фрагментного шейдера
 				bindings[0].pImmutableSamplers = nullptr;
+			
+				bindings[5].binding = 5;												// layout(binding = 5) uniform sampler2D imaps[1]; из фрагментного шейдера
+				bindings[5].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;	// тип - изображение
+				bindings[5].descriptorCount = 1;					// все из G-паса, кроме глубины
+				bindings[5].stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;					// обращение к текстурам ожидается из фрагментного шейдера
+				bindings[5].pImmutableSamplers = nullptr;
 			
 			// binding 1 - illumination infos matrices
 				bindings[1].binding = 1;													// индекс точки привязки: layout(binding = 1) uniform {}  из  шейдера
@@ -1506,9 +1621,12 @@ void Graphics::createLpass()
 		// 1 - Сначала нужно описать, какие типы дескрипторов содержатся в сетах дескрипторов, и их количество/
 		// То есть какие патроны набивать в магазин, помещаемый в разгрузку (пул)
 		// Есть пока всего 2 типа передаваемых в шейдер (конвейер) ресурсов - UBO и Image sampler, создадим массив с описанием обоих типов ресурсов
-		std::array<VkDescriptorPoolSize, 5> poolSizes{};
+		std::array<VkDescriptorPoolSize, 6> poolSizes{};
 			poolSizes[0].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-			poolSizes[0].descriptorCount =  gPassAttachmentsCount-1;	// в каждом шейдере - массив на 3-5 ячеек текстур с предыдущего G-паса
+			poolSizes[0].descriptorCount =  gPassAttachmentsCount-2;	// в каждом шейдере - массив на 3-5 ячеек текстур с предыдущего G-паса
+			
+			poolSizes[5].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+			poolSizes[5].descriptorCount =  1;	// в
 			
 			// 1.0 - в движке будет 1 UBO для 16 illumination info structs
 			poolSizes[1].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
@@ -1610,7 +1728,7 @@ void Graphics::createLpass()
 				
 		// 3.2 - информация о текстурах
 		// к шейдеру прикрепляются максимум 2-5 картинки: массив текстур на gPassAttachmentsCount-1 сэмплера с предыдущего прохода (G-pass), без глубины!
-		std::array<VkDescriptorImageInfo, gPassAttachmentsCount-1> materials_textures {};			
+		std::array<VkDescriptorImageInfo, gPassAttachmentsCount-2> materials_textures {};			
 			// color resouce
 			materials_textures[G_PASS_COLOR_ATTACHMENT].imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 			materials_textures[G_PASS_COLOR_ATTACHMENT].imageView = gPassImageView[G_PASS_COLOR_ATTACHMENT];
@@ -1636,6 +1754,11 @@ void Graphics::createLpass()
 			materials_textures[G_PASS_EMISSION_ATTACHMENT].imageView = gPassImageView[G_PASS_EMISSION_ATTACHMENT];
 			materials_textures[G_PASS_EMISSION_ATTACHMENT].sampler = gPassImageSampler[G_PASS_EMISSION_ATTACHMENT];
 	
+		std::array<VkDescriptorImageInfo, 1> integer_materials_textures {};	
+			// ID
+			integer_materials_textures[0].imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+			integer_materials_textures[0].imageView = gPassImageView[G_PASS_ID_ATTACHMENT];
+			integer_materials_textures[0].sampler = gPassImageSampler[G_PASS_ID_ATTACHMENT];
 	
 		// 3.3 информация о картах теней - заполнение заглушками
 		std::array<VkDescriptorImageInfo, MAX_DYNAMIC_LIGHT_SOURCES> shadowmap_textures_spots {};	
@@ -1700,15 +1823,23 @@ void Graphics::createLpass()
 		
 		
 		// 4 - описание дескрипторов
-		std::array<VkWriteDescriptorSet, 5> descriptorWrites{};
+		std::array<VkWriteDescriptorSet, 6> descriptorWrites{};
 
 			descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 			descriptorWrites[0].dstSet = descriptorSet_L;
 			descriptorWrites[0].dstBinding = 0;							// в фрагментном (!) шейдере: layout(binding = 0) uniform sampler2D maps[2];
 			descriptorWrites[0].dstArrayElement = 0;					// смещение в массиве дескрипторов: начинать с maps[0] или maps[1] или maps[2]
 			descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-			descriptorWrites[0].descriptorCount = gPassAttachmentsCount-1;	// Количество текстур в массиве maps[]
+			descriptorWrites[0].descriptorCount = gPassAttachmentsCount-2;	// Количество текстур в массиве maps[5]
 			descriptorWrites[0].pImageInfo = materials_textures.data();
+
+			descriptorWrites[5].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			descriptorWrites[5].dstSet = descriptorSet_L;
+			descriptorWrites[5].dstBinding = 5;							// в фрагментном (!) шейдере: layout(binding = 0) uniform sampler2D maps[2];
+			descriptorWrites[5].dstArrayElement = 0;					// смещение в массиве дескрипторов: начинать с maps[0] или maps[1] или maps[2]
+			descriptorWrites[5].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+			descriptorWrites[5].descriptorCount = 1;	// Количество текстур в массиве imaps[]
+			descriptorWrites[5].pImageInfo = integer_materials_textures.data();
 
 			// 4.1 Illumination buffer: struct FhDynamicLightSourceInfo
 			descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
@@ -2033,8 +2164,9 @@ void Graphics::destroyLpass()
 	{			
 		vkDestroySampler(logicalDevice, 	lPassImageSampler[i], nullptr);
 		vkDestroyImageView(logicalDevice, 	lPassImageView[i], 	nullptr);
-		vkFreeMemory(logicalDevice, 		lPassImageMemory[i], nullptr);
-		vkDestroyImage(logicalDevice, 		lPassImage[i], 		nullptr);
+		vmaDestroyImage(allocator, lPassImage[i], lPassVmaAllocation[i]);
+		//~ vkFreeMemory(logicalDevice, 		lPassImageMemory[i], nullptr);
+		//~ vkDestroyImage(logicalDevice, 		lPassImage[i], 		nullptr);
 	}
 	
 	vkDestroyRenderPass(logicalDevice, renderPass_L, nullptr);

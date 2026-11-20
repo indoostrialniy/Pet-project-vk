@@ -6,7 +6,7 @@
 #include <algorithm>
 
 
-//~ #define RENDER_1_DEBUG
+#define RENDER_1_DEBUG
 
 
 /*
@@ -18,75 +18,76 @@
  */
 void Graphics::createInstance() 
 {
-	
-	
-	if( enableValidationLayers && !checkValidationLayerSupport() ) 
+	if( enableValidationLayers && !checkValidationLayerSupport() ) 	// если нужны слои, но они недоступны, выбросим исключение
 	{
-		throw std::runtime_error("validation layers requested, but not available!");
+		DEBUG_INFO
+		throw std::runtime_error("Error: validation layers requested, but not available!");
 	}
 	
+	// 1.1
+	// Необходимые на данной платформе расширения экземпляра GLFW определяет сам
+	std::vector<const char*> glfwRequiredExtensions = getRequiredExtensions();						// получили вектор строк с именами требуемых экземпляру расширений
+		// glfwRequiredExtensions:	VK_KHR_surface
+        // 							VK_KHR_win32_surface
+        // 							VK_EXT_debug_utils
+	
+	
+	// 1.2
+	// Доступные на данной платформе расширения экземпляра получим вручную
+	uint32_t extensionCount = 0;
+	vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);						// get extensions count			
+	
+	std::vector<VkExtensionProperties> availableExtensions(extensionCount);							// vector of available extensions
+	vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, availableExtensions.data());	// get available Vulkan extensions names
+		
+	std::vector<const char*> availableExtensionsNames(extensionCount);								// vector of just names of available extensions
+	for(int i=0; i<extensionCount; i++)	{															// get only available Vulkan extensions names
+		availableExtensionsNames[i] = availableExtensions[i].extensionName;		}					// iterative copying names
+
+	#ifdef RENDER_1_DEBUG
+		std::cout << "\nAvailable instance extensions:\n";											// optional console output
+		for (const auto& extension : availableExtensions)	{ 										// перебор доступных
+			std::cout << '\t' << extension.extensionName << '\n';		}		
+	#endif
+	
+	// 1.3
+	// Проверяем, что необходимые - доступны
+	if( !hasCommonStrings(glfwRequiredExtensions, availableExtensionsNames) )						// if there are required extensions
+	{
+		DEBUG_INFO
+		throw std::runtime_error("Error: required extensions are not available! Failed to create VkInstance!");
+	}
+	
+	// 2
+	// Раз все в порядке, заполняем формы и создаем экземпляр
 	VkApplicationInfo appInfo{};
 		appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
 		appInfo.pApplicationName = "DemoLevel";
 		appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
 		appInfo.pEngineName = "fhEngine";
-		appInfo.engineVersion = VK_MAKE_VERSION(0, 0, 5);
-		appInfo.apiVersion = VK_API_VERSION_1_0;
+		appInfo.engineVersion = VK_MAKE_VERSION(0, 2, 5);
+		appInfo.apiVersion = VK_API_VERSION_1_3;
 		
 	VkInstanceCreateInfo createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
 		createInfo.pApplicationInfo = &appInfo;		
-	
-	std::vector<const char*> glfwExtensions = getRequiredExtensions();						// получили вектор строк с именами требуемых экземпляру расширений
-		
-		createInfo.enabledExtensionCount = static_cast<uint32_t>(glfwExtensions.size());	// занесли в структуру количество расширений на основании размера вектора
-		createInfo.ppEnabledExtensionNames = glfwExtensions.data();							// занесли в структуру имена самих расширений
+		createInfo.enabledExtensionCount = static_cast<uint32_t>(glfwRequiredExtensions.size());	// занесли в структуру количество расширений на основании размера вектора
+		createInfo.ppEnabledExtensionNames = glfwRequiredExtensions.data();							// занесли в структуру имена самих расширений
 				
 	// depending on debug mode, specify validation layers count
-	if (enableValidationLayers) 
-	{
+	if (enableValidationLayers) 	{
 		createInfo.enabledLayerCount =	static_cast<uint32_t>(validationLayers.size());
-		createInfo.ppEnabledLayerNames = validationLayers.data();
-	}
-	else 
-	{
+		createInfo.ppEnabledLayerNames = validationLayers.data();		}	// "VK_LAYER_KHRONOS_validation"
+	else 	{
 		createInfo.enabledLayerCount = 0;
-	}
+		createInfo.ppEnabledLayerNames = nullptr;		}
 	
-	// get extensions count	
-	uint32_t extensionCount = 0;
-	vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount,nullptr);				
-	
-	// get these available extensions
-	std::vector<VkExtensionProperties> availableExtensions(extensionCount);							// make vector of enough capacity
-	vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, availableExtensions.data());	// get Vulkan extensions names
-	
-	// make an independent vector of just available extension names
-	std::vector<const char*> availableExtensionsNames(extensionCount);
-	
-	for(int i=0; i<extensionCount; i++)
+	VkResult result = vkCreateInstance(&createInfo, nullptr, &instance);
+	if ( result != VK_SUCCESS) 
 	{
-		availableExtensionsNames[i] = availableExtensions[i].extensionName;							// iterative copying names
-	}
-
-	// optional console output
-	#ifdef RENDER_1_DEBUG
-		std::cout << "\nAvailable instance extensions:\n";
-		for (const auto& extension : availableExtensions) // перебор доступных
-		{
-			std::cout << '\t' << extension.extensionName << '\n';			
-		}	
-	#endif
-	
-	if( hasCommonStrings(glfwExtensions, availableExtensionsNames) )	// if there are required extensions
-	{
-		// create Vulkan API instance with required extensions and simultaneously check return code
-		checkResult( vkCreateInstance(&createInfo, nullptr, &instance) );
-	}
-	else
-	{
+		checkResult(result);
 		DEBUG_INFO
-		throw std::runtime_error("There are no required extensions! Failed to create Vulkan instance! Try to recompile with #define RENDER_1_DEBUG");
+		throw std::runtime_error("Error: failed to create VkInstance!");
 	}
 	
 }
@@ -94,6 +95,7 @@ void Graphics::createInstance()
 void Graphics::destroyInstance()
 {
 	vkDestroyInstance(instance, nullptr);
+	instance = VK_NULL_HANDLE;
 }
 
 
@@ -128,7 +130,7 @@ void Graphics::createSurface()
 		But here we create it with GLFW!
 	*/	
 	
-	if(surface == VK_NULL_HANDLE)
+	if( HANDLE_NULL(surface) )
 	{
 		VkResult result = glfwCreateWindowSurface(instance, window, nullptr, &surface);
 		
@@ -136,7 +138,7 @@ void Graphics::createSurface()
 		{
 			checkResult(result);
 			DEBUG_INFO
-			throw std::runtime_error("Failed to create window surface!");
+			throw std::runtime_error("Error: failed to create glfw window surface!");
 		}
 	}
 }
@@ -161,23 +163,25 @@ void Graphics::destroySurface()
  */
 void Graphics::pickPhysicalDevice() 
 {
-	// 1 - figure out the number of all available physical devices
+	// 1
+	// figure out the number of all available physical devices
 	uint32_t deviceCount = 0;
 	vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);				
 
 	if (deviceCount == 0) 
 	{
-		throw std::runtime_error("failed to find GPUs with Vulkan support!");
+		DEBUG_INFO
+		throw std::runtime_error("Error: failed to find GPUs with Vulkan support!");
 	}
 
 
-	// 2 - save info about all detected physical devices
+	// 2
+	// save info about all detected physical devices
 	std::vector<VkPhysicalDevice> devices(deviceCount);					// make vector of enough capacity
 	vkEnumeratePhysicalDevices(instance, &deviceCount, devices.data());	
 
-	// optional console output
 	#ifdef RENDER_1_DEBUG
-		printMessage("\nPhysical devices and info: ")       
+		printMessage("\nPhysical devices and info: ")      				// optional console output 
 		for( auto dev : devices)
 		{	
 			// VkPhysicalDeviceType 1->VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU, 2->VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU, 4->VK_PHYSICAL_DEVICE_TYPE_CPU
@@ -189,11 +193,11 @@ void Graphics::pickPhysicalDevice()
 			std::cout << "\tDevice Type: ";
 			switch(deviceProperties.deviceType)
 			{
-				case VK_PHYSICAL_DEVICE_TYPE_OTHER: printMessage("unknown other") break;			//0
-				case VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU: printMessage("integrated") break;		//1
-				case VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU: printMessage("discrete") break;			//2
-				case VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU: printMessage("virtual") break;			//3
-				case VK_PHYSICAL_DEVICE_TYPE_CPU: printMessage("CPU") break;						//4
+				case VK_PHYSICAL_DEVICE_TYPE_OTHER: std::cout << "unknown other" << std::endl; break;			//0
+				case VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU: std::cout << "integrated" << std::endl; break;		//1
+				case VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU: std::cout << "discrete" << std::endl; break;			//2
+				case VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU: std::cout << "virtual" << std::endl; break;			//3
+				case VK_PHYSICAL_DEVICE_TYPE_CPU: std::cout << "CPU" << std::endl; break;						//4
 			}		
 			std::cout << "\tDriver Version: " << deviceProperties.driverVersion << std::endl;
 			
@@ -210,28 +214,28 @@ void Graphics::pickPhysicalDevice()
 	#endif
 
 
-	// 3 - now select the most suitable device. We can decide on simply by name/type or (if there are no choices) estimate GPU "score points" and pick the "winner"
+
+	// 3
+	// now select the most suitable device. We can decide on simply by name/type or (if there are no choices) estimate GPU "score points" and pick the "winner"
 	for (const auto& device : devices) 
 	{
-		if( isDeviceSuitable(device) ) 
+		if( isDeviceSuitable(device) ) 									// очереди, расширения, свапчейн и фичи в порядке
 		{
-			physicalDevice = device;								// as soon as found suitable device, save its descriptor and break loop
+			physicalDevice = device;									// as soon as found suitable device, save its descriptor and break loop
 			break;													
 		}
 	}
 	
-	if (physicalDevice == VK_NULL_HANDLE) 							// if there are no suitable devices, we have no chance(
+	if( !HANDLE_VALID(physicalDevice) ) 									// if there are no suitable devices, we have no chance(
 	{
 		DEBUG_INFO
-		throw std::runtime_error("Failed to find a suitable GPU!");	// 
+		throw std::runtime_error("Error: failed to find a suitable GPU!");	// 
 	}
 	
 	
-	// 4 - query properties and features of selected GPU
+	// 4 
+	// query properties of selected GPU
 	vkGetPhysicalDeviceProperties(physicalDevice, &mGpuProperties); // again like in p.2 ↑↑↑
-	vkGetPhysicalDeviceFeatures(physicalDevice, &mGpuFeatures);		// 
-	
-		//~ mGpuFeatures.geometryShader = VK_TRUE;
 	
 	// 5 - optional console output about selected physical device
 	#ifdef RENDER_1_DEBUG
@@ -239,11 +243,11 @@ void Graphics::pickPhysicalDevice()
 		std::cout << "\tDevice Type: ";
 		switch(mGpuProperties.deviceType)
 		{
-			case VK_PHYSICAL_DEVICE_TYPE_OTHER: printMessage("unknown other") break;	//0
-			case VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU: printMessage("integrated") break;		//1
-			case VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU: printMessage("discrete") break;			//2
-			case VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU: printMessage("virtual") break;			//3
-			case VK_PHYSICAL_DEVICE_TYPE_CPU: printMessage("CPU") break;			//3
+			case VK_PHYSICAL_DEVICE_TYPE_OTHER: std::cout << "unknown other" << std::endl; break;	//0
+			case VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU: std::cout << "integrated" << std::endl; break;		//1
+			case VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU: std::cout << "discrete" << std::endl; break;			//2
+			case VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU: std::cout << "virtual" << std::endl; break;			//3
+			case VK_PHYSICAL_DEVICE_TYPE_CPU: std::cout << "CPU" << std::endl; break;			//3
 		}		
 		std::cout << "\tDriver Version: " << mGpuProperties.driverVersion << std::endl;
 		std::cout << "\tAPI Version: " 	<< VK_VERSION_MAJOR(mGpuProperties.apiVersion) 
@@ -251,6 +255,8 @@ void Graphics::pickPhysicalDevice()
 										<< "." << VK_VERSION_PATCH(mGpuProperties.apiVersion) << std::endl;
 	#endif
 	
+	
+	//system("pause");
 }
 
 
@@ -332,11 +338,9 @@ void Graphics::createLogicalDevice()
 	
 	
 	// 4 - фичи видеокарты
-	VkPhysicalDeviceFeatures deviceFeatures{};						
-		deviceFeatures.geometryShader = VK_TRUE;
-		deviceFeatures.multiViewport = VK_TRUE;
-		deviceFeatures.shaderSampledImageArrayDynamicIndexing  = VK_TRUE;
-		
+
+	
+   
 	// 5 - прописываем информацию о создаваемом логическом устройстве
 	VkDeviceCreateInfo createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
@@ -345,54 +349,62 @@ void Graphics::createLogicalDevice()
 		createInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());		// количество резервируемых очередей
 		createInfo.pQueueCreateInfos = queueCreateInfos.data();									// занесли инфу об очередях
 
-		// 5.2 - фичи
-		// createInfo.pEnabledFeatures = &deviceFeatures;											
-
-		// 5.3 - требуемые расширения
+		// 5.2 - требуемые расширения
 		createInfo.enabledExtensionCount = static_cast<uint32_t>(deviceExtensions.size());		// количество
 		createInfo.ppEnabledExtensionNames = deviceExtensions.data();							// инфа
 	
-		// Сначала описываем, какие фичи нам нужны
-		VkPhysicalDeviceDescriptorIndexingFeaturesEXT indexingFeatures{};
-			indexingFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT;
-			indexingFeatures.pNext = nullptr;
+		// 5.3 - Сначала описываем, какие фичи нам нужны
+				/*
+				//~ VkPhysicalDeviceDescriptorIndexingFeaturesEXT indexingFeatures{};
+					//~ indexingFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT;
+					//~ indexingFeatures.pNext = nullptr;
+					//~ // ВАЖНО: включаем динамическую индексацию массивов сэмплеров
+					//~ indexingFeatures.shaderSampledImageArrayNonUniformIndexing  = VK_TRUE;	//shaderSampledImageArrayDynamicIndexing = VK_TRUE;
+					// (Опционально) если планируешь менять MIP-уровень динамически
+					//indexingFeatures.shaderResourceMinLod = VK_TRUE; 
 
-			// ВАЖНО: включаем динамическую индексацию массивов сэмплеров
-			indexingFeatures.shaderSampledImageArrayNonUniformIndexing  = VK_TRUE;	//shaderSampledImageArrayDynamicIndexing = VK_TRUE;
+				//----------
+				//~ printMessage("Flag")
+				//~ VkPhysicalDeviceFeatures2 pFeatures;
+				//~ pFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
 
-			// (Опционально) если планируешь менять MIP-уровень динамически
-			//indexingFeatures.shaderResourceMinLod = VK_TRUE; 
+				//~ vkGetPhysicalDeviceFeatures2( physicalDevice,    &pFeatures);
+				//~ VkPhysicalDeviceFeatures tmp = pFeatures.features;
+				
+				//~ const VkBool32* tmpp  = reinterpret_cast<const VkBool32*>(&tmp);
+	
+				//~ #ifdef RENDER_1_DEBUG
+					//~ printMessage("\nRequiered tmpp device features:")
+					//~ for (size_t i = 0; i < sizeof(VkPhysicalDeviceFeatures) / sizeof(VkBool32); ++i) {
+						//~ if( tmpp[i] ) {		std::cout << "\t" << i << std::endl;}		}
+				//~ #endif
 
-		// Теперь оборачиваем это в VkPhysicalDeviceFeatures2, чтобы передать в vkCreateDevice
-		VkPhysicalDeviceFeatures2 features2{};
-			features2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
-			features2.pNext = &indexingFeatures;
-			features2.features = deviceFeatures;
+				//~ system("pause");
+				//----------
+				*/
+				
+			// Оборачиваем все в VkPhysicalDeviceFeatures2, чтобы передать в vkCreateDevice
+			VkPhysicalDeviceFeatures2 features2{};
+				features2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
+				features2.pNext = &indexingFeatures; // фичи 1_1+ проверены на этапе выбора физического устройства
+				features2.features = mGpuFeatures; // фичи 1_0 проверены на этапе выбора физического устройства
 
 		// И передаём в createInfo
-		createInfo.pEnabledFeatures = nullptr; // Если используешь features2, старое поле не используй
+		createInfo.pEnabledFeatures = nullptr; // &mGpuFeatures. Если используем VkPhysicalDeviceFeatures2, старое поле оставляем nullptr
 		createInfo.pNext = &features2;          // <-- это ключ: фичи идут через pNext
 
 
-		//~ // 5.4 - слои валидации
-		//~ if (enableValidationLayers) 
-		//~ {
-			//~ createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
-			//~ createInfo.ppEnabledLayerNames = validationLayers.data();
-		//~ } 
-		//~ else 
-		//~ {
-			//~ createInfo.enabledLayerCount = 0;
-		//~ }
-
+		// 5.4 - слои валидации
+		// Device Layers have never worked since Vulkan 1.0 and only Instance Layers should be used instead: https://docs.vulkan.org/spec/latest/appendices/legacy.html#legacy-devicelayers.
+		
 
 	// 6 - теперь непосредственно создаем главное логическое устройство, а очереди зарезервируются автоматически
 	VkResult result = vkCreateDevice(physicalDevice, &createInfo, nullptr, &logicalDevice);
-	
 	if (result != VK_SUCCESS) 
 	{
 		checkResult(result);
-		throw std::runtime_error("failed to create logical logicalDevice!");
+		DEBUG_INFO
+		throw std::runtime_error("Error: failed to create logical VkDevice!");
 	}
 	
 	// 7 - т.к. очереди резервируются автоматически, нужно явным образом сохранить их дескрипторы для дальнейшего взаимодействия
@@ -426,27 +438,37 @@ void Graphics::destroyLogicalDevice()	// уничтожение логическ
  */
 std::vector<const char*> Graphics::getRequiredExtensions()					// запрос требуемых расширений instance`а
 {
-	
-	uint32_t glfwExtensionCount = 0;
-	const char** glfwExtensions;																// массив строк с именами расширений
-	
-	glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);					// записали в массив строки с именами требуемых расширений, заодно по ссылке записав их количество
+	/*
+	Расширения instance-уровня, нужные для создания окна-поверхности, стандартизированы заранее:
 
-	std::vector<const char*> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);	// конструктор принимает 2 итератора (начало и конец) и т.о. копирует в вектор содержимое массива строк имен
+	VK_KHR_surface — универсальное, всегда (это «передняя часть» WSI, абстракция поверхности);
+		платформенно-зависимое второе: 	VK_KHR_win32_surface на Windows, 
+										VK_KHR_xcb_surface/VK_KHR_xlib_surface на Linux, 
+										VK_KHR_wayland_surface под Wayland, 
+										VK_KHR_metal_surface на macOS (через MoltenVK), 
+										VK_KHR_android_surface на Android.
+	*/
+	
+	uint32_t greExtensionsCount = 0;
+	const char** greExtensions;																// массив строк с именами расширений
+	
+	greExtensions = glfwGetRequiredInstanceExtensions(&greExtensionsCount);					// записали в массив строки с именами требуемых расширений, заодно по ссылке записав их количество
 
-	#ifdef RENDER_1_DEBUG
-		printMessage("\nRequired instance extensions:")
-		for(auto requiredExtension : extensions)
-		{
-			std::cout << "\t" << requiredExtension << "\n";
-		}
-	#endif
+	std::vector<const char*> extensions(greExtensions, greExtensions + greExtensionsCount);	// конструктор принимает 2 итератора (начало и конец) и т.о. копирует в вектор содержимое массива строк имен
 
 	if (enableValidationLayers) 																// если слои валидации включены, добавим еще и расширение "VK_EXT_debug_utils"
 	{
 		extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);								// "VK_EXT_debug_utils"
 	}
 
+	#ifdef RENDER_1_DEBUG
+		printMessage("\nRequired by GLFW instance extensions:")
+		for(auto requiredExtension : extensions)
+		{
+			std::cout << "\t" << requiredExtension << "\n";
+		}
+	#endif
+	
 	return extensions;																			// вернули вектор требуемых расширений
 }
 
@@ -462,7 +484,6 @@ std::vector<const char*> Graphics::getRequiredExtensions()					// запрос �
  */
 bool Graphics::hasCommonStrings(const std::vector<const char*> &v1, const std::vector<const char*> &v2)
 {
-	
 	if( v1.empty() || v2.empty() ) return false;
 
 	// Конвертируем указатели на строки в string_view
@@ -479,7 +500,7 @@ bool Graphics::hasCommonStrings(const std::vector<const char*> &v1, const std::v
 	set_intersection(sv1.begin(), sv1.end(), sv2.begin(), sv2.end(), back_inserter(intersection));
 
 	#ifdef RENDER_1_DEBUG
-		printMessage("\nCommon strings: ")
+		printMessage("Available required instance extenstions: ")
 		for(auto Common : intersection)
 		{
 			std::cout << "\t" << Common << "\n";
@@ -530,14 +551,58 @@ bool Graphics::isDeviceSuitable(VkPhysicalDevice ids_phDevice)
 		swapChainAdequate = 	!swapChainSupport.formats.empty() 
 							&& 	!swapChainSupport.presentModes.empty(); // where are capabilities?
 	}
-
+	
+	// 4 - features available
+	bool featuresAvailable = checkDeviceFeaturesSupport(ids_phDevice);
 	// for anisotrophics
 	// VkPhysicalDeviceFeatures supportedFeatures;
 	// vkGetPhysicalDeviceFeatures(physicalDevice, &supportedFeatures);
 
 
+	// 5 formats for deferred rendering
+	
+	if(HANDLE_VALID(surface))
+	{
+		uint32_t formatCount;
+		vkGetPhysicalDeviceSurfaceFormatsKHR(ids_phDevice, surface, &formatCount, nullptr);
+		std::vector<VkSurfaceFormatKHR> 	formats;
+		
+		//~ vkGetPhysicalDeviceFormatProperties
+		
+		/*
+		// грубый перебор известных форматов - для таблицы в консоль
+		for (uint32_t f = VK_FORMAT_BEGIN_RANGE; f <= VK_FORMAT_END_RANGE; ++f) {
+			VkFormat format = static_cast<VkFormat>(f);
+			VkFormatProperties p;
+			vkGetPhysicalDeviceFormatProperties(physicalDevice, format, &p);
+			if (p.optimalTilingFeatures == 0) continue; // полностью бесполезный
+
+			std::printf("%4d: sampled=%d attach=%d blend=%d linear=%d storage=%d\n",
+				format,
+				bool(p.optimalTilingFeatures & VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT),
+				bool(p.optimalTilingFeatures & VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT),
+				bool(p.optimalTilingFeatures & VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT),
+				bool(p.optimalTilingFeatures & VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT),
+				bool(p.optimalTilingFeatures & VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT));
+		}
+		*/
+		
+		if( formatCount != 0 ) 
+		{
+			formats.resize(formatCount);
+			vkGetPhysicalDeviceSurfaceFormatsKHR(ids_phDevice, surface, &formatCount, formats.data());
+		}
+		
+		printMessage("\nAvailable surface formats")
+		for(auto f : formats)
+		{
+			printVariable(f.format)
+		}
+	}
+	
+
 	// 4 - if all OK, return true (queues supported AND extensions supported AND swapchain OK
-	return indices.isComplete() && extensionsSupported && swapChainAdequate;// && supportedFeatures.samplerAnisotropy;
+	return indices.isComplete() && extensionsSupported && swapChainAdequate && featuresAvailable;// && supportedFeatures.samplerAnisotropy;
 }
 
 
@@ -632,47 +697,144 @@ QueueFamilyIndices Graphics::findQueueFamilies(VkPhysicalDevice fqf_physDevice)
  */
 bool Graphics::checkDeviceExtensionSupport(VkPhysicalDevice cdes_phDevice)
 {
-	// 1 - get properties of supported extensions
-	uint32_t extensionCount;
-	vkEnumerateDeviceExtensionProperties(cdes_phDevice, nullptr, &extensionCount, nullptr);					// get the count of available extensions
+	// 1
+	// Необходимые расширения конкретного устройства прописаны в fhRender.h
+	std::set<std::string> cdesRequiredExtensions( deviceExtensions.begin(), deviceExtensions.end() );	//convert global required extensions vector to a Set
 
-	std::vector<VkExtensionProperties> availableExtensions(extensionCount);								// // create vector of enough capacity for extensions properties
-	vkEnumerateDeviceExtensionProperties(cdes_phDevice, nullptr, &extensionCount, availableExtensions.data());	// save extensions data
-	
-	// optional console output
 	#ifdef RENDER_1_DEBUG
-		std::cout << "\nAvailable device extensions:\n";
-		for(auto ae : availableExtensions)
-		{
-			printVarComment("\t", ae.extensionName)
-		}
+		std::cout << "\nRequired device extensions:\n";		// optional console output
+		for(auto re : cdesRequiredExtensions)	{
+			std::cout << "\t" << re << std::endl;	}
 	#endif
 	
-	// 2 - convert global required extensions vector to a Set
-	std::set<std::string> requiredExtensions( deviceExtensions.begin(), deviceExtensions.end() );
+	
+	// 2
+	// Доступные расширения устройства получим вручную
+	uint32_t cdesExtensionCount;
+	vkEnumerateDeviceExtensionProperties(cdes_phDevice, nullptr, &cdesExtensionCount, nullptr);					// get the count of available extensions
 
-	// optional console output
+	std::vector<VkExtensionProperties> cdesAvailableExtensions(cdesExtensionCount);								// // create vector of enough capacity for extensions properties
+	vkEnumerateDeviceExtensionProperties(cdes_phDevice, nullptr, &cdesExtensionCount, cdesAvailableExtensions.data());	// save extensions data
+	
 	#ifdef RENDER_1_DEBUG
-		std::cout << "\nRequired device extensions:\n";
-		for(auto re : requiredExtensions)
-		{
-			printVarComment("\t", re)
-		}
+		std::cout << "\nAvailable device extensions:\n";	// optional console output
+		for(auto ae : cdesAvailableExtensions)	{
+			std::cout << "\t" << ae.extensionName << std::endl;	}
 	#endif
+		
 
-	// 3 - simply check if element of first vector also is member in second vector
-	for (const auto& extension : availableExtensions) 
+	// 3
+	// simply check if element of first vector also is member in second vector
+	for (const auto& extension : cdesAvailableExtensions) 
 	{
 		//std::cout << '\t' << extension.extensionName << '\n';
-		// erase() tries to delete current extension from list of requiredExtensions
-		requiredExtensions.erase(extension.extensionName); // XXX возможно, стоит указать конец диапазона удаления, чтобы не очищалось впоть до конца вектора?
+		// erase() tries to delete current extension from list of cdesRequiredExtensions
+		cdesRequiredExtensions.erase(extension.extensionName); // XXX возможно, стоит указать конец диапазона удаления, чтобы не очищалось вплоть до конца вектора?
 	}
 	
-	// 4 - if vector of required extensions is empty (empty()==true) - then all required extensions were detected in availables and excluded from there and device is ready
+	// 4
+	//if vector of required extensions is empty (empty()==true) - then all required extensions were detected in availables and excluded from there and device is ready
 	// otherwise device is not suitable
-	return requiredExtensions.empty();
-	 
+	
+	
+	if( cdesRequiredExtensions.empty() )
+	{
+		#ifdef RENDER_1_DEBUG
+			printMessage("All required device extensions available!")
+		#endif
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+		 
 }
+
+
+
+
+bool Graphics::checkDeviceFeaturesSupport(VkPhysicalDevice cdfs_phDevice)
+{
+	// 1
+	// Необходимые проекту фичи устройства версии 1_0 прописаны в mGpuFeatures
+	const VkBool32* requiredFeatures10  = reinterpret_cast<const VkBool32*>(&mGpuFeatures);
+	
+	#ifdef RENDER_1_DEBUG
+		printMessage("\nRequiered device features: (in order of their enumeration in VkPhysicalDeviceFeatures)")
+		for (size_t i = 0; i < sizeof(VkPhysicalDeviceFeatures) / sizeof(VkBool32); ++i) {
+			if( requiredFeatures10[i] ) {		std::cout << "\t" << i << std::endl;}		}
+	#endif
+	
+	// 2
+	// Поддерживаемые конкретной видеокартой cdfs_phDevice фичи получим вручную	
+	VkPhysicalDeviceDescriptorIndexingFeatures indexingFeatures11{};
+		indexingFeatures11.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES;
+
+	VkPhysicalDeviceFeatures2 features2{};
+		features2.sType  = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
+		features2.pNext  = &indexingFeatures11;          // базовая + навесная в одной цепочке
+		//features2.features = ...						// структура со всеми поддерживаемыми устройством фичами версии 1_0
+	vkGetPhysicalDeviceFeatures2(cdfs_phDevice, &features2);	// запросим все доступные фичи
+	
+	// 2.1 поддерживаемые фичи версии 1_0
+	const VkBool32* supportedFeatures10  = reinterpret_cast<const VkBool32*>(&features2.features);
+	
+	#ifdef RENDER_1_DEBUG
+		printMessage("\nSupported advanced device features: ")
+		for (size_t i = 0; i < sizeof(VkPhysicalDeviceFeatures) / sizeof(VkBool32); ++i) {
+			if( supportedFeatures10[i] ) {		std::cout << "\t" << i << std::endl;}		}
+	#endif
+	
+	// 2.2 поддерживаемых более новых фич VkPhysicalDeviceDescriptorIndexingFeatures всего 20 штук, можно сравнивать вручную с indexingFeatures
+	
+
+	// 3
+	// Проверка поддержки требуемых фич
+	bool featuresSupported = true;
+	
+	#ifdef RENDER_1_DEBUG
+		printMessage("Supported required features:")
+	#endif
+	
+	// 10 check
+	for (size_t i = 0; i < sizeof(VkPhysicalDeviceFeatures) / sizeof(VkBool32); ++i) 
+	{
+		if( requiredFeatures10[i] ) 
+		{		
+			if( supportedFeatures10[i] ) 
+			{
+				#ifdef RENDER_1_DEBUG
+					std::cout << "\t" << i << ": OK!" << std::endl;
+				#endif
+			}
+			else
+			{
+				featuresSupported = false;
+				printVarComment("At least not supported 1_0 feature: ", i)
+				break;
+			}
+		}		
+	}
+	
+	// 11+ check
+	if( indexingFeatures11.shaderSampledImageArrayNonUniformIndexing != indexingFeatures.shaderSampledImageArrayNonUniformIndexing)
+	{
+		printVarComment("At least not supported 1_1+ feature: ", indexingFeatures11.shaderSampledImageArrayNonUniformIndexing)
+		featuresSupported == false;
+	}
+	else
+	{
+		#ifdef RENDER_1_DEBUG
+			std::cout << "\t .shaderSampledImageArrayNonUniformIndexing OK!" << std::endl;
+		#endif
+	}
+	
+	//system("pause");
+		
+	return featuresSupported;
+}
+
 
 
 
@@ -685,6 +847,12 @@ bool Graphics::checkDeviceExtensionSupport(VkPhysicalDevice cdes_phDevice)
  */
 SwapChainSupportDetails Graphics::querySwapChainSupport(VkPhysicalDevice qscs_phDevice) 	// функция запрашивает информацию о цепочке показа, вспомогательная для создания Swapchain:
 {
+	if( !HANDLE_VALID(qscs_phDevice) )
+	{
+		DEBUG_INFO
+		throw std::runtime_error("Error: cannot query swapchain support because of invalid VkPhysicalDevice");
+	}
+	
 	// 1 - create empty struct
 	SwapChainSupportDetails details;	
 	// now query:		 

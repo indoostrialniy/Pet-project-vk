@@ -5,6 +5,7 @@ layout(location = 0) out vec4 outColor;
 layout(location = 1) out vec4 outBloom;
 
 layout(binding = 0) uniform sampler2D maps[5]; // color, normal, position, PBR, emission
+layout(binding = 5) uniform usampler2D imaps[1]; // ID
 #define f3_BUF_COLOR(uv) texture(maps[0], uv).rgb
 #define f3_BUF_NORMAL(uv) texture(maps[1], uv).xyz
 #define f3_BUF_POSITION(uv) texture(maps[2], uv).xyz
@@ -12,10 +13,14 @@ layout(binding = 0) uniform sampler2D maps[5]; // color, normal, position, PBR, 
 #define f_BUF_ROUGHNESS(uv) texture(maps[3], uv).g
 #define f_BUF_SPECULAR(uv) texture(maps[3], uv).b
 #define f3_BUF_EMISSION(uv) texture(maps[4], uv).rgb
+#define i_BUF_ID(uv) texture(imaps[0], uv).r
 
 
 #define SHADOWS_ON
 
+#define LIGHT_TYPE_OMNI 0
+#define LIGHT_TYPE_SPOT 1
+#define LIGHT_TYPE_SUN 2
 //struct FhDynamicLightSourceInfo
 //{
 //	vec3 position;
@@ -138,21 +143,58 @@ float shadowCalculation(int index)
 
 	vec3 dir = normalize(worldPos - lightPos);
 	//POS.y = 1-POS.y;
-
-	float shadow;
+	float bias = 0.005;
+	//float shadow;
 	//currentDepth = POS.z;
 	//switch(illuminationInfos.illuminationInfo[index].type)
-	//{
 		//case 0 : shadow = texture(shadowMaps[index], vec3(dir)).r;break;
 		//case 1 : 
-	shadow = texture(shadowMapsSpots[index], POS.xy ).x;// break;// vec4(POS.xy,0,1)
-	//}
 	
-	float bias = 0.005;
+	int border = 2;
+	int step1 = 1;
+	float texelSize = 1.0/2048.0; // /8;
+	int count = 1;
+	float shadow = 0.0;
 
-	//outColor = vec4(texture(shadowMaps[index], POS.xy).rrr,1);
+	float sh;
+	//for(int i=-border; i<= border; i+=step1)
+	{
+		//for(int j=-border; j<= border; j+=step1)
+		{
+			int i, j=0;
+			shadow = texture(shadowMapsSpots[index], POS.xy + vec2(i,j)*texelSize ).x;// break;// vec4(POS.xy,0,1)
+			shadow =  (shadow  < currentDepth - bias ? 0.0 : 1.0);// * sin(POS.y*texelSize*1000000*3.14/180) ;
+			// texture(maps[1], fragTexCoord + vec2(i,j)*texelSize).rgb;
+			count++;
+		}
+	}
+	//shadow /= count;	
 
-	return shadow  < currentDepth - bias ? 0.0 : 1.0 ;
+
+		
+
+	return shadow;
+}
+
+float smoothShadow(int index)
+{
+	int border = 3;
+	int step1 = 2;
+	float texelSize = 1.0/768.0;
+	int count = 1;
+	float shadow = 0.0;
+	for(int i=-border; i<= border; i+=step1)
+	{
+		for(int j=-border; j<= border; j+=step1)
+		{
+			shadow += shadowCalculation(index);
+			// texture(maps[1], fragTexCoord + vec2(i,j)*texelSize).rgb;
+			count++;
+		}
+	}
+	shadow /= count;
+	
+	return shadow;
 }
 
 float shadowCube(int index) 
@@ -326,14 +368,180 @@ vec3 getLightSourceInfluence(int index)
 
     //return Lo;
 
-    vec3 finalColor = ambient + Lo;
+    vec3 finalColor = ambient*0 + Lo;
 		//finalColor *= spot;
     //finalColor = finalColor / (finalColor + 1.0);
     //finalColor = pow(finalColor, vec3(1.0 / 2.2));
 	return finalColor;//*finalColor;
 }
 
-void main() 
+void main()
+{
+	uint id = uint(i_BUF_ID(fragTexCoord));
+	vec3 N = normalize(f3_BUF_NORMAL(fragTexCoord));// нормаль фрагмента
+
+	vec3 albedo = f3_BUF_COLOR(fragTexCoord); 		// линейный RGB [0..1]
+
+	vec3 resultColor = albedo * 0.05;				// ambient
+
+	float height = 0; // высота плоскости реки
+	if(id==12) height = -0.74;
+	if(id==13) height = 5.74;
+	
+	
+	//if(id==12 || id==13) discard;
+
+	
+
+	
+	vec3 cameraPos2 = commonData.cameraPos;
+	float metallic = f_BUF_METALLIC(fragTexCoord);
+	float roughness = f_BUF_ROUGHNESS(fragTexCoord);
+	vec3 V = normalize( cameraPos2 - f3_BUF_POSITION(fragTexCoord) ); 
+	vec3 F0 = vec3(0.04);
+		F0 = mix(F0, albedo, metallic);
+
+	for(int index=0; index<16; index++)
+	{
+		//break;
+		//if(index == 1) break;
+		//vec3 lightInfluence = getLightSourceInfluence(index);
+		//if(index != 0) lightInfluence *= shadowCalculation(index);
+		//resultColor += lightInfluence;
+	
+		//break;//continue;
+
+		FhDynamicLightSourceInfo info = illuminationInfos.illuminationInfo[index];
+		
+		// first filter - by source status
+		if( info.exists != 1) continue;	// skip non-active lightsources
+
+		// second filter - by distance
+		float 	lightVolumeRadius 	= info.radius;	//радиус влияния источника света
+		vec3 	fragWorldPos 		= f3_BUF_POSITION(fragTexCoord);
+		vec3 	lightPos 			= info.position;
+		if( length(lightPos - fragWorldPos) > lightVolumeRadius ) continue;	// if fragment is too far from lightsource, skip it
+		
+		// third filter - by shadow
+		float shadow = shadowCalculation(index);	//
+		////if(id == 12 || id == 13) shadow = 1; // свет должен проникать под воду
+		if(index == 0) shadow = 1.0;
+		if(shadow < 0.05)		continue;			// if fragment is shadowed (with bias), also skip it
+		
+
+		// otherwise, if fragment is in radius and not shadowed
+		vec3 L = normalize(lightPos - fragWorldPos);
+		vec3 	lightSourceDir 		= normalize(info.direction);
+		int		lightType			= int(info.type);
+		
+		float d = length(lightPos - fragWorldPos);
+		float t = 1.0 - d/lightVolumeRadius;
+		float attenuation = smoothstep(0.0, 1.0, t);
+
+		if( lightType == LIGHT_TYPE_SUN) // if ortho sun
+		{
+			L = -normalize(lightSourceDir);  // sun rays are parallel
+			attenuation = 1.0;		// no attenuation from sun
+		}
+
+		vec3 	lightColor 			= info.color; // pink
+				//lightColor = vec3(vec3(1, 0.958, 0.541));
+
+		float 	lightIntensity 		= info.power; // Это ватты, как в Blender сила источника Strength
+				//lightIntensity *= 1/sqrt(2);
+
+		vec3 E = vec3(0); // освещенность
+		if( lightType == LIGHT_TYPE_OMNI || lightType == LIGHT_TYPE_SPOT)
+		{
+			// 1. Поток -> сила света (если P задаёшь как в Blender, в ваттах)
+			vec3 I = lightColor * (lightIntensity / (4.0 * PI));   // Вт/ср
+			// 2. Сила света -> освещённость (только для точечных источников)
+			float d = max(d, 0.01);                          // защита от d=0
+			E = I / (d * d);                                   // Вт/м²
+			// color, attenuation, intensity
+		}
+
+		if( lightType == LIGHT_TYPE_SUN)
+		{
+			// Для солнца (directional) затухания нет — там сразу освещённость:
+			E = lightColor * lightIntensity;
+		}
+		
+		if( lightType == LIGHT_TYPE_SPOT)
+		{
+			
+			float spotSectorAngleFullDark = info.sector; // out there is total no light
+				float blendWidthDegree = 25;	// width of the fade of the spot
+				float spotSectorAngleFullBright  = spotSectorAngleFullDark - blendWidthDegree;
+			float spot = smoothstep(cos(spotSectorAngleFullDark*PI/180), cos(spotSectorAngleFullBright*PI/180), dot(lightSourceDir, -L) );
+
+			shadow *= spot;	
+		}
+		
+		// fourth filter - by power
+		float lightStrength = attenuation * lightIntensity;
+		//if(lightStrength < 0.05) continue;				// if lightsource is too weak
+
+		// derivatives
+		vec3 H = normalize(V + L);
+
+		float NDF = distributionGGX(N, H, roughness);
+		float G = geometrySmith(N, V, L, roughness);
+		vec3 F = fresnelSchlick(max(dot(H, V), 0.0), F0);
+			F = vec3(0.2);
+		vec3 numerator = NDF * G * F;
+		float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001;
+		vec3 specular = numerator / denominator;
+
+		vec3 kS = F;
+		vec3 kD = vec3(1.0) - kS;
+		kD *= 1.0 - metallic; 
+
+		vec3 waterColor = vec3(0.084, 0.465, 0.149);
+		float k = 1;// =
+		if(id == 12 || id == 13) 
+		{
+			albedo = f3_BUF_COLOR(fragTexCoord+0.02*vec2(N.xy)); // distortion
+			
+			
+			
+			float depth = abs( height-f3_BUF_POSITION(fragTexCoord).z );
+			float viewDepth = length( f3_BUF_POSITION(fragTexCoord) - commonData.cameraPos);
+			 smoothstep(-5, height, -depth);//f3_BUF_POSITION(fragTexCoord).z);// /3; //
+				k = smoothstep( height-3, height, f3_BUF_POSITION(fragTexCoord).z);
+
+			k = pow(k, 0.97);
+			//albedo += waterColor*k;
+			//albedo = 1*vec3(k);
+			//resultColor = mix(waterColor*0.4, f3_BUF_COLOR(fragTexCoord)*0.1, k );
+		//resultColor = mix(waterColor*0.5*shadow, resultColor, k );
+				//resultColor = waterColor;
+			//outColor = vec4(vec3(f3_BUF_COLOR(fragTexCoord)), 1);
+			//return;
+		}
+
+		vec3 diffuse = (kD * albedo / PI + specular) * max(dot(N,L), 0.0) * E  ;
+			 diffuse = (kD * albedo / PI + specular) * max(dot(N,L), 0.0) * lightColor * lightStrength ;
+			//diffuse = mix
+
+		//diffuse = mix((waterColor)*0.5, diffuse*1, k );
+		//if(index != 0) 
+		resultColor += shadow * diffuse;//*;
+		
+		//outColor = vec4(vec3( k ), 1);
+		//break;
+		//outColor = vec4(diffuse, 1);
+	}
+
+	
+
+	
+	resultColor += f3_BUF_EMISSION(fragTexCoord);
+	outColor = vec4(resultColor, 1);
+	outBloom = vec4(f3_BUF_EMISSION(fragTexCoord),1);
+}
+
+void main2() 
 {
 	//outColor = vec4(f3_BUF_COLOR(fragTexCoord), 1);//texture(maps[0], fragTexCoord);
 	//vec3 normal = f3_BUF_NORMAL(fragTexCoord);

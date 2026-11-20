@@ -44,8 +44,8 @@ Laboratory::Laboratory(std::string name, Graphics& core) : Level(core)
 	
 	FhMicroWorldInitializationInfo sun(g_GraphicsCore);
 			sun.name = "SUN";
-			sun.initPos = glm::vec3(5.98, 14.61, 73);//7, 1, 3);
-			sun.initRot = glm::quat(0.774, -0.093, 0.615, -0.116);
+			sun.initPos = glm::vec3(5.98, 14.61, 73);//5,7,6);//7, 1, 3);
+			sun.initRot = glm::quat(0.774, -0.093, 0.615, -0.116);//glm::quat(0.108, 0.344, 0.040, -0.932);//
 			sun.color = glm::vec3(1, 0.958, 0.541);//1.0, 0.594, 0.834);
 			sun.type = FH_DYNAMIC_LIGHTSOURCE_SUN;
 			sun.sector = 90.0f;

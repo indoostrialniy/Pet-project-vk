@@ -14,7 +14,8 @@ layout(location = 7) out float sysTime;
 layout(location = 8) out vec3 tangent;
 layout(location = 9) out uint Type;
 layout(location = 10) out vec3 POV;
-layout(location = 11) out struct VSOut
+layout(location = 11) out uint ID;
+layout(location = 12) out struct VSOut
 {
 	uint v[48];	// прямая переиндексация 48 материалов, назначенных объекту
 } vs_out;
@@ -33,6 +34,8 @@ struct FhMaterialInfo
 	uint emissionAddress;
 	uint displacementAddress;
 	
+	uint flowmapAddress;
+	
 	float colorScale;
 	float normalScale;
 	float roughnessScale;
@@ -42,6 +45,9 @@ struct FhMaterialInfo
 	float lightmapScale;
 	float emissionScale;
 	float displacementScale;
+	
+	float flowmapScale;
+
 	
 	float alphaDefault;
 	float roughnessDefault;
@@ -72,27 +78,14 @@ struct PushConstantsStruct
 	mat4 model;					// 64 bytes - entity model matrix
 	uint type;					// 68 bytes
 	uint uboOffset;				// 72 bytes
-	float reserve2;				// 76 bytes
+	uint ID;					// 76 bytes
 	float reserve3;				// 76 77 78 79 bytes
-	uvec4 materialIndexes[3];
-	//uint materialIndexes0;
-	//uint materialIndexes1;
-	//uint materialIndexes2;
-	//uint materialIndexes3;
-	//uint materialIndexes4;
-	//uint materialIndexes5;
-	//uint materialIndexes6;
-	//uint materialIndexes7;
-	//uint materialIndexes8;
-	//uint materialIndexes9;
-	//uint materialIndexes10;
-	//uint materialIndexes11;
-	//uint materialIndexes[3];	// We`ll pack here 48 short integers and in GLSL (read by 4 bytes straight) decomposite it using bitwise operatons	
+	uvec4 materialIndexes[3];	// We`ll pack here 48 short integers and in GLSL (read by 4 bytes straight) decomposite it using bitwise operatons	
 };
 
 layout(binding = 3) uniform FhGpassPushConstantsInfo 
 {
-	PushConstantsStruct constants[700];							// 64 push constants structs
+	PushConstantsStruct constants[512];							// 64 push constants structs
 } pushConstantsBuffer;
 
 
@@ -103,7 +96,7 @@ layout( push_constant ) uniform constants
 	mat4 model;					// 64 bytes - entity model matrix
 	uint type;					// 68 bytes
 	uint uboOffset;				// 72 bytes
-	float reserve2;				// 76 bytes
+	uint ID;					// 76 bytes
 	float reserve3;				// 80 bytes
 	uint materialIndexes[12];	// We`ll pack here 48 short integers and in GLSL (read by 4 bytes straight) decomposite it using bitwise operatons
 } PushConstants;
@@ -151,6 +144,8 @@ void main()
 	sysTime = commonData.Time;
 	
 	Type = uint(pushes.type);
+
+	ID = uint(pushes.ID);
 
 	tangent = inTangent;
 

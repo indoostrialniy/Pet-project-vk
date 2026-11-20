@@ -16,12 +16,12 @@ GLFW::GLFW() // конструктор инициализирует окно
 {
 	glfwInit();
 	
-	printMessage("\n\nCREATE NEW WINDOW\n\n")
+	//~ printMessage("\n\nCREATE NEW WINDOW\n\n")
 
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);		// GLFW создавался под OpenGL, поэтому сейчас этого API не надо
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);			// измение размера окна влечет пересоздание swapchain, поэтому пока заблокировано
 
-	window = glfwCreateWindow(WIDTH, HEIGHT, "fhEngineVK v0.2.4", nullptr, nullptr);
+	window = glfwCreateWindow(WIDTH, HEIGHT, "fhEngineVK v0.2.5", nullptr, nullptr);
 	
 	glfwSetWindowUserPointer(window, this);
 	glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);	// callback для отслежиавния изменения размера окна. Нужен для пересоздания swapchain

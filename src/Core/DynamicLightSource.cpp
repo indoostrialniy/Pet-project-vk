@@ -943,6 +943,12 @@ void DynamicLight::recordShadowpassCommand( VkCommandBuffer& commandBuffer )
 							&& glm::length(ent.second->position - position) < 1.0*radius
 						)
 						{
+							if( ent.second->entityType & FH_ENTITY_TYPE_RENDER_TRANSPARENT )
+							{
+								// printVarComment("Transparent object: ", ent.second->entityName)
+								continue;
+							}
+							
 							vkCmdBindVertexBuffers( commandBuffer, 0, 1, &ent.second->entityMeshPtr->getMeshVertexBuffer(), offsets);	// bind mesh
 				
 							ent.second->configureModelMatrix( modelMatrix );	// make model matrix

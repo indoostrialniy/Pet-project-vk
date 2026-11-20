@@ -7,7 +7,7 @@
 
 
 
-//~ #define RENDER_2_DEBUG
+#define RENDER_2_DEBUG
 
 
 /*
@@ -19,6 +19,12 @@
  */
 void Graphics::createSwapChain() 
 {
+
+	if( !HANDLE_VALID(physicalDevice) )
+	{
+		DEBUG_INFO
+		throw std::runtime_error("Error: cannot create VkSwapchainKHR because of invalid VkPhysicalDevice");
+	}
 	
 	// Vulkan does not have the concept of a “default framebuffer”, hence it requires
 	// an infrastructure that will own the buffers we will render to before we visualize
@@ -42,19 +48,9 @@ void Graphics::createSwapChain()
 	swapChainImageFormat = surfaceFormat.format;
 	swapChainExtent = extent;
 	
-
-	// optional console output
-	#ifdef RENDER_2_DEBUG
-		printMessage("\ncreateSwapchain")
-		printVarComment("width ", extent.width)
-		printVarComment("height ", extent.height)
-	#endif
-	
 	// 3 - specify count of images in swapchain
 	uint32_t imageCount = swapChainSupport.capabilities.minImageCount + 1;	// == two
-	
-	//printVarComment("\n\n\n\nSwapchain images: ", imageCount)
-	
+		
 	// 3.1 if there is upper-limit of count of images and out ↑↑imageCount↑↑ is greater...
 	if (swapChainSupport.capabilities.maxImageCount > 0 				// 0 is a special value that means that there is no maximum
 		&& imageCount > swapChainSupport.capabilities.maxImageCount)	// если мы превысили число максимально допустимых изображений
@@ -62,8 +58,13 @@ void Graphics::createSwapChain()
 		imageCount = swapChainSupport.capabilities.maxImageCount; // ... bound imageCount to maximum
 	}
 	
-	
-	//printVarComment("\n\n\n\nSwapchain images: ", imageCount)
+	// optional console output
+	#ifdef RENDER_2_DEBUG
+		printMessage("\nSwapchain parameters: ")
+		printVarComment("\twidth ", extent.width)
+		printVarComment("\theight ", extent.height)
+		printVarComment("\nSwapchain images: ", imageCount)
+	#endif
 	
 	// 4 - convert family indexes to set
 	// 4.1 - get required family indexes
@@ -73,7 +74,7 @@ void Graphics::createSwapChain()
 	if( !indices.graphicsFamily.has_value() || !indices.presentFamily.has_value() )
 	{
 		DEBUG_INFO
-		throw std::runtime_error("Cannot create Swapchain: Not all families found!");
+		throw std::runtime_error("Error: cannot create VkSwapchainKHR! Not all families found!");
 	}
 	
 	uint32_t queueFamilyIndices[] = { indices.graphicsFamily.value(), indices.presentFamily.value() };
@@ -115,11 +116,9 @@ void Graphics::createSwapChain()
 	if( result != VK_SUCCESS) 
 	{
 		checkResult(result);
-		throw std::runtime_error("failed to create swapchain!");
+		DEBUG_INFO
+		throw std::runtime_error("Error: failed to create VkSwapchainKHR!");
 	}
-	
-	
-
 	
 }
 
@@ -129,6 +128,7 @@ void Graphics::destroySwapChain()
 	if(swapChain != VK_NULL_HANDLE) 
 	{
 		vkDestroySwapchainKHR(logicalDevice, swapChain, nullptr);
+		swapChain = VK_NULL_HANDLE;
 	}
 }
 
@@ -246,26 +246,28 @@ void Graphics::recreateSwapChain()
  */
 void Graphics::getSwapchainImages()
 {
-	
-	// we need to specify how to handle swap chain images that will be used across multiple queue families. 
-	// That will be the case in our application if the graphics queue family is different from the presentation queue. 
-	// We’ll be drawing on the images in the swap chain from the graphics queue and then submitting them on the presentation queue. 
-	
-	// 1 - Swapchain is already created, now we extract image handlers.
-	// Vulkan implementation allows to create Swapchains with multiple images, so query Swapchain size first
-	// get count of images in swapchain. Actually it was specified by us in createSwapchain()
-	uint32_t swch_imageCount;
-	vkGetSwapchainImagesKHR(logicalDevice, swapChain, &swch_imageCount, nullptr);
-	
-	// 2 - then resize the container...
-	swapChainImages.resize(swch_imageCount);
-	
-	// 3 - get handles to VkImages of the Swapchain and put them in vector "swapChainImages"
-	vkGetSwapchainImagesKHR(logicalDevice, swapChain, &swch_imageCount, swapChainImages.data());
+	if( HANDLE_VALID(logicalDevice) && HANDLE_VALID(swapChain) )
+	{
+		// we need to specify how to handle swap chain images that will be used across multiple queue families. 
+		// That will be the case in our application if the graphics queue family is different from the presentation queue. 
+		// We’ll be drawing on the images in the swap chain from the graphics queue and then submitting them on the presentation queue. 
+		
+		// 1 - Swapchain is already created, now we extract image handlers.
+		// Vulkan implementation allows to create Swapchains with multiple images, so query Swapchain size first
+		// get count of images in swapchain. Actually it was specified by us in createSwapchain()
+		uint32_t swch_imageCount;
+		vkGetSwapchainImagesKHR(logicalDevice, swapChain, &swch_imageCount, nullptr);
+		
+		// 2 - then resize the container...
+		swapChainImages.resize(swch_imageCount);
+		
+		// 3 - get handles to VkImages of the Swapchain and put them in vector "swapChainImages"
+		vkGetSwapchainImagesKHR(logicalDevice, swapChain, &swch_imageCount, swapChainImages.data());
 
-	#ifdef RENDER_2_DEBUG
-		printVarComment("Images in swapchain: ", swch_imageCount)
-	#endif
+		#ifdef RENDER_2_DEBUG
+			printVarComment("Images in swapchain: ", swch_imageCount)
+		#endif
+	}
 }
 
 
@@ -279,7 +281,6 @@ void Graphics::getSwapchainImages()
  */
 void Graphics::createSwapchainImageViews() 
 {
-	
 	// VkImageView это обертка над объектом изображения в памяти. 
 	// Она описывает, как обращаться к изображению и к какой его части. 
 	// К примеру, изображение может быть обработано как 2D depth texture без мипмаппинга.
@@ -290,8 +291,11 @@ void Graphics::createSwapchainImageViews()
 
 	for (size_t i = 0; i < swapChainImages.size(); i++) 
 	{
-		// т.к. есть вспомогательная функция createImageView, то можно сократить код до:
-		swapChainImageViews[i] = createImageView(swapChainImages[i], swapChainImageFormat, VK_IMAGE_ASPECT_COLOR_BIT);
+		if(HANDLE_VALID(swapChainImages[i]))
+		{
+			// т.к. есть вспомогательная функция createImageView, то можно сократить код до:
+			swapChainImageViews[i] = createImageView(swapChainImages[i], swapChainImageFormat, VK_IMAGE_ASPECT_COLOR_BIT);
+		}
 	}
 	
 }
@@ -399,7 +403,8 @@ VkFormat Graphics::findSupportedFormat(const std::vector<VkFormat>& candidates, 
 		}
 	}
 
-	throw std::runtime_error("failed to find supported format!");
+	DEBUG_INFO
+	throw std::runtime_error("Error: failed to find supported format!");
 }
 
 

@@ -28,6 +28,10 @@ public:
 	bool 						getStatus();
 	std::string 				getResourceName();
 	
+	glm::vec2 sizesX = glm::vec2(0.0, 0.0);
+	glm::vec2 sizesY = glm::vec2(0.0, 0.0);
+	glm::vec2 sizesZ = glm::vec2(0.0, 0.0);
+	
 	std::optional<std::string> 	meshSkeletonName;// By default the model is non-skeletal. Skeleton is optional, so if it exist, its name will be written in this optional-variable. 
 												// Skeleton itself will be loaded and configured during Entity creation via Entity::configureEntity()
 protected:

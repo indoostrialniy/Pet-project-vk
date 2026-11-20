@@ -73,39 +73,56 @@ vec3 ACESFitted(vec3 color)
     return clamp(color, 0.0, 1.0);
 }
 
+vec3 srgb_to_linear(vec3 c) 
+{
+    return mix(pow((c + 0.055) / 1.055, vec3(2.4)) * 1.055 - 0.055,
+               c / 12.92,
+               lessThanEqual(c, vec3(0.04045)));
+}
+
+vec3 linear_to_srgb(vec3 c) 
+{
+	vec3 low = c * 12.92;
+	vec3 high = 1.055 * pow(c, vec3(1.0/2.4)) - 0.055;
+
+    return mix(high, low, step(c, vec3(0.0031308)));
+               
+}
+
 void main() {
-    //outColor = vec4(1,1,0,1);	//
-	outColor = texture(maps[0], fragTexCoord);// put linear color to exit as is
-
-	return;
+	//outColor = texture(maps[0], fragTexCoord);// put linear color to exit as is
+	//return;
 
 
-	vec3 hdrColor = texture(maps[0], fragTexCoord).rgb;
+	vec3 hdrColor = texture(maps[0], fragTexCoord).rgb; // linear
 
 	//hdrColor = vec3(0.5);
 
 	//float gamma = 2.2;
-	float exposure = 1.0;
+	float exposure = 0.0;
 
-	//hdrColor *= Exposure;
 	hdrColor *= exp2(exposure);                      // экспозиция
 
     // тональная компрессия с экспозицией
     //vec3 mapped = vec3(1.0) - exp(-hdrColor * exposure);
-	vec3 mapped = ACESFilm(hdrColor);
+	//vec3 mapped = ACESFilm(hdrColor);
 	//mapped = ACESFitted(hdrColor);
+	//mapped = hdrColor;
     // гамма-коррекция
-    //mapped = pow(mapped, vec3(1.0 / gamma));
+    //mapped = pow(mapped, vec3(gamma));//	mapped = srgb_to_linear(mapped);	//mapped = linear_to_srgb(mapped);
+	
 
 	// — и вот теперь color grading, в display-referred [0..1] —
-	float luma = dot(mapped, vec3(0.2126, 0.7152, 0.0722));
-	mapped = mix(vec3(luma), mapped, 1.15);          // насыщенность +15%
-	mapped = (mapped - 0.5) * 1.08 + 0.5;            // контраст +8%
+	//float luma = dot(mapped, vec3(0.2126, 0.7152, 0.0722));
+	//mapped = mix(vec3(luma), mapped, 1.15);          // насыщенность +15%
+	//mapped = (mapped - 0.5) * 1.08 + 0.5;            // контраст +8%
 	// опционально: mapped = clamp(1.05 * mapped - 0.02, 0.0, 1.0); // лёгкий lift/gamma
 
 
+	//mapped = pow(mapped, vec3(gamma));
+    //mapped = srgb_to_linear(mapped);	
 
-    outColor = vec4(mapped, 1.0);
+	outColor = vec4(hdrColor, 1);
 
 	//outColor += outColor * texture(maps[1], fragTexCoord);
 }

@@ -550,13 +550,15 @@ bool Graphics::hasStencilComponent(VkFormat format)
 
 
 
-bool Graphics::checkValidationLayerSupport() {
+bool Graphics::checkValidationLayerSupport() // берет список доступных слоев и проверяет, содержит ли он заданные в validationLayers имена слоев
+{
 	uint32_t layerCount;
 	vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
 
 	std::vector<VkLayerProperties> availableLayers(layerCount);
 	vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
 	//return false;
+	// получили вектор всех доступных слоев
 	
 	
 	for (const char* layerName : validationLayers)
@@ -576,7 +578,7 @@ bool Graphics::checkValidationLayerSupport() {
 			return false;
 		}
 	}
-	return true;		
+	return true;	// если все слои из validationLayers доступны, то вернем true	
 }
 
 
